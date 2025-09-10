@@ -37,27 +37,18 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
     <Card className="group relative overflow-hidden bg-card/50 backdrop-blur-sm border-2 border-border/50 hover:border-primary/30 transition-smooth hover:shadow-card animate-slide-up" 
           style={{ animationDelay: `${index * 0.1}s` }}>
       <CardContent className="p-6">
-        {/* Custom Number Display - Following user's exact specifications */}
-        <div className="flex items-start gap-3 mb-4">
+        {/* Clean Number Display - Huge white letters with gestalt principles */}
+        <div className="flex items-start gap-4 mb-6">
           <div className="flex items-baseline gap-1 flex-shrink-0">
             {/* Tiny # symbol - 1/3 size of number */}
-            <span className="text-number-xs font-light text-muted-foreground leading-none">#</span>
-            {/* Massive condensed ultra thin number - 1.5x larger */}
+            <span className="text-number-xs font-light text-muted-foreground/60 leading-none">#</span>
+            {/* Massive condensed ultra thin number - clean white huge letters */}
             <span className="text-number-massive font-ultra-thin font-display leading-none text-foreground tracking-tighter">
               {prompt.id}
             </span>
             {/* Dot separator */}
-            <span className="text-xl font-light text-muted-foreground leading-none ml-1">•</span>
+            <span className="text-xl font-light text-muted-foreground/60 leading-none ml-1">•</span>
           </div>
-          
-          {/* Score with padding and border radius on limey yellow */}
-          {prompt.score && (
-            <div className="ml-auto">
-              <div className="px-3 py-1 rounded-lg bg-score text-score-foreground font-bold text-sm shadow-sm">
-                {prompt.score}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* Title */}
