@@ -5,7 +5,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 100,
     title: "Recursive Self-Improvement Prompt",
     description: "AI helps you improve your own prompts iteratively",
-    category: "Meta-Prompting",
+    category: "Advanced",
     example: "Analyze this prompt and suggest 3 improvements: [YOUR_PROMPT]. Then rewrite it using those improvements.",
     score: 95
   },
@@ -13,7 +13,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 99,
     title: "Context Window Memory Extension",
     description: "Simulate longer memory by chunking and summarizing",
-    category: "Memory Hacks",
+    category: "Advanced",
     example: "Before we continue, summarize our conversation in 3 bullet points, then proceed with: [NEW_TASK]",
     score: 92
   },
@@ -37,7 +37,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 96,
     title: "Progressive Disclosure Prompting",
     description: "Reveal information gradually for better processing",
-    category: "Information Processing",
+    category: "Analysis",
     example: "I'll give you info in 3 parts. After each, ask clarifying questions before I continue. Part 1: [INITIAL_INFO]",
     score: 89
   },
@@ -45,7 +45,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 95,
     title: "Inverse Problem Definition",
     description: "Define problems by exploring what they're NOT",
-    category: "Problem Solving",
+    category: "Strategy",
     example: "Instead of solving [PROBLEM], list 10 things this problem definitely ISN'T, then define what it actually is.",
     score: 87
   },
@@ -53,7 +53,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 94,
     title: "Temporal Perspective Shifting",
     description: "Analyze problems from different time horizons",
-    category: "Strategic Thinking",
+    category: "Strategy",
     example: "View [SITUATION] from: 1) Next week 2) Next year 3) Next decade. What changes?",
     score: 90
   },
@@ -61,7 +61,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 93,
     title: "Emotional State Injection",
     description: "Prime AI with specific emotional contexts",
-    category: "Emotional Intelligence",
+    category: "Psychology",
     example: "Respond as if you're feeling [EMOTION] about [TOPIC]. How would that change your advice?",
     score: 85
   },
@@ -85,7 +85,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 90,
     title: "Assumption Archaeology",
     description: "Dig deep into hidden assumptions",
-    category: "Critical Thinking",
+    category: "Analysis",
     example: "List 5 assumptions behind [STATEMENT]. For each, ask: What if this wasn't true?",
     score: 94
   },
@@ -93,7 +93,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 89,
     title: "Failure Mode Analysis",
     description: "Explore how things could go wrong",
-    category: "Risk Assessment",
+    category: "Strategy",
     example: "For [PLAN], list 10 ways it could fail. For each failure, suggest a prevention strategy.",
     score: 88
   }

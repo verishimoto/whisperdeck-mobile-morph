@@ -1,5 +1,6 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 interface HeaderProps {
   searchQuery: string;
@@ -10,7 +11,12 @@ interface HeaderProps {
 export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl">
-      <div className="container px-4 py-6">
+      <div className="container px-4 py-6 relative">
+        {/* Theme Toggle - Positioned at top right */}
+        <div className="absolute top-4 right-4 z-10">
+          <ThemeToggle />
+        </div>
+
         {/* Logo and Title */}
         <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-brand rounded-xl mb-3 shadow-glow">
