@@ -10,7 +10,7 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <ThemeProvider defaultTheme="light" storageKey="hack-whisperer-theme">
+  <ThemeProvider defaultTheme="dark" storageKey="hack-whisperer-theme">
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />

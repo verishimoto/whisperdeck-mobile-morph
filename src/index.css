@@ -2,113 +2,96 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Hack Whisperer Design System - Mobile-First AI Prompting App
-   Color palette: UI-With-Levels (Purple to Cyan tech gradient)
-   Typography: Helvetica Condensed Neue (titles) + Inter family (body)
-   All colors MUST be HSL for consistent theming
+/* Prompt Hacks Master Grid - Dark Mode Design System
+   Neon color palette with dark background and opal hover effects
+   Typography: Helvetica Neue Condensed for ultra-thin numbers + Inter family
 */
 
 @layer base {
   :root {
-    /* Core Brand Colors - UI-With-Levels Palette */
-    --brand-purple: 270 100% 50%;           /* #7E00FF - Primary brand */
-    --brand-cyan: 193 100% 50%;             /* #00C7FF - Secondary brand */
-    --brand-mint: 167 100% 50%;             /* #00FFC8 - Accent 1 */
-    --brand-lime: 113 100% 50%;             /* #1CFF00 - Accent 2 */
-    --brand-yellow: 66 100% 50%;            /* #DCFF00 - Score highlight (limey yellow) */
-    --brand-orange: 19 100% 50%;            /* #FF5100 - Warning/Alert */
+    /* Dark Mode Base */
+    --bg-main: 236 57% 9%;                  /* #0D0C1D - Deep space blue */
+    --bg-glass: 236 47% 13%;                /* #17162A - Glass overlay */
+    --text-primary: 0 0% 97%;               /* #F3F3F3 - Off-white text */
+    --text-secondary: 203 23% 75%;          /* #B5CEDE - Light slate grey */
+    --text-title: 66 91% 70%;               /* #E7FF71 - Yellow-lime title */
     
-    /* Dark Tones */
-    --dark-base: 0 0% 0%;                   /* #000000 - Pure black */
-    --dark-1: 0 38% 5%;                     /* #120808 - Very dark */
-    --dark-2: 0 67% 10%;                    /* #290808 - Dark accent */
+    /* Neon Color Palette - Exact from user requirements */
+    --neon-purple: 270 100% 50%;            /* #7E00FF - Level 1 */
+    --neon-cyan: 193 100% 50%;              /* #00C7FF - Level 2 */
+    --neon-mint: 167 100% 78%;              /* #00FFC8 - Level 3 */
+    --neon-lime: 113 100% 50%;              /* #1CFF00 - Level 4 */
+    --neon-yellow: 66 100% 50%;             /* #DCFF00 - Level 5 */
+    --neon-orange: 19 100% 50%;             /* #FF5100 - Level 6 */
     
-    /* Light Tones */
-    --light-mint: 140 100% 92%;             /* #D8FFE5 - Light green */
-    --light-cyan: 167 100% 93%;             /* #DEFFFB - Light cyan */  
-    --light-purple: 269 100% 94%;           /* #EEDEFF - Light purple */
-    --light-orange: 18 100% 93%;            /* #FFE8DE - Light orange */
-    --light-yellow: 60 100% 93%;            /* #FFFFDE - Light yellow */
-    --pure-white: 0 0% 100%;                /* #FFFFFF - Pure white */
-
-    /* Semantic Design System */
-    --background: var(--pure-white);
-    --foreground: var(--dark-base);
+    /* Glass & Border Effects */
+    --border-glass: 270 60% 70%;            /* Purple border with transparency */
+    --accent-glow: 193 100% 50%;            /* Cyan glow */
+    --opal-overlay: 193 100% 50%;           /* Base opal color */
     
-    --card: var(--pure-white);
-    --card-foreground: var(--dark-base);
+    /* Semantic Colors for Dark Mode */
+    --background: var(--bg-main);
+    --foreground: var(--text-primary);
     
-    --popover: var(--pure-white);
-    --popover-foreground: var(--dark-base);
+    --card: var(--bg-glass);
+    --card-foreground: var(--text-primary);
     
-    --primary: var(--brand-purple);
-    --primary-foreground: var(--pure-white);
-    --primary-glow: var(--light-purple);
+    --primary: var(--neon-cyan);
+    --primary-foreground: var(--bg-main);
     
-    --secondary: var(--brand-cyan);
-    --secondary-foreground: var(--pure-white);
-    --secondary-glow: var(--light-cyan);
+    --secondary: var(--neon-purple);
+    --secondary-foreground: var(--text-primary);
     
-    --accent: var(--brand-mint);
-    --accent-foreground: var(--dark-base);
-    --accent-glow: var(--light-mint);
+    --accent: var(--neon-mint);
+    --accent-foreground: var(--bg-main);
     
-    --score-highlight: var(--brand-yellow);
-    --score-highlight-foreground: var(--dark-base);
+    --muted: var(--bg-glass);
+    --muted-foreground: var(--text-secondary);
     
-    --muted: var(--light-cyan);
-    --muted-foreground: var(--dark-2);
-    
-    --destructive: var(--brand-orange);
-    --destructive-foreground: var(--pure-white);
-    
-    --border: 193 30% 90%;
-    --input: 193 30% 95%;
-    --ring: var(--brand-cyan);
+    --border: var(--border-glass);
+    --input: var(--bg-glass);
+    --ring: var(--neon-cyan);
     
     --radius: 1rem;
     
-    /* Custom Gradients */
-    --gradient-brand: linear-gradient(135deg, hsl(var(--brand-purple)), hsl(var(--brand-cyan)));
-    --gradient-accent: linear-gradient(135deg, hsl(var(--brand-mint)), hsl(var(--brand-lime)));
-    --gradient-glow: linear-gradient(135deg, hsl(var(--light-purple)), hsl(var(--light-cyan)));
-    --gradient-score: linear-gradient(135deg, hsl(var(--brand-yellow)), hsl(var(--brand-lime)));
+    /* Typography Scale for Ultra-Thin Numbers */
+    --font-display: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-condensed: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
     
-    /* Typography */
-    --font-display: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    /* Custom Gradients with Opal Effects */
+    --gradient-glow: radial-gradient(circle at 20% 20%, hsl(var(--neon-purple) / 0.15) 0%, transparent 30%), 
+                     radial-gradient(circle at 80% 70%, hsl(var(--neon-cyan) / 0.1) 0%, transparent 40%);
+    --gradient-opal: linear-gradient(135deg, 
+                     hsl(var(--neon-cyan) / 0.3) 0%, 
+                     hsl(var(--neon-purple) / 0.3) 25%,
+                     hsl(var(--neon-mint) / 0.3) 50%,
+                     hsl(var(--neon-lime) / 0.3) 75%,
+                     hsl(var(--neon-yellow) / 0.3) 100%);
     
-    /* Shadows */
-    --shadow-brand: 0 10px 40px -10px hsl(var(--brand-purple) / 0.3);
-    --shadow-glow: 0 0 40px hsl(var(--brand-cyan) / 0.2);
-    --shadow-card: 0 4px 20px -2px hsl(var(--dark-base) / 0.1);
+    /* Interactive Shadows */
+    --shadow-card: 0 4px 20px -2px hsl(var(--bg-main) / 0.8);
+    --shadow-hover: 0 10px 30px hsl(var(--bg-main) / 0.3), 0 0 20px hsl(var(--accent-glow) / 0.15);
+    --shadow-glow: 0 0 40px hsl(var(--neon-cyan) / 0.4);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-glow: opacity 0.3s ease, transform 0.3s ease;
   }
 
-  .dark {
-    --background: var(--dark-base);
-    --foreground: var(--pure-white);
-    
-    --card: var(--dark-1);
-    --card-foreground: var(--pure-white);
-    
-    --popover: var(--dark-1);
-    --popover-foreground: var(--pure-white);
-    
-    --primary: var(--brand-cyan);
-    --primary-foreground: var(--dark-base);
-    
-    --muted: var(--dark-2);
-    --muted-foreground: var(--light-cyan);
-    
-    --border: var(--dark-2);
-    --input: var(--dark-2);
-    --ring: var(--brand-cyan);
-    
-    --shadow-card: 0 4px 20px -2px hsl(var(--brand-purple) / 0.3);
+  /* Light mode fallback (keeping for theme toggle) */
+  .light {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --primary: var(--neon-purple);
+    --primary-foreground: 0 0% 98%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
   }
 }
 
@@ -126,6 +109,9 @@
     @apply bg-background text-foreground;
     font-family: var(--font-body);
     line-height: 1.6;
+    background: hsl(var(--bg-main));
+    background-image: var(--gradient-glow);
+    background-attachment: fixed;
   }
   
   /* Custom utility classes for the app */
@@ -137,39 +123,52 @@
     font-family: var(--font-body);
   }
   
-  .gradient-brand {
-    background: var(--gradient-brand);
-  }
-  
-  .gradient-accent {
-    background: var(--gradient-accent);
+  .font-condensed {
+    font-family: var(--font-condensed);
   }
   
   .gradient-glow {
     background: var(--gradient-glow);
   }
   
-  .gradient-score {
-    background: var(--gradient-score);
-  }
-  
-  .shadow-brand {
-    box-shadow: var(--shadow-brand);
-  }
-  
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
+  .gradient-opal {
+    background: var(--gradient-opal);
   }
   
   .shadow-card {
     box-shadow: var(--shadow-card);
   }
   
+  .shadow-hover {
+    box-shadow: var(--shadow-hover);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
   .transition-smooth {
     transition: var(--transition-smooth);
   }
   
+  .transition-glow {
+    transition: var(--transition-glow);
+  }
+  
   .transition-bounce {
     transition: var(--transition-bounce);
+  }
+  
+  /* Glass morphism effect */
+  .glass-card {
+    background: hsl(var(--bg-glass) / 0.6);
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    border: 1px solid hsl(var(--border-glass) / 0.2);
+  }
+  
+  /* Interactive hover effects */
+  .hover-glow:hover {
+    box-shadow: var(--shadow-glow);
   }
 }

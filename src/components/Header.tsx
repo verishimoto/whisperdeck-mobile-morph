@@ -10,41 +10,38 @@ interface HeaderProps {
 
 export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl">
-      <div className="container px-4 py-6 relative">
+    <header className="sticky top-0 z-50 w-full border-b border-glass-border bg-glass/80 backdrop-blur-xl">
+      <div className="container px-4 py-8 relative">
         {/* Theme Toggle - Positioned at top right */}
         <div className="absolute top-4 right-4 z-10">
           <ThemeToggle />
         </div>
 
         {/* Logo and Title */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gradient-brand rounded-xl mb-3 shadow-glow">
-            <span className="text-2xl">🔮</span>
-          </div>
-          <h1 className="text-2xl font-display font-extrabold bg-gradient-brand bg-clip-text text-transparent mb-2">
-            Hack Whisperer
+        <div className="text-center mb-8">
+          <h1 className="text-6xl md:text-8xl font-display font-ultra-thin text-text-title mb-4 tracking-tighter leading-none">
+            <span className="block md:inline">Prompt Hacks</span>
+            <span className="block md:inline text-4xl md:text-6xl font-light text-text-secondary ml-0 md:ml-4">
+              Master Grid
+            </span>
           </h1>
-          <p className="text-sm text-muted-foreground font-medium">
-            Top {totalPrompts} Most Unknown AI Prompting Techniques
+          <p className="text-lg md:text-xl text-text-secondary font-light max-w-4xl mx-auto leading-relaxed">
+            Elevate your prompt engineering with {totalPrompts}+ advanced hacks.<br className="hidden md:block" />
+            Discover, filter, and explore the most powerful techniques for AI creativity, control, and transformation.
           </p>
-          <div className="flex items-center justify-center gap-2 mt-2 text-xs text-muted-foreground">
-            <span className="px-2 py-1 bg-primary-glow rounded-full">September 2024</span>
-            <span>•</span>
-            <span>Mobile Optimized</span>
-            <span>•</span>
-            <span>Copyable Examples</span>
-          </div>
         </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        {/* Search Bar */}
+        <div className="relative max-w-2xl mx-auto">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <Search className="h-5 w-5 text-muted-foreground" />
+          </div>
           <Input
-            placeholder="Search hack prompts..."
+            type="text"
+            placeholder="Type to filter hacks..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10 h-12 text-base font-medium bg-muted/50 border-2 focus:border-primary transition-smooth"
+            className="pl-12 h-14 text-lg bg-glass/40 border-glass-border backdrop-blur-sm focus:bg-glass/60 transition-smooth rounded-2xl"
           />
         </div>
       </div>

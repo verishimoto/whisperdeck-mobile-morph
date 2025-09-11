@@ -33,7 +33,11 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-glow">
+    <div className="min-h-screen bg-background text-foreground" style={{
+      background: `hsl(var(--bg-main))`,
+      backgroundImage: `radial-gradient(circle at 20% 20%, rgba(126, 0, 255, 0.15) 0%, transparent 30%), 
+                        radial-gradient(circle at 80% 70%, rgba(0, 199, 255, 0.1) 0%, transparent 40%)`
+    }}>
       <Header 
         searchQuery={filters.search}
         onSearchChange={handleSearchChange}
