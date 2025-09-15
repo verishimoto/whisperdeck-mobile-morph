@@ -4,6 +4,9 @@ export interface HackPrompt {
   description: string;
   category: string;
   example: string;
+  advancedExample?: string;
+  whyHack?: string;
+  source?: string;
   score?: number;
 }
 

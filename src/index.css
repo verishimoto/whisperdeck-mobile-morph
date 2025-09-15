@@ -8,76 +8,86 @@
 */
 
 @layer base {
-  :root {
-    /* Dark Mode Base */
-    --bg-main: 236 57% 9%;                  /* #0D0C1D - Deep space blue */
-    --bg-glass: 236 47% 13%;                /* #17162A - Glass overlay */
-    --text-primary: 0 0% 97%;               /* #F3F3F3 - Off-white text */
-    --text-secondary: 203 23% 75%;          /* #B5CEDE - Light slate grey */
-    --text-title: 66 91% 70%;               /* #E7FF71 - Yellow-lime title */
-    
-    /* Neon Color Palette - Exact from user requirements */
-    --neon-purple: 270 100% 50%;            /* #7E00FF - Level 1 */
-    --neon-cyan: 193 100% 50%;              /* #00C7FF - Level 2 */
-    --neon-mint: 167 100% 78%;              /* #00FFC8 - Level 3 */
-    --neon-lime: 113 100% 50%;              /* #1CFF00 - Level 4 */
-    --neon-yellow: 66 100% 50%;             /* #DCFF00 - Level 5 */
-    --neon-orange: 19 100% 50%;             /* #FF5100 - Level 6 */
-    
-    /* Glass & Border Effects */
-    --border-glass: 270 60% 70%;            /* Purple border with transparency */
-    --accent-glow: 193 100% 50%;            /* Cyan glow */
-    --opal-overlay: 193 100% 50%;           /* Base opal color */
-    
-    /* Semantic Colors for Dark Mode */
-    --background: var(--bg-main);
-    --foreground: var(--text-primary);
-    
-    --card: var(--bg-glass);
-    --card-foreground: var(--text-primary);
-    
-    --primary: var(--neon-cyan);
-    --primary-foreground: var(--bg-main);
-    
-    --secondary: var(--neon-purple);
-    --secondary-foreground: var(--text-primary);
-    
-    --accent: var(--neon-mint);
-    --accent-foreground: var(--bg-main);
-    
-    --muted: var(--bg-glass);
-    --muted-foreground: var(--text-secondary);
-    
-    --border: var(--border-glass);
-    --input: var(--bg-glass);
-    --ring: var(--neon-cyan);
-    
-    --radius: 1rem;
-    
-    /* Typography Scale for Ultra-Thin Numbers */
-    --font-display: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-condensed: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
-    
-    /* Custom Gradients with Opal Effects */
-    --gradient-glow: radial-gradient(circle at 20% 20%, hsl(var(--neon-purple) / 0.15) 0%, transparent 30%), 
-                     radial-gradient(circle at 80% 70%, hsl(var(--neon-cyan) / 0.1) 0%, transparent 40%);
-    --gradient-opal: linear-gradient(135deg, 
-                     hsl(var(--neon-cyan) / 0.3) 0%, 
-                     hsl(var(--neon-purple) / 0.3) 25%,
-                     hsl(var(--neon-mint) / 0.3) 50%,
-                     hsl(var(--neon-lime) / 0.3) 75%,
-                     hsl(var(--neon-yellow) / 0.3) 100%);
-    
-    /* Interactive Shadows */
-    --shadow-card: 0 4px 20px -2px hsl(var(--bg-main) / 0.8);
-    --shadow-hover: 0 10px 30px hsl(var(--bg-main) / 0.3), 0 0 20px hsl(var(--accent-glow) / 0.15);
-    --shadow-glow: 0 0 40px hsl(var(--neon-cyan) / 0.4);
-    
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    --transition-glow: opacity 0.3s ease, transform 0.3s ease;
+        :root {
+            /* GitHub Desktop Gradient Palette */
+            --bg-main: 210 40% 7%;                 /* #0d1117 - GitHub dark */
+            --bg-glass: 210 33% 12%;               /* #161b22 - Glass overlay */
+            --border-glass: 0 0% 100%;             /* Glass borders */
+            --text-primary: 0 0% 100%;             /* Pure white text */
+            --text-secondary: 0 0% 70%;            /* Semi-transparent white */
+            --text-muted: 0 0% 50%;                /* Muted text */
+            
+            /* GitHub Gradient Colors */
+            --gradient-green: 152 36% 23%;         /* #1e4d3b */
+            --gradient-teal: 152 27% 28%;          /* #2d5a4d */
+            --gradient-blue: 206 45% 28%;          /* #1a4d6d */
+            --github-button: 210 17% 95%;          /* #f6f8fa */
+            --github-button-text: 210 11% 19%;     /* #24292f */
+            
+            /* High-Contrast Level Colors */
+            --level-ultra: 334 100% 51%;           /* #FF0066 - Hot Pink */
+            --level-master: 270 100% 50%;          /* #7E00FF - Electric Purple */
+            --level-advanced: 155 100% 53%;        /* #00FF88 - Bright Green */
+            --level-strategy: 180 100% 50%;        /* #00FFFF - Cyan */
+            --level-analysis: 51 100% 50%;         /* #FFD700 - Gold */
+            --level-creativity: 19 100% 60%;       /* #FF6B35 - Orange Red */
+            --level-psychology: 271 76% 53%;       /* #8A2BE2 - Blue Violet */
+            --level-essential: 123 96% 50%;        /* #32CD32 - Lime Green */
+            
+            /* Glass Effects */
+            --glass-bg: 210 33% 12%;
+            --glass-border: 0 0% 100%;
+            --glass-hover: 0 0% 100%;
+            
+            /* Cursor Effects */
+            --cursor-glow: 0 0% 100%;
+            --accent-glow: 193 100% 50%;
+            
+            /* Semantic Colors for Dark Mode */
+            --background: var(--bg-main);
+            --foreground: var(--text-primary);
+            
+            --card: var(--bg-glass);
+            --card-foreground: var(--text-primary);
+            
+            --primary: var(--level-strategy);
+            --primary-foreground: var(--bg-main);
+            
+            --secondary: var(--level-master);
+            --secondary-foreground: var(--text-primary);
+            
+            --accent: var(--level-advanced);
+            --accent-foreground: var(--bg-main);
+            
+            --muted: var(--bg-glass);
+            --muted-foreground: var(--text-secondary);
+            
+            --border: var(--border-glass);
+            --input: var(--bg-glass);
+            --ring: var(--level-strategy);
+            
+            --radius: 1rem;
+            
+            /* Typography */
+            --font-display: 'Helvetica Neue', 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-condensed: 'Inter Tight', 'Helvetica Neue', sans-serif;
+            
+            /* Shadows */
+            --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px hsl(var(--cursor-glow) / 0.15);
+            
+            /* Border Radius System */
+            --radius-sm: 0.25rem; /* 4px */
+            --radius-md: 0.5rem;  /* 8px */
+            --radius-lg: 0.75rem; /* 12px */
+            --radius-card: 1rem;  /* 16px - cards only */
+            
+            /* Transitions */
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-glow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-bounce: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
   }
 
   /* Light mode fallback (keeping for theme toggle) */
@@ -106,15 +116,54 @@
   }
 
   body {
-    @apply bg-background text-foreground;
     font-family: var(--font-body);
-    line-height: 1.6;
     background: hsl(var(--bg-main));
-    background-image: var(--gradient-glow);
+    color: hsl(var(--text-primary));
+    cursor: none; /* Hide default cursor for custom implementation */
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* GitHub Desktop Gradient Background */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+      radial-gradient(ellipse at 20% 20%, rgba(30, 77, 59, 0.6) 0%, rgba(13, 17, 23, 0.9) 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(26, 77, 109, 0.4) 0%, rgba(13, 17, 23, 0.9) 50%),
+      hsl(var(--bg-main));
     background-attachment: fixed;
+    z-index: -1;
+    pointer-events: none;
   }
   
-  /* Custom utility classes for the app */
+  /* Custom Cursor */
+  #custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.2) 70%, transparent 100%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease-out;
+    backdrop-filter: blur(2px);
+  }
+
+  #custom-cursor.hover {
+    transform: scale(2);
+    background: radial-gradient(circle, hsl(var(--cursor-glow) / 0.15) 0%, transparent 70%);
+  }
+
+  #custom-cursor.click {
+    transform: scale(0.8);
+  }
+
+  /* Typography System */
   .font-display {
     font-family: var(--font-display);
   }
@@ -127,12 +176,16 @@
     font-family: var(--font-condensed);
   }
   
-  .gradient-glow {
-    background: var(--gradient-glow);
+  .font-ultra-thin {
+    font-weight: 100;
+    font-stretch: condensed;
+    letter-spacing: -0.02em;
   }
   
-  .gradient-opal {
-    background: var(--gradient-opal);
+  .text-number-massive {
+    font-size: clamp(3rem, 8vw, 6rem);
+    line-height: 0.8;
+    font-weight: 100;
   }
   
   .shadow-card {
@@ -161,14 +214,9 @@
   
   /* Glass morphism effect */
   .glass-card {
-    background: hsl(var(--bg-glass) / 0.6);
-    backdrop-filter: blur(12px) saturate(150%);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
-    border: 1px solid hsl(var(--border-glass) / 0.2);
-  }
-  
-  /* Interactive hover effects */
-  .hover-glow:hover {
-    box-shadow: var(--shadow-glow);
+    background: hsl(var(--glass-bg) / 0.3);
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border: 1px solid hsl(var(--glass-border) / 0.1);
   }
 }

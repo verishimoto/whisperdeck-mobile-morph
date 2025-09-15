@@ -16,42 +16,60 @@ const getCategoryColor = (category: string) => {
     border: string;
     hover: string;
   }> = {
+    'Ultra': {
+      text: 'text-level-ultra',
+      bg: 'bg-level-ultra/10',
+      border: 'border-level-ultra/30',
+      hover: 'hover:border-level-ultra/50'
+    },
+    'Master': {
+      text: 'text-level-master',
+      bg: 'bg-level-master/10', 
+      border: 'border-level-master/30',
+      hover: 'hover:border-level-master/50'
+    },
     'Advanced': {
-      text: 'text-neon-purple',
-      bg: 'bg-neon-purple/10',
-      border: 'border-neon-purple/20',
-      hover: 'hover:border-neon-purple/30'
-    },
-    'Analysis': {
-      text: 'text-neon-cyan',
-      bg: 'bg-neon-cyan/10',
-      border: 'border-neon-cyan/20',
-      hover: 'hover:border-neon-cyan/30'
-    },
-    'Creativity': {
-      text: 'text-neon-mint',
-      bg: 'bg-neon-mint/10',
-      border: 'border-neon-mint/20',
-      hover: 'hover:border-neon-mint/30'
+      text: 'text-level-advanced',
+      bg: 'bg-level-advanced/10',
+      border: 'border-level-advanced/30',
+      hover: 'hover:border-level-advanced/50'
     },
     'Strategy': {
-      text: 'text-neon-lime',
-      bg: 'bg-neon-lime/10',
-      border: 'border-neon-lime/20',
-      hover: 'hover:border-neon-lime/30'
+      text: 'text-level-strategy',
+      bg: 'bg-level-strategy/10',
+      border: 'border-level-strategy/30',
+      hover: 'hover:border-level-strategy/50'
+    },
+    'Analysis': {
+      text: 'text-level-analysis',
+      bg: 'bg-level-analysis/10',
+      border: 'border-level-analysis/30',
+      hover: 'hover:border-level-analysis/50'
+    },
+    'Creativity': {
+      text: 'text-level-creativity',
+      bg: 'bg-level-creativity/10',
+      border: 'border-level-creativity/30',
+      hover: 'hover:border-level-creativity/50'
     },
     'Psychology': {
-      text: 'text-neon-yellow',
-      bg: 'bg-neon-yellow/10',
-      border: 'border-neon-yellow/20',
-      hover: 'hover:border-neon-yellow/30'
+      text: 'text-level-psychology',
+      bg: 'bg-level-psychology/10',
+      border: 'border-level-psychology/30',
+      hover: 'hover:border-level-psychology/50'
+    },
+    'Essential': {
+      text: 'text-level-essential',
+      bg: 'bg-level-essential/10',
+      border: 'border-level-essential/30', 
+      hover: 'hover:border-level-essential/50'
     }
   };
-  return categoryMap[category] || categoryMap['Analysis']; // Default to cyan
+  return categoryMap[category] || categoryMap['Analysis'];
 };
 const getScoreFromId = (id: number) => {
-  // Convert ID (1-100) to score (100-1) - reverse ranking
-  return 101 - id;
+  // Use ID directly as ranking (1-250)
+  return id;
 };
 export function PromptCard({
   prompt,
@@ -83,96 +101,174 @@ export function PromptCard({
       });
     }
   };
-  return <Card className={`group relative overflow-hidden transition-smooth animate-slide-up hover:shadow-hover glass-card ${expanded ? categoryStyles.border : ''} ${categoryStyles.hover}`} style={{
-    animationDelay: `${index * 0.1}s`
-  }}>
-      {/* Radial Gradient Overlay for Hover Effect */}
-      <div className="radial-gradient-overlay absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-glow" style={{
-      background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(--accent-glow) / 0.15) 0%, transparent 40%)`
-    }} />
+
+  const handleCopyExample = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied!",
+        description: "Example copied to clipboard"
+      });
+    } catch (err) {
+      toast({
+        title: "Failed to copy",
+        description: "Please select and copy manually",
+        variant: "destructive"
+      });
+    }
+  };
+  return <Card 
+    className={`group relative overflow-hidden transition-all duration-500 animate-slide-up glass-card border-2 ${categoryStyles.border} ${categoryStyles.hover}`} 
+    style={{
+      animationDelay: `${index * 0.05}s`,
+      background: 'var(--glass-bg)',
+      backdropFilter: 'blur(20px) saturate(150%)',
+      borderRadius: 'var(--radius-card)',
+    }}
+    data-cursor="hover"
+  >
+      {/* Interactive Cursor Glow Overlay */}
+      <div className="absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-all duration-300" 
+        style={{
+          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--cursor-glow) 0%, transparent 40%)`
+        }} 
+      />
       
       <CardContent className="p-6 relative z-10">
         {/* Header with Score and Toggle */}
-        <div className="flex items-start justify-between mb-6">
-          {/* Score Display - Ultra-thin massive number */}
-          <div className="flex items-baseline gap-3">
-            <span className="text-number-xs font-light text-muted-foreground/60">#</span>
-            <span className={`text-number-massive font-ultra-thin font-display leading-none tracking-tighter ${categoryStyles.text} opacity-80`} style={{
-            letterSpacing: '-0.02em'
-          }}>
-              {score}
-            </span>
+        <div className="flex items-start justify-between mb-4">
+          {/* Left Column: Number + Title */}
+          <div className="flex items-start gap-4 flex-1">
+            {/* Ultra-thin massive number */}
+            <div className="flex flex-col items-start">
+              <span className={`font-ultra-thin font-condensed text-number-massive leading-none ${categoryStyles.text}`} style={{
+                letterSpacing: '-0.03em',
+                fontStretch: 'condensed'
+              }}>
+                {score}
+              </span>
+            </div>
+            
+            {/* Title */}
+            <div className="flex-1 pt-1">
+              <h3 className={`font-condensed font-medium text-xl leading-tight text-white group-hover:${categoryStyles.text} transition-smooth`}>
+                {prompt.title}
+              </h3>
+            </div>
           </div>
           
-          {/* Toggle Button */}
-          <Button onClick={() => setExpanded(!expanded)} size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10 transition-smooth">
-            {expanded ? <ChevronUp className="h-4 w-4 text-primary" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+          {/* Toggle Button - Larger and Aligned Right */}
+          <Button 
+            onClick={() => setExpanded(!expanded)} 
+            size="sm" 
+            variant="ghost" 
+            className="h-10 w-10 p-0 hover:bg-white/10 transition-smooth flex-shrink-0"
+          >
+            {expanded ? (
+              <ChevronUp className={`h-6 w-6 ${categoryStyles.text}`} />
+            ) : (
+              <ChevronDown className="h-6 w-6 text-white/60" />
+            )}
           </Button>
         </div>
 
-        {/* Title */}
-        <h3 className={`text-title-lg font-condensed font-medium text-foreground mb-3 group-hover:${categoryStyles.text} transition-smooth`}>
-          {prompt.title}
-        </h3>
-
-        {/* Description - Always visible */}
-        <p className="text-muted-foreground font-medium mb-4 leading-relaxed">
+        {/* Description - Larger and Always visible */}
+        <p className="text-white/80 font-normal text-lg mb-4 leading-relaxed" style={{ lineHeight: '1.4' }}>
           {prompt.description}
         </p>
 
-        {/* Category Badge */}
+        {/* Category Badge - Smaller radius */}
         <div className="mb-4">
-          <Badge className={`${categoryStyles.bg} ${categoryStyles.text} ${categoryStyles.border} border font-semibold px-3 py-1 text-xs rounded-lg`}>
+          <Badge className={`${categoryStyles.bg} ${categoryStyles.text} ${categoryStyles.border} border font-semibold px-3 py-1 text-sm`} style={{ borderRadius: 'var(--radius-sm)' }}>
             {prompt.category}
           </Badge>
         </div>
 
         {/* Expandable Content */}
-        <div className={`overflow-hidden transition-all duration-500 ease-out ${expanded ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-          <div className="space-y-4 pt-4 border-t border-border/30">
-            {/* Basic Example */}
-            <div>
-              <h4 className="text-sm font-condensed font-bold text-foreground uppercase tracking-wider mb-2">
-                Basic Example
-              </h4>
-              <div className="bg-muted/20 rounded-lg p-3 text-sm leading-relaxed border border-border/30">
-                <code className="text-foreground/90">Given this background, answer the question.</code>
+        <div className={`overflow-hidden transition-all duration-500 ease-out ${expanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}>
+          <div className="space-y-4 pt-4 border-t border-white/10">
+            
+            {/* Basic Example - No border, integrated */}
+            <div className="bg-black/15 p-4 text-white/90 leading-relaxed cursor-pointer group/copy" 
+              onClick={() => handleCopyExample(prompt.example)}
+              title="Click to copy this example"
+              style={{ borderRadius: 'var(--radius-sm)' }}
+            >
+              <div className="flex justify-between items-start">
+                <div>
+                  <p className="font-medium mb-1 text-white">Basic Example</p>
+                  <code className="text-sm">{prompt.example}</code>
+                </div>
+                <Copy className="h-4 w-4 opacity-60 group-hover/copy:opacity-100 transition-opacity" />
               </div>
             </div>
 
-            {/* Advanced Example */}
-            <div>
-              <h4 className="text-sm font-condensed font-bold text-foreground uppercase tracking-wider mb-2">
-                Advanced Example
-              </h4>
-              <div className="bg-muted/20 rounded-lg p-3 text-sm leading-relaxed border border-border/30">
-                
+            {/* Advanced Example - No border, integrated */}
+            {prompt.advancedExample && (
+              <div className="bg-black/15 p-4 text-white/90 leading-relaxed cursor-pointer group/copy" 
+                onClick={() => handleCopyExample(prompt.advancedExample || '')}
+                title="Click to copy this example"
+                style={{ borderRadius: 'var(--radius-sm)' }}
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <p className="font-medium mb-1 text-white">Advanced Example</p>
+                    <code className="text-sm">{prompt.advancedExample}</code>
+                  </div>
+                  <Copy className="h-4 w-4 opacity-60 group-hover/copy:opacity-100 transition-opacity" />
+                </div>
               </div>
-            </div>
+            )}
 
-            {/* Why This is Hack */}
-            <div className={`${categoryStyles.bg.replace('/10', '/5')} ${categoryStyles.border} border rounded-lg p-4`}>
-              <h4 className="text-sm font-condensed font-bold text-foreground uppercase tracking-wider mb-2">
-                Why this is hack?
-              </h4>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                Guides the model to use specific information, reducing hallucinations and increasing relevance.
-              </p>
+            {/* Why This is Hack - Showstopper styling */}
+            <div className={`${categoryStyles.bg} border-2 ${categoryStyles.border} p-4 relative overflow-hidden`} 
+              style={{ borderRadius: 'var(--radius-md)' }}
+            >
+              {/* White overlay for title */}
+              <div className="absolute inset-0 bg-white/5 pointer-events-none"></div>
+              <div className="relative">
+                <h4 className="font-condensed font-bold text-white uppercase tracking-wider mb-3 text-sm">
+                  Why this is hack?
+                </h4>
+                <p className="text-white/90 leading-relaxed">
+                  {prompt.whyHack || 'Advanced prompt engineering technique that enhances AI model performance through strategic instruction design.'}
+                </p>
+              </div>
             </div>
 
             {/* Source & Copy */}
             <div className="flex items-center justify-between pt-2">
-              <a href="https://arxiv.org/abs/2302.00923" target="_blank" rel="noopener noreferrer" className={`text-sm font-medium ${categoryStyles.text} hover:opacity-80 transition-smooth underline`}>
+              <a 
+                href={prompt.source || 'https://arxiv.org/abs/2302.00923'} 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className={`${categoryStyles.text} hover:opacity-80 transition-smooth text-sm font-semibold flex items-center gap-1`}
+              >
                 Source
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
               </a>
               
               <div className="flex items-center gap-2">
-                {copyCount > 0 && <span className="text-xs text-muted-foreground bg-muted/20 px-2 py-1 rounded border">
+                {copyCount > 0 && (
+                  <span className="text-xs text-white/60 bg-white/10 px-2 py-1 border" style={{ borderRadius: 'var(--radius-sm)' }}>
                     Copied {copyCount}x
-                  </span>}
-                <Button onClick={handleCopy} size="sm" variant="ghost" className={`h-8 px-3 transition-smooth ${categoryStyles.bg.replace('/10', '/5')} hover:${categoryStyles.bg}`}>
-                  {copied ? <Check className={`h-4 w-4 ${categoryStyles.text}`} /> : <Copy className="h-4 w-4" />}
-                  <span className="ml-2 text-xs">Copy</span>
+                  </span>
+                )}
+                <Button 
+                  onClick={handleCopy} 
+                  size="sm" 
+                  variant="ghost" 
+                  className={`h-8 px-3 transition-smooth ${categoryStyles.bg} hover:${categoryStyles.bg.replace('/10', '/20')} text-lg font-semibold`}
+                  style={{ borderRadius: 'var(--radius-sm)' }}
+                >
+                  {copied ? (
+                    <Check className={`h-4 w-4 ${categoryStyles.text}`} />
+                  ) : (
+                    <Copy className="h-4 w-4 text-white/70" />
+                  )}
+                  <span className="ml-2">Copy</span>
                 </Button>
               </div>
             </div>

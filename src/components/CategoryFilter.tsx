@@ -1,43 +1,47 @@
 import { Badge } from "@/components/ui/badge";
 
 interface CategoryFilterProps {
-  categories: string[];
-  selectedCategory: string;
-  onCategoryChange: (category: string) => void;
+  selectedCategory: string | null;
+  onCategoryChange: (category: string | null) => void;
 }
 
-export function CategoryFilter({ categories, selectedCategory, onCategoryChange }: CategoryFilterProps) {
+export function CategoryFilter({ selectedCategory, onCategoryChange }: CategoryFilterProps) {
+  const categories = [
+    { name: "All", count: 250, color: "text-white" },
+    { name: "Ultra", count: 5, color: "text-level-ultra" },
+    { name: "Master", count: 15, color: "text-level-master" },
+    { name: "Advanced", count: 30, color: "text-level-advanced" },
+    { name: "Strategy", count: 50, color: "text-level-strategy" },
+    { name: "Analysis", count: 50, color: "text-level-analysis" },
+    { name: "Creativity", count: 50, color: "text-level-creativity" },
+    { name: "Psychology", count: 25, color: "text-level-psychology" },
+    { name: "Essential", count: 25, color: "text-level-essential" }
+  ];
+
   return (
-    <div className="sticky top-[120px] z-40 bg-background/80 backdrop-blur-xl border-b pb-4 mb-6">
-      <div className="container px-4">
-        <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-          <Badge
-            variant={selectedCategory === "" ? "default" : "secondary"}
-            className={`cursor-pointer whitespace-nowrap transition-bounce hover:scale-105 ${
-              selectedCategory === "" 
-                ? "bg-primary text-primary-foreground shadow-brand" 
-                : "hover:bg-primary/10"
+    <div className="flex gap-3 justify-center overflow-x-auto pb-2 scrollbar-hide px-4">
+      {categories.map((category) => {
+        const isActive = selectedCategory === category.name || (selectedCategory === null && category.name === "All");
+        return (
+          <button
+            key={category.name}
+            onClick={() => onCategoryChange(category.name === "All" ? null : category.name)}
+            className={`whitespace-nowrap flex items-center gap-2 hover:scale-105 transition-all duration-300 font-semibold text-lg px-6 py-3 border-2 ${
+              isActive 
+                ? `${category.color} bg-white/10 border-current` 
+                : `${category.color} border-current/30 bg-transparent hover:bg-white/5`
             }`}
-            onClick={() => onCategoryChange("")}
+            style={{ 
+              borderRadius: 'var(--radius-md)',
+              backdropFilter: 'blur(10px)'
+            }}
+            data-cursor="hover"
           >
-            All ({categories.length + 1})
-          </Badge>
-          {categories.map((category) => (
-            <Badge
-              key={category}
-              variant={selectedCategory === category ? "default" : "secondary"}
-              className={`cursor-pointer whitespace-nowrap transition-bounce hover:scale-105 ${
-                selectedCategory === category 
-                  ? "bg-primary text-primary-foreground shadow-brand" 
-                  : "hover:bg-primary/10"
-              }`}
-              onClick={() => onCategoryChange(category)}
-            >
-              {category}
-            </Badge>
-          ))}
-        </div>
-      </div>
+            {category.name}
+            <span className="text-sm opacity-70">({category.count})</span>
+          </button>
+        );
+      })}
     </div>
   );
 }

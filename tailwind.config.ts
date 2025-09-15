@@ -47,26 +47,33 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        /* Neon Color System - Exact from user palette */
-        neon: {
-          purple: 'hsl(270, 100%, 50%)',    /* #7E00FF */
-          cyan: 'hsl(193, 100%, 50%)',      /* #00C7FF */
-          mint: 'hsl(167, 100%, 78%)',      /* #00FFC8 */
-          lime: 'hsl(113, 100%, 50%)',      /* #1CFF00 */
-          yellow: 'hsl(66, 100%, 50%)',     /* #DCFF00 */
-          orange: 'hsl(19, 100%, 50%)',     /* #FF5100 */
+        /* GitHub Desktop Inspired Palette */
+        github: {
+          dark: '#0d1117',
+          card: '#161b22', 
+          green: '#1e4d3b',
+          teal: '#2d5a4d',
+          blue: '#1a4d6d',
+          button: '#f6f8fa',
+          'button-text': '#24292f',
         },
-        /* Level-based Color System */
+        
+        /* High-Contrast Level Colors */
         level: {
-          'advanced': 'hsl(270, 100%, 50%)',     /* #7E00FF - Purple */
-          'analysis': 'hsl(193, 100%, 50%)',     /* #00C7FF - Cyan */
-          'creativity': 'hsl(167, 100%, 78%)',   /* #00FFC8 - Mint */
-          'strategy': 'hsl(113, 100%, 50%)',     /* #1CFF00 - Lime */
-          'psychology': 'hsl(66, 100%, 50%)',    /* #DCFF00 - Yellow */
+          'ultra': '#FF0066',      /* Hot Pink */
+          'master': '#7E00FF',     /* Electric Purple */
+          'advanced': '#00FF88',   /* Bright Green */
+          'strategy': '#00FFFF',   /* Cyan */
+          'analysis': '#FFD700',   /* Gold */
+          'creativity': '#FF6B35', /* Orange Red */
+          'psychology': '#8A2BE2', /* Blue Violet */
+          'essential': '#32CD32',  /* Lime Green */
         },
+        
         /* Glass Effects */
-        'glass': 'hsl(var(--bg-glass) / 0.6)',
-        'glass-border': 'hsl(var(--border-glass) / 0.2)',
+        'glass': 'rgba(22, 27, 34, 0.3)',
+        'glass-border': 'rgba(255, 255, 255, 0.1)',
+        'glass-hover': 'rgba(255, 255, 255, 0.05)',
       },
       borderRadius: {
         lg: "var(--radius)",

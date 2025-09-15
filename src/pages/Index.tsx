@@ -45,7 +45,6 @@ const Index = () => {
       />
       
       <CategoryFilter
-        categories={categories}
         selectedCategory={filters.category}
         onCategoryChange={handleCategoryChange}
       />
