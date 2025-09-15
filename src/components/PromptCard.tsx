@@ -5,12 +5,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { HackPrompt } from "@/types";
-
 interface PromptCardProps {
   prompt: HackPrompt;
   index: number;
 }
-
 const getCategoryColor = (category: string) => {
   const categoryMap: Record<string, {
     text: string;
@@ -26,7 +24,7 @@ const getCategoryColor = (category: string) => {
     },
     'Analysis': {
       text: 'text-neon-cyan',
-      bg: 'bg-neon-cyan/10', 
+      bg: 'bg-neon-cyan/10',
       border: 'border-neon-cyan/20',
       hover: 'hover:border-neon-cyan/30'
     },
@@ -47,25 +45,26 @@ const getCategoryColor = (category: string) => {
       bg: 'bg-neon-yellow/10',
       border: 'border-neon-yellow/20',
       hover: 'hover:border-neon-yellow/30'
-    },
+    }
   };
   return categoryMap[category] || categoryMap['Analysis']; // Default to cyan
 };
-
 const getScoreFromId = (id: number) => {
   // Convert ID (1-100) to score (100-1) - reverse ranking
   return 101 - id;
 };
-
-export function PromptCard({ prompt, index }: PromptCardProps) {
+export function PromptCard({
+  prompt,
+  index
+}: PromptCardProps) {
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [copyCount, setCopyCount] = useState(0);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const categoryStyles = getCategoryColor(prompt.category);
   const score = getScoreFromId(prompt.id);
-
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(prompt.example);
@@ -73,30 +72,24 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
       setCopyCount(prev => prev + 1);
       toast({
         title: "Copied!",
-        description: "Prompt example copied to clipboard",
+        description: "Prompt example copied to clipboard"
       });
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       toast({
         title: "Failed to copy",
         description: "Please select and copy manually",
-        variant: "destructive",
+        variant: "destructive"
       });
     }
   };
-
-  return (
-    <Card 
-      className={`group relative overflow-hidden transition-smooth animate-slide-up hover:shadow-hover glass-card ${expanded ? categoryStyles.border : ''} ${categoryStyles.hover}`}
-      style={{ animationDelay: `${index * 0.1}s` }}
-    >
+  return <Card className={`group relative overflow-hidden transition-smooth animate-slide-up hover:shadow-hover glass-card ${expanded ? categoryStyles.border : ''} ${categoryStyles.hover}`} style={{
+    animationDelay: `${index * 0.1}s`
+  }}>
       {/* Radial Gradient Overlay for Hover Effect */}
-      <div 
-        className="radial-gradient-overlay absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-glow"
-        style={{
-          background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(--accent-glow) / 0.15) 0%, transparent 40%)`
-        }}
-      />
+      <div className="radial-gradient-overlay absolute inset-0 pointer-events-none opacity-0 group-hover:opacity-100 transition-glow" style={{
+      background: `radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(--accent-glow) / 0.15) 0%, transparent 40%)`
+    }} />
       
       <CardContent className="p-6 relative z-10">
         {/* Header with Score and Toggle */}
@@ -104,26 +97,16 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           {/* Score Display - Ultra-thin massive number */}
           <div className="flex items-baseline gap-3">
             <span className="text-number-xs font-light text-muted-foreground/60">#</span>
-            <span 
-              className={`text-number-massive font-ultra-thin font-display leading-none tracking-tighter ${categoryStyles.text} opacity-80`}
-              style={{ letterSpacing: '-0.02em' }}
-            >
+            <span className={`text-number-massive font-ultra-thin font-display leading-none tracking-tighter ${categoryStyles.text} opacity-80`} style={{
+            letterSpacing: '-0.02em'
+          }}>
               {score}
             </span>
           </div>
           
           {/* Toggle Button */}
-          <Button
-            onClick={() => setExpanded(!expanded)}
-            size="sm"
-            variant="ghost"
-            className="h-8 w-8 p-0 hover:bg-primary/10 transition-smooth"
-          >
-            {expanded ? (
-              <ChevronUp className="h-4 w-4 text-primary" />
-            ) : (
-              <ChevronDown className="h-4 w-4 text-muted-foreground" />
-            )}
+          <Button onClick={() => setExpanded(!expanded)} size="sm" variant="ghost" className="h-8 w-8 p-0 hover:bg-primary/10 transition-smooth">
+            {expanded ? <ChevronUp className="h-4 w-4 text-primary" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
           </Button>
         </div>
 
@@ -139,9 +122,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
         {/* Category Badge */}
         <div className="mb-4">
-          <Badge 
-            className={`${categoryStyles.bg} ${categoryStyles.text} ${categoryStyles.border} border font-semibold px-3 py-1 text-xs rounded-lg`}
-          >
+          <Badge className={`${categoryStyles.bg} ${categoryStyles.text} ${categoryStyles.border} border font-semibold px-3 py-1 text-xs rounded-lg`}>
             {prompt.category}
           </Badge>
         </div>
@@ -165,7 +146,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
                 Advanced Example
               </h4>
               <div className="bg-muted/20 rounded-lg p-3 text-sm leading-relaxed border border-border/30">
-                <code className="text-foreground/90">{prompt.example}</code>
+                
               </div>
             </div>
 
@@ -181,32 +162,16 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
             {/* Source & Copy */}
             <div className="flex items-center justify-between pt-2">
-              <a 
-                href="https://arxiv.org/abs/2302.00923" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`text-sm font-medium ${categoryStyles.text} hover:opacity-80 transition-smooth underline`}
-              >
+              <a href="https://arxiv.org/abs/2302.00923" target="_blank" rel="noopener noreferrer" className={`text-sm font-medium ${categoryStyles.text} hover:opacity-80 transition-smooth underline`}>
                 Source
               </a>
               
               <div className="flex items-center gap-2">
-                {copyCount > 0 && (
-                  <span className="text-xs text-muted-foreground bg-muted/20 px-2 py-1 rounded border">
+                {copyCount > 0 && <span className="text-xs text-muted-foreground bg-muted/20 px-2 py-1 rounded border">
                     Copied {copyCount}x
-                  </span>
-                )}
-                <Button
-                  onClick={handleCopy}
-                  size="sm"
-                  variant="ghost"
-                  className={`h-8 px-3 transition-smooth ${categoryStyles.bg.replace('/10', '/5')} hover:${categoryStyles.bg}`}
-                >
-                  {copied ? (
-                    <Check className={`h-4 w-4 ${categoryStyles.text}`} />
-                  ) : (
-                    <Copy className="h-4 w-4" />
-                  )}
+                  </span>}
+                <Button onClick={handleCopy} size="sm" variant="ghost" className={`h-8 px-3 transition-smooth ${categoryStyles.bg.replace('/10', '/5')} hover:${categoryStyles.bg}`}>
+                  {copied ? <Check className={`h-4 w-4 ${categoryStyles.text}`} /> : <Copy className="h-4 w-4" />}
                   <span className="ml-2 text-xs">Copy</span>
                 </Button>
               </div>
@@ -214,6 +179,5 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 }
