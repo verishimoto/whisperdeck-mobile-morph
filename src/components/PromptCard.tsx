@@ -141,9 +141,10 @@ export function PromptCard({
           <div className="flex items-start gap-4 flex-1">
             {/* Ultra-thin massive number */}
             <div className="flex flex-col items-start">
-              <span className={`font-ultra-thin font-condensed text-number-massive leading-none ${categoryStyles.text}`} style={{
-                letterSpacing: '-0.03em',
-                fontStretch: 'condensed'
+              <span className={`font-ultra-thin font-display text-number-massive leading-none ${categoryStyles.text}`} style={{
+                letterSpacing: '-0.05em',
+                fontStretch: 'ultra-condensed',
+                fontWeight: '100'
               }}>
                 {score}
               </span>
@@ -151,7 +152,12 @@ export function PromptCard({
             
             {/* Title */}
             <div className="flex-1 pt-1">
-              <h3 className={`font-condensed font-medium text-xl leading-tight text-white group-hover:${categoryStyles.text} transition-smooth`} style={{ lineHeight: '1.1' }}>
+              <h3 className={`font-display font-light text-xl leading-tight ${categoryStyles.text} transition-smooth`} style={{ 
+                lineHeight: '1.1',
+                letterSpacing: '0.02em',
+                fontWeight: '300',
+                textTransform: 'none'
+              }}>
                 {prompt.title}
               </h3>
             </div>

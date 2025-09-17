@@ -187,8 +187,8 @@
   
   .font-ultra-thin {
     font-weight: 100;
-    font-stretch: condensed;
-    letter-spacing: -0.02em;
+    font-stretch: ultra-condensed;
+    letter-spacing: -0.05em;
   }
   
   .text-number-massive {
