@@ -151,7 +151,7 @@ export function PromptCard({
             
             {/* Title */}
             <div className="flex-1 pt-1">
-              <h3 className={`font-condensed font-medium text-xl leading-tight text-white group-hover:${categoryStyles.text} transition-smooth`}>
+              <h3 className={`font-condensed font-medium text-xl leading-tight text-white group-hover:${categoryStyles.text} transition-smooth`} style={{ lineHeight: '1.1' }}>
                 {prompt.title}
               </h3>
             </div>
@@ -165,16 +165,16 @@ export function PromptCard({
             className="h-10 w-10 p-0 hover:bg-white/10 transition-smooth flex-shrink-0"
           >
             {expanded ? (
-              <ChevronUp className={`h-6 w-6 ${categoryStyles.text}`} />
+              <ChevronUp className={`h-8 w-8 ${categoryStyles.text} hover:scale-110 transition-transform`} />
             ) : (
-              <ChevronDown className="h-6 w-6 text-white/60" />
+              <ChevronDown className="h-8 w-8 text-white/60 hover:text-white transition-colors" />
             )}
           </Button>
         </div>
 
         {/* Description - Larger and Always visible */}
-        <p className="text-white/80 font-normal text-lg mb-4 leading-relaxed" style={{ lineHeight: '1.4' }}>
-          {prompt.description}
+        <p className="text-white/85 font-normal text-lg mb-4 leading-relaxed font-condensed" style={{ lineHeight: '1.3' }}>
+          {prompt.description.replace(/→/g, '→')}
         </p>
 
         {/* Category Badge - Smaller radius */}
@@ -197,7 +197,7 @@ export function PromptCard({
               <div className="flex justify-between items-start">
                 <div>
                   <p className="font-medium mb-1 text-white">Basic Example</p>
-                  <code className="text-sm">{prompt.example}</code>
+                  <code className="text-sm">{prompt.example.replace(/→/g, '→')}</code>
                 </div>
                 <Copy className="h-4 w-4 opacity-60 group-hover/copy:opacity-100 transition-opacity" />
               </div>
@@ -213,7 +213,7 @@ export function PromptCard({
                 <div className="flex justify-between items-start">
                   <div>
                     <p className="font-medium mb-1 text-white">Advanced Example</p>
-                    <code className="text-sm">{prompt.advancedExample}</code>
+                    <code className="text-sm">{prompt.advancedExample?.replace(/→/g, '→')}</code>
                   </div>
                   <Copy className="h-4 w-4 opacity-60 group-hover/copy:opacity-100 transition-opacity" />
                 </div>
@@ -242,10 +242,10 @@ export function PromptCard({
                 href={prompt.source || 'https://arxiv.org/abs/2302.00923'} 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className={`${categoryStyles.text} hover:opacity-80 transition-smooth text-sm font-semibold flex items-center gap-1`}
+                className={`${categoryStyles.text} hover:opacity-80 transition-smooth text-base font-semibold flex items-center gap-1`}
               >
                 Source
-                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </a>
@@ -260,13 +260,13 @@ export function PromptCard({
                   onClick={handleCopy} 
                   size="sm" 
                   variant="ghost" 
-                  className={`h-8 px-3 transition-smooth ${categoryStyles.bg} hover:${categoryStyles.bg.replace('/10', '/20')} text-lg font-semibold`}
+                  className={`h-8 px-3 transition-smooth hover:bg-transparent text-base font-semibold ${copied ? categoryStyles.text : 'text-white/70 hover:' + categoryStyles.text}`}
                   style={{ borderRadius: 'var(--radius-sm)' }}
                 >
                   {copied ? (
                     <Check className={`h-4 w-4 ${categoryStyles.text}`} />
                   ) : (
-                    <Copy className="h-4 w-4 text-white/70" />
+                    <Copy className="h-4 w-4" />
                   )}
                   <span className="ml-2">Copy</span>
                 </Button>

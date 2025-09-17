@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProps) {
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-glass-border bg-glass/80 backdrop-blur-xl">
+    <header className="w-full">
       <div className="container px-4 py-8 relative">
         {/* Theme Toggle - Positioned at top right */}
         <div className="absolute top-4 right-4 z-10">
@@ -21,11 +21,11 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
         <div className="text-center mb-8">
           <h1 className="text-6xl md:text-8xl font-display font-ultra-thin text-text-title mb-4 tracking-tighter leading-none">
             <span className="block md:inline">Prompt Hacks</span>
-            <span className="block md:inline text-4xl md:text-6xl font-light text-text-secondary ml-0 md:ml-4">
+            <span className="block md:inline text-4xl md:text-6xl font-light text-white ml-0 md:ml-4">
               Master Grid
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-text-secondary font-light max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-white font-light max-w-4xl mx-auto leading-relaxed opacity-90">
             Elevate your prompt engineering with {totalPrompts}+ advanced hacks.<br className="hidden md:block" />
             Discover, filter, and explore the most powerful techniques for AI creativity, control, and transformation.
           </p>

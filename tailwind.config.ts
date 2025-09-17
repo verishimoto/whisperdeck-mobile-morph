@@ -82,7 +82,7 @@ export default {
       },
       fontFamily: {
         'display': ['Helvetica Neue', 'Inter Tight', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        'condensed': ['Inter Tight', 'Helvetica Neue', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        'condensed': ['Helvetica Neue Condensed', 'Helvetica Neue', 'Inter Tight', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         'body': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
       },

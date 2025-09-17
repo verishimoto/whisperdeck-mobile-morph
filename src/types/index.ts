@@ -13,4 +13,5 @@ export interface HackPrompt {
 export interface FilterState {
   search: string;
   category: string;
+  sort: 'asc' | 'desc';
 }

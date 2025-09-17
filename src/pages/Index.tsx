@@ -9,10 +9,11 @@ const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "",
+    sort: "desc",
   });
 
   const filteredPrompts = useMemo(() => {
-    return hackPrompts.filter((prompt) => {
+    let filtered = hackPrompts.filter((prompt) => {
       const matchesSearch = filters.search === "" || 
         prompt.title.toLowerCase().includes(filters.search.toLowerCase()) ||
         prompt.description.toLowerCase().includes(filters.search.toLowerCase()) ||
@@ -22,21 +23,35 @@ const Index = () => {
       
       return matchesSearch && matchesCategory;
     });
+
+    // Sort by score
+    filtered.sort((a, b) => {
+      if (filters.sort === 'asc') {
+        return a.id - b.id; // Lower ID = higher score (reverse ranking)
+      } else {
+        return b.id - a.id; // Higher ID = lower score (normal ranking)
+      }
+    });
+
+    return filtered;
   }, [filters]);
 
   const handleSearchChange = (search: string) => {
     setFilters(prev => ({ ...prev, search }));
   };
 
-  const handleCategoryChange = (category: string) => {
-    setFilters(prev => ({ ...prev, category }));
+  const handleCategoryChange = (category: string | null) => {
+    setFilters(prev => ({ ...prev, category: category || "" }));
+  };
+
+  const handleSortChange = (sort: 'asc' | 'desc') => {
+    setFilters(prev => ({ ...prev, sort }));
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground" style={{
-      background: `hsl(var(--bg-main))`,
-      backgroundImage: `radial-gradient(circle at 20% 20%, rgba(126, 0, 255, 0.15) 0%, transparent 30%), 
-                        radial-gradient(circle at 80% 70%, rgba(0, 199, 255, 0.1) 0%, transparent 40%)`
+      background: `linear-gradient(180deg, rgba(20, 25, 30, 0.8) 0%, rgba(13, 17, 23, 0.95) 50%, rgba(13, 17, 23, 1) 100%)`,
+      backgroundAttachment: 'fixed'
     }}>
       <Header 
         searchQuery={filters.search}
@@ -47,6 +62,8 @@ const Index = () => {
       <CategoryFilter
         selectedCategory={filters.category}
         onCategoryChange={handleCategoryChange}
+        sortOrder={filters.sort}
+        onSortChange={handleSortChange}
       />
       
       <PromptGrid

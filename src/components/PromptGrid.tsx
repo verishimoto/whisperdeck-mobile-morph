@@ -12,9 +12,9 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
     <div className="container px-4 pb-8">
       {/* Results Summary */}
       <div className="text-center mb-8">
-        <p className="text-muted-foreground font-medium">
-          Showing <span className="font-bold text-primary">{filteredCount}</span> of{" "}
-          <span className="font-bold text-primary">{totalCount}</span> hack prompts
+        <p className="text-white font-medium opacity-90">
+          Showing <span className="font-bold text-white">{filteredCount}</span> of{" "}
+          <span className="font-bold text-white">{totalCount}</span> hack prompts
         </p>
       </div>
 
