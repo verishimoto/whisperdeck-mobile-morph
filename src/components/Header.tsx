@@ -1,6 +1,4 @@
 import { Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 interface HeaderProps {
   searchQuery: string;
@@ -10,39 +8,63 @@ interface HeaderProps {
 
 export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProps) {
   return (
-    <header className="w-full">
-      <div className="container px-4 py-8 relative">
-        {/* Theme Toggle - Positioned at top right */}
-        <div className="absolute top-4 right-4 z-10">
-          <ThemeToggle />
+    <header className="py-8 text-center px-4">
+      <div className="max-w-4xl mx-auto">
+        {/* Master Grid Label */}
+        <div className="mb-2">
+          <span className="inline-block text-xs tracking-[0.3em] uppercase font-light text-white/60" style={{
+            fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
+            fontWeight: '300',
+            letterSpacing: '0.3em'
+          }}>
+            MASTER GRID
+          </span>
         </div>
-
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <h1 className="text-6xl md:text-8xl font-display font-ultra-thin text-text-title mb-4 tracking-tighter leading-none">
-            <span className="block md:inline">Prompt Hacks</span>
-            <span className="block md:inline text-4xl md:text-6xl font-light text-white ml-0 md:ml-4">
-              Master Grid
-            </span>
-          </h1>
-          <p className="text-lg md:text-xl text-white font-light max-w-4xl mx-auto leading-relaxed opacity-90">
-            Elevate your prompt engineering with {totalPrompts}+ advanced hacks.<br className="hidden md:block" />
-            Discover, filter, and explore the most powerful techniques for AI creativity, control, and transformation.
-          </p>
-        </div>
-
+        
+        {/* Main Title */}
+        <h1 className="mb-4 font-ultra-thin" style={{
+          fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
+          fontSize: 'clamp(3rem, 12vw, 7rem)',
+          fontWeight: '100',
+          fontStretch: 'ultra-condensed',
+          letterSpacing: '-0.03em',
+          lineHeight: '0.9',
+          color: '#ffffff'
+        }}>
+          Whisperer Deck
+        </h1>
+        
+        {/* Subtitle */}
+        <p className="text-white/70 mb-8 font-light" style={{
+          fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
+          fontSize: 'clamp(0.95rem, 2.5vw, 1.1rem)',
+          fontWeight: '300',
+          lineHeight: '1.5',
+          maxWidth: '600px',
+          margin: '0 auto'
+        }}>
+          <span className="text-white/90">250 Ultimate Advanced Prompt Hacks</span>
+          <br />
+          For Advanced LLM Prompt Engineers Only
+        </p>
+        
         {/* Search Bar */}
-        <div className="relative max-w-2xl mx-auto">
-          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-muted-foreground" />
+        <div className="max-w-2xl mx-auto">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-white/40" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Type to filter hacks..."
+              className="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-opal-purple/50 focus:border-transparent transition-all backdrop-blur-xl"
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontSize: '1rem',
+                fontWeight: '300'
+              }}
+            />
           </div>
-          <Input
-            type="text"
-            placeholder="Type to filter hacks..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-12 h-14 text-lg bg-glass/40 border-glass-border backdrop-blur-sm focus:bg-glass/60 transition-smooth rounded-2xl"
-          />
         </div>
       </div>
     </header>
