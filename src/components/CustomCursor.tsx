@@ -27,8 +27,8 @@ export function CustomCursor() {
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
 
-    // Mouse move tracking
-    document.addEventListener('mousemove', updateMousePosition);
+    // Mouse move tracking - optimized with passive
+    document.addEventListener('mousemove', updateMousePosition, { passive: true });
     
     // Hover detection
     document.addEventListener('mouseenter', handleMouseEnter, true);

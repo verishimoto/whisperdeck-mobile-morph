@@ -54,8 +54,8 @@ const Index = () => {
       backgroundAttachment: 'fixed'
     }}>
       <Header 
-        searchQuery={filters.search}
-        onSearchChange={handleSearchChange}
+        searchQuery=""
+        onSearchChange={() => {}}
         totalPrompts={hackPrompts.length}
       />
       
@@ -64,6 +64,8 @@ const Index = () => {
         onCategoryChange={handleCategoryChange}
         sortOrder={filters.sort}
         onSortChange={handleSortChange}
+        searchQuery={filters.search}
+        onSearchChange={handleSearchChange}
       />
       
       <PromptGrid

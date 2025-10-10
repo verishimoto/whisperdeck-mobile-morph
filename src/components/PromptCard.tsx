@@ -55,18 +55,19 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
     >
       <CardContent className="p-5">
         {/* Top Section - Number and Title aligned top */}
-        <div className="flex items-start gap-4 mb-4">
+        <div className="flex items-start gap-3 mb-4">
           {/* Ultra-thin massive number */}
-          <div className="flex-shrink-0 flex flex-col items-center justify-center" style={{ minWidth: '60px' }}>
+          <div className="flex-shrink-0 flex items-start" style={{ minWidth: '80px', maxWidth: '80px' }}>
             <span 
               className={`font-ultra-thin leading-none ${categoryStyles.text}`} 
               style={{
-                fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
-                fontSize: 'clamp(2.5rem, 6vw, 4rem)',
+                fontFamily: "'Helvetica Neue Condensed', 'Helvetica Neue', sans-serif",
+                fontSize: 'clamp(3.5rem, 8vw, 5.5rem)',
                 fontWeight: '100',
-                letterSpacing: '-0.05em',
+                letterSpacing: '-0.06em',
                 fontStretch: 'ultra-condensed',
-                opacity: '0.9'
+                opacity: '0.95',
+                lineHeight: '0.85'
               }}
             >
               {score}
@@ -74,21 +75,18 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </div>
           
           {/* Title - word-breakable, responsive sizing */}
-          <div className="flex-1 pt-0.5">
+          <div className="flex-1 pt-0">
             <h3 
               className={`${categoryStyles.text} leading-tight transition-smooth`}
               style={{ 
-                fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
-                fontSize: 'clamp(1.05rem, 2.5vw, 1.25rem)',
+                fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
+                fontSize: 'clamp(1.15rem, 2.8vw, 1.5rem)',
                 fontWeight: '300',
-                lineHeight: '1.15',
-                letterSpacing: '0.01em',
+                lineHeight: '1.1',
+                letterSpacing: '0.005em',
                 wordBreak: 'break-word',
                 hyphens: 'auto',
-                WebkitLineClamp: 3,
-                display: '-webkit-box',
-                WebkitBoxOrient: 'vertical',
-                overflow: 'hidden'
+                textTransform: 'none'
               }}
             >
               {prompt.title}
@@ -110,16 +108,16 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
         </p>
 
         {/* Category Tag */}
-        <div className="flex items-center justify-center mb-4">
+        <div className="flex items-start mb-4" style={{ width: '80px' }}>
           <Badge
-            className={`${categoryStyles.bg} ${categoryStyles.border} ${categoryStyles.text} border backdrop-blur-sm px-4 py-1.5 transition-glow hover:bg-opacity-80`}
+            className={`${categoryStyles.bg} ${categoryStyles.border} ${categoryStyles.text} border backdrop-blur-sm px-3 py-1.5 transition-all duration-500`}
             style={{
-              borderRadius,
+              borderRadius: '0.5rem',
               fontFamily: "'Inter', sans-serif",
-              fontSize: '0.8rem',
+              fontSize: '0.75rem',
               fontWeight: '500',
               letterSpacing: '0.02em',
-              minWidth: '60px',
+              width: '100%',
               textAlign: 'center'
             }}
           >
@@ -127,27 +125,17 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </Badge>
         </div>
 
-        {/* Expand Button - Full card clickable */}
+        {/* Expand Button */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-between py-3 px-4 rounded-lg bg-white/3 hover:bg-white/5 transition-all border border-white/10 hover:border-white/15 group"
-          style={{ borderRadius }}
+          className="w-full flex items-center justify-center py-3 px-4 rounded-lg bg-white/5 hover:bg-white/8 transition-all duration-400 border border-white/15 hover:border-white/20 group"
+          style={{ borderRadius: '0.5rem' }}
           data-cursor="hover"
+          aria-expanded={expanded}
+          aria-label={expanded ? 'Collapse card' : 'Expand card'}
         >
-          <span 
-            className="text-white/70 group-hover:text-white transition-smooth"
-            style={{
-              fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
-              fontSize: '0.9rem',
-              fontWeight: '400',
-              letterSpacing: '0.01em'
-            }}
-          >
-            {expanded ? 'Show Less' : 'View Details'}
-          </span>
           <ChevronDown 
-            className={`h-5 w-5 text-white/50 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`}
-            style={{ transform: `scale(${expanded ? 1.25 : 1.25})`, opacity: 0.7 }}
+            className={`h-5 w-5 text-white/60 group-hover:text-white/80 transition-all duration-400 ${expanded ? 'rotate-180' : ''}`}
           />
         </button>
 
@@ -156,27 +144,35 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
             {/* Basic Example */}
             <div 
-              className="p-4 rounded-lg bg-white/3 border border-white/10"
-              style={{ borderRadius }}
+              className="p-4 rounded-lg bg-white/5 border border-white/15"
+              style={{ borderRadius: '0.5rem' }}
             >
-              <div className="flex items-start justify-between mb-2">
+              <div className="flex items-center justify-between mb-3">
                 <h4 
-                  className="text-white/80 font-medium"
+                  className="text-white/70 font-medium"
                   style={{
-                    fontFamily: "'Helvetica Neue', 'Inter Tight', sans-serif",
-                    fontSize: '0.95rem',
+                    fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
+                    fontSize: '0.9rem',
                     fontWeight: '500',
                     letterSpacing: '0.01em'
                   }}
                 >
-                  Example Prompt
+                  Basic Example
                 </h4>
                 <button
                   onClick={handleCopy}
-                  className="text-white/60 hover:text-white transition-all p-1.5 rounded hover:bg-white/10"
+                  className="flex items-center gap-2 text-white/50 hover:text-white transition-all duration-300 p-1.5 rounded hover:bg-white/10"
                   data-cursor="hover"
-                  style={{ marginRight: '-6px' }}
                 >
+                  <span 
+                    className="text-xs font-medium"
+                    style={{
+                      fontFamily: "'Inter', sans-serif",
+                      fontWeight: '500'
+                    }}
+                  >
+                    Copy
+                  </span>
                   {copied ? (
                     <Check className="h-4 w-4" />
                   ) : (
@@ -188,12 +184,41 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
                 className="text-white/70 font-mono leading-relaxed"
                 style={{
                   fontFamily: "'SF Mono', 'Consolas', monospace",
-                  fontSize: '0.85rem',
+                  fontSize: '0.8rem',
                   fontWeight: '300',
                   lineHeight: '1.6'
                 }}
               >
                 {prompt.example}
+              </p>
+            </div>
+
+            {/* Why This Is Hack */}
+            <div 
+              className={`p-4 rounded-lg ${categoryStyles.bg} border ${categoryStyles.border}`}
+              style={{ borderRadius: '0.5rem' }}
+            >
+              <h4 
+                className="text-white/70 font-medium mb-2"
+                style={{
+                  fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
+                  fontSize: '0.9rem',
+                  fontWeight: '500',
+                  letterSpacing: '0.01em'
+                }}
+              >
+                Why This Is Hack
+              </h4>
+              <p 
+                className="text-white/70 leading-relaxed"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: '0.85rem',
+                  fontWeight: '300',
+                  lineHeight: '1.6'
+                }}
+              >
+                {prompt.whyHack || 'Advanced prompt engineering technique that enhances AI model performance through strategic instruction design.'}
               </p>
             </div>
 

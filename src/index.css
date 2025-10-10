@@ -59,6 +59,10 @@
     @apply bg-background text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
+    background-image: url('/src/assets/opal-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -66,7 +70,7 @@
   }
 }
 
-/* Custom Cursor - Optimized Speed */
+/* Custom Cursor - Optimized Speed & Smoothness */
 #custom-cursor {
   position: fixed;
   width: 32px;
@@ -74,23 +78,24 @@
   border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
-  transition: all 0.12s cubic-bezier(0.25, 0.1, 0.25, 1);
+  transition: all 0.10s cubic-bezier(0.23, 1, 0.32, 1);
   mix-blend-mode: difference;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.35) 0%, transparent 70%);
+  backdrop-filter: blur(3px);
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  will-change: transform;
 }
 
 #custom-cursor.hover {
-  width: 48px;
-  height: 48px;
-  background: radial-gradient(circle, rgba(136, 107, 246, 0.4) 0%, transparent 70%);
-  border-color: rgba(136, 107, 246, 0.4);
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.45) 0%, transparent 70%);
+  border-color: rgba(139, 92, 246, 0.5);
 }
 
 #custom-cursor.click {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -127,15 +132,26 @@
   letter-spacing: -0.02em;
 }
 
-/* Glassmorphism Effects */
+/* Enhanced Glassmorphism Effects */
 .glass-card {
-  background: rgba(30, 35, 45, 0.35);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   box-shadow: 
-    0 8px 32px 0 rgba(0, 0, 0, 0.37),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+    0 8px 32px 0 rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+    0 0 60px rgba(139, 92, 246, 0.12);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    0 12px 40px 0 rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.22),
+    0 0 80px rgba(139, 92, 246, 0.18);
+  transform: translateY(-3px);
 }
 
 .glass-subtle {
@@ -145,7 +161,7 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Opalescent Gradient Background */
+/* Opalescent Gradient Overlay */
 body::before {
   content: '';
   position: fixed;
@@ -153,14 +169,20 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: -1;
+  z-index: 0;
   background: 
-    radial-gradient(circle at 10% 20%, rgba(136, 107, 246, 0.08) 0%, transparent 35%),
-    radial-gradient(circle at 90% 80%, rgba(0, 199, 255, 0.06) 0%, transparent 35%),
-    radial-gradient(circle at 50% 50%, rgba(255, 100, 200, 0.04) 0%, transparent 40%),
-    radial-gradient(circle at 20% 80%, rgba(100, 255, 180, 0.05) 0%, transparent 30%),
-    radial-gradient(circle at 80% 20%, rgba(100, 150, 255, 0.05) 0%, transparent 35%),
-    linear-gradient(180deg, hsl(220, 15%, 8%) 0%, hsl(220, 18%, 10%) 100%);
+    radial-gradient(circle at 10% 20%, rgba(255, 105, 180, 0.12) 0%, transparent 35%),
+    radial-gradient(circle at 90% 80%, rgba(100, 149, 237, 0.10) 0%, transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(152, 251, 152, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 20% 80%, rgba(186, 85, 211, 0.10) 0%, transparent 30%),
+    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.09) 0%, transparent 35%),
+    linear-gradient(180deg, rgba(13, 17, 23, 0.85) 0%, rgba(13, 17, 23, 0.92) 50%, rgba(13, 17, 23, 0.95) 100%);
+  pointer-events: none;
+}
+
+body > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Page Container with Border */
@@ -209,10 +231,10 @@ body::before {
 .border-level-psychology\/30 { border-color: hsl(var(--level-psychology) / 0.3); }
 .border-level-essential\/30 { border-color: hsl(var(--level-essential) / 0.3); }
 
-/* Scrollbar Styling */
+/* Scrollbar Styling - Increased Size */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 14px;
+  height: 14px;
 }
 
 ::-webkit-scrollbar-track {
@@ -220,10 +242,10 @@ body::before {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(136, 107, 246, 0.3);
-  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.4);
+  border-radius: 7px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(136, 107, 246, 0.5);
+  background: rgba(139, 92, 246, 0.6);
 }

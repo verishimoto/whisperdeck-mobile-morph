@@ -1,56 +1,61 @@
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, Search } from "lucide-react";
 
 interface CategoryFilterProps {
   selectedCategory: string | null;
   onCategoryChange: (category: string | null) => void;
   sortOrder: 'asc' | 'desc';
   onSortChange: (sort: 'asc' | 'desc') => void;
+  searchQuery: string;
+  onSearchChange: (search: string) => void;
 }
 
-export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, onSortChange }: CategoryFilterProps) {
-  const categories = [
-    { name: "All", count: 250, color: "text-white" },
-    { name: "Ultra", count: 50, color: "text-level-ultra" },
-    { name: "Master", count: 50, color: "text-level-master" },
-    { name: "Advanced", count: 45, color: "text-level-advanced" },
-    { name: "Strategy", count: 45, color: "text-level-strategy" },
-    { name: "Analysis", count: 35, color: "text-level-analysis" },
-    { name: "Creativity", count: 25, color: "text-level-creativity" }
-  ];
-
+export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, onSortChange, searchQuery, onSearchChange }: CategoryFilterProps) {
   return (
     <div className="mb-8 px-4">
       <div className="flex items-center justify-center gap-3 flex-wrap max-w-6xl mx-auto">
-        {categories.map((category) => {
-          const isActive = selectedCategory === category.name || (selectedCategory === null && category.name === "All");
-          return (
-            <button
-              key={category.name}
-              onClick={() => onCategoryChange(category.name === "All" ? null : category.name)}
-              className={`whitespace-nowrap flex items-center gap-2 transition-all duration-300 text-sm px-4 py-2.5 border rounded-lg backdrop-blur-xl ${
-                isActive 
-                  ? `${category.color} bg-white/15 border-current font-medium` 
-                  : `${category.color} border-current/20 bg-transparent hover:bg-white/8 font-light`
-              }`}
-              style={{
-                fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
-                fontWeight: isActive ? '500' : '300',
-                letterSpacing: '0.01em'
-              }}
-              data-cursor="hover"
-            >
-              {category.name}
-              <span className="text-xs opacity-60">({category.count})</span>
-            </button>
-          );
-        })}
+        {/* All Button */}
+        <button
+          onClick={() => onCategoryChange(null)}
+          className={`whitespace-nowrap transition-all duration-300 text-sm px-5 py-3 border rounded-xl backdrop-blur-xl h-[48px] ${
+            selectedCategory === null
+              ? 'text-white bg-white/15 border-white/30 font-medium' 
+              : 'text-white/70 border-white/15 bg-white/5 hover:bg-white/10 hover:text-white font-light'
+          }`}
+          style={{
+            fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
+            fontWeight: selectedCategory === null ? '500' : '300',
+            letterSpacing: '0.01em'
+          }}
+          data-cursor="hover"
+        >
+          All
+        </button>
+
+        {/* Search Bar */}
+        <div className="relative flex-1 max-w-md h-[48px]">
+          <input
+            type="text"
+            placeholder="Type to filter hacks"
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="w-full h-full px-5 py-3 bg-white/5 border border-white/15 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all backdrop-blur-xl"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: '0.875rem',
+              fontWeight: '300'
+            }}
+            data-cursor="hover"
+          />
+        </div>
+
+        {/* Sort Button */}
         <button
           onClick={() => onSortChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-          className="ml-2 p-2.5 text-white/70 hover:text-white transition-all backdrop-blur-xl border border-white/15 rounded-lg hover:bg-white/10 hover:border-white/25"
+          className="p-3 h-[48px] w-[48px] text-white/70 hover:text-white transition-all backdrop-blur-xl border border-white/15 rounded-xl hover:bg-white/10 hover:border-white/25 flex items-center justify-center"
           title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
           data-cursor="hover"
         >
-          <ArrowUpDown className="h-4 w-4" />
+          <ArrowUpDown className="h-5 w-5" />
         </button>
       </div>
     </div>
