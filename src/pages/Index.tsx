@@ -24,12 +24,12 @@ const Index = () => {
       return matchesSearch && matchesCategory;
     });
 
-    // Sort by score
+    // Sort by score (descending = high to low, ascending = low to high)
     filtered.sort((a, b) => {
       if (filters.sort === 'asc') {
-        return a.id - b.id; // Lower ID = higher score (reverse ranking)
+        return a.score - b.score; // Low to high (250 to 1)
       } else {
-        return b.id - a.id; // Higher ID = lower score (normal ranking)
+        return b.score - a.score; // High to low (1 to 250)
       }
     });
 

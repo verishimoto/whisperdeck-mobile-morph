@@ -47,7 +47,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
   return (
     <Card 
-      className="glass-card overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-opal-purple/5"
+      className={`glass-card overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-opal-purple/10 ${expanded ? 'shadow-2xl shadow-opal-purple/15 border-white/35' : ''}`}
       style={{
         borderRadius,
         animationDelay: `${index * 50}ms`
@@ -128,44 +128,33 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
         {/* Expand Button */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-center py-3 px-4 rounded-lg bg-white/5 hover:bg-white/8 transition-all duration-400 border border-white/15 hover:border-white/20 group"
+          className="w-full flex items-center justify-center py-3 px-4 rounded-lg bg-white/6 hover:bg-white/12 transition-all duration-500 border border-white/18 hover:border-white/35 group"
           style={{ borderRadius: '0.5rem' }}
           data-cursor="hover"
           aria-expanded={expanded}
           aria-label={expanded ? 'Collapse card' : 'Expand card'}
         >
           <ChevronDown 
-            className={`h-5 w-5 text-white/60 group-hover:text-white/80 transition-all duration-400 ${expanded ? 'rotate-180' : ''}`}
+            className={`h-5 w-5 text-white/70 group-hover:text-white transition-all duration-500 ${expanded ? 'rotate-180' : ''}`}
           />
         </button>
 
         {/* Expanded Content */}
         {expanded && (
           <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-            {/* Basic Example */}
+            {/* Prompt Example */}
             <div 
-              className="p-4 rounded-lg bg-white/5 border border-white/15"
+              className="p-4 rounded-lg bg-white/8 border border-white/20 transition-all duration-500 hover:bg-white/12 hover:border-white/30"
               style={{ borderRadius: '0.5rem' }}
             >
-              <div className="flex items-center justify-between mb-3">
-                <h4 
-                  className="text-white/70 font-medium"
-                  style={{
-                    fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
-                    fontSize: '0.9rem',
-                    fontWeight: '500',
-                    letterSpacing: '0.01em'
-                  }}
-                >
-                  Basic Example
-                </h4>
+              <div className="flex items-center justify-end mb-3">
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-2 text-white/50 hover:text-white transition-all duration-300 p-1.5 rounded hover:bg-white/10"
+                  className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 p-2 rounded-lg hover:bg-white/15"
                   data-cursor="hover"
                 >
                   <span 
-                    className="text-xs font-medium"
+                    className="text-xs font-medium tracking-wide"
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       fontWeight: '500'
@@ -181,41 +170,44 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
                 </button>
               </div>
               <p 
-                className="text-white/70 font-mono leading-relaxed"
+                className="text-white/85 font-mono leading-relaxed"
                 style={{
                   fontFamily: "'SF Mono', 'Consolas', monospace",
-                  fontSize: '0.8rem',
-                  fontWeight: '300',
-                  lineHeight: '1.6'
+                  fontSize: '0.85rem',
+                  fontWeight: '400',
+                  lineHeight: '1.7'
                 }}
               >
                 {prompt.example}
               </p>
             </div>
 
-            {/* Why This Is Hack */}
+            {/* Why This Is a Hack */}
             <div 
-              className={`p-4 rounded-lg ${categoryStyles.bg} border ${categoryStyles.border}`}
-              style={{ borderRadius: '0.5rem' }}
+              className={`p-4 rounded-lg ${categoryStyles.bg} border ${categoryStyles.border} transition-all duration-500 hover:bg-opacity-80`}
+              style={{ 
+                borderRadius: '0.5rem',
+                backgroundColor: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.15)`
+              }}
             >
               <h4 
-                className="text-white/70 font-medium mb-2"
+                className={`${categoryStyles.text} font-medium mb-2`}
                 style={{
                   fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
-                  fontSize: '0.9rem',
+                  fontSize: '0.95rem',
                   fontWeight: '500',
                   letterSpacing: '0.01em'
                 }}
               >
-                Why This Is Hack
+                Why This Is a Hack
               </h4>
               <p 
-                className="text-white/70 leading-relaxed"
+                className="text-white/80 leading-relaxed"
                 style={{
                   fontFamily: "'Inter', sans-serif",
-                  fontSize: '0.85rem',
+                  fontSize: '0.875rem',
                   fontWeight: '300',
-                  lineHeight: '1.6'
+                  lineHeight: '1.7'
                 }}
               >
                 {prompt.whyHack || 'Advanced prompt engineering technique that enhances AI model performance through strategic instruction design.'}
