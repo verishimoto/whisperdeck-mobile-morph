@@ -16,7 +16,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
         {/* All Button */}
         <button
           onClick={() => onCategoryChange(null)}
-          className={`whitespace-nowrap transition-all duration-300 text-sm px-5 py-3 border rounded-xl backdrop-blur-xl h-[48px] ${
+          className={`button-glow whitespace-nowrap transition-all duration-300 text-sm px-5 py-3 border rounded-xl backdrop-blur-xl h-[48px] ${
             selectedCategory === null
               ? 'text-white bg-white/15 border-white/30 font-medium' 
               : 'text-white/70 border-white/15 bg-white/5 hover:bg-white/10 hover:text-white font-light'
@@ -38,7 +38,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
             placeholder="Type to filter hacks"
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full h-full px-5 py-3 bg-white/5 border border-white/15 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all backdrop-blur-xl"
+            className="w-full h-full px-5 pr-12 py-3 bg-white/5 border border-white/15 rounded-xl text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 focus:bg-white/10 transition-all backdrop-blur-xl"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: '0.875rem',
@@ -46,12 +46,13 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
             }}
             data-cursor="hover"
           />
+          <Search className="absolute right-4 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40 pointer-events-none" />
         </div>
 
         {/* Sort Button */}
         <button
           onClick={() => onSortChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-          className="p-3 h-[48px] w-[48px] text-white/70 hover:text-white transition-all backdrop-blur-xl border border-white/15 rounded-xl hover:bg-white/10 hover:border-white/25 flex items-center justify-center"
+          className="button-glow p-3 h-[48px] w-[48px] text-white/70 hover:text-white transition-all backdrop-blur-xl border border-white/15 rounded-xl hover:bg-white/10 hover:border-white/25 flex items-center justify-center"
           title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
           data-cursor="hover"
         >

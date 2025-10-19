@@ -47,16 +47,33 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
   return (
     <Card 
-      className={`glass-card overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-opal-purple/10 ${expanded ? 'shadow-2xl shadow-opal-purple/15 border-white/35' : ''}`}
+      className={`glass-card overflow-hidden transition-all duration-500 group/card relative ${expanded ? 'shadow-2xl border-white/35' : ''}`}
       style={{
         borderRadius,
         animationDelay: `${index * 50}ms`,
-        height: 'fit-content'
+        position: 'relative'
+      }}
+      onMouseMove={(e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
       }}
     >
-      <CardContent className="p-5">
+      {/* Radial gradient border glow on hover */}
+      <div 
+        className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[0.75rem]"
+        style={{
+          background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(${categoryStyles.text.replace('text-', '--')}) / 0.15), transparent 40%)`,
+          zIndex: 0
+        }}
+      />
+      
+      <CardContent className="p-5 relative z-10">
         {/* Top Section - Number and Title aligned top */}
-        <div className="flex items-start gap-3 mb-4">
+        <div className="flex items-start gap-5 mb-4">
           {/* Ultra-thin massive number */}
           <div className="flex-shrink-0 flex items-start" style={{ minWidth: '90px', maxWidth: '90px' }}>
             <span 
@@ -76,8 +93,8 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </div>
           
           {/* Title - word-breakable, responsive sizing */}
-          <div className="flex-1 pt-1">
-            <h3 
+          <div className="flex-1">
+            <h3
               className={`${categoryStyles.text} leading-tight transition-smooth`}
               style={{ 
                 fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
@@ -129,10 +146,10 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </Badge>
         </div>
 
-        {/* Expand Toggle */}
+        {/* Expand Toggle - Larger with glow */}
         <div
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-center py-2 cursor-pointer group"
+          className="w-full flex items-center justify-center py-3 cursor-pointer group/toggle mt-2"
           data-cursor="hover"
           aria-expanded={expanded}
           aria-label={expanded ? 'Collapse card' : 'Expand card'}
@@ -145,9 +162,11 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
             }
           }}
         >
-          <ChevronDown 
-            className={`h-5 w-5 text-white/40 group-hover:text-white/70 transition-all duration-300 ${expanded ? 'rotate-180' : ''}`}
-          />
+          <div className="button-glow rounded-full p-2 backdrop-blur-sm bg-white/5 border border-white/10 group-hover/toggle:border-white/30 transition-all duration-300">
+            <ChevronDown 
+              className={`h-6 w-6 ${categoryStyles.text} transition-all duration-300 ${expanded ? 'rotate-180' : ''}`}
+            />
+          </div>
         </div>
 
         {/* Expanded Content */}
@@ -155,13 +174,13 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           <div className="mt-4 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
             {/* Prompt Example */}
             <div 
-              className="p-4 rounded-lg bg-white/8 border border-white/20 transition-all duration-500 hover:bg-white/12 hover:border-white/30"
+              className="p-4 rounded-lg bg-white/8 border border-white/20 transition-all duration-500 hover:bg-white/12 hover:border-white/30 relative overflow-hidden"
               style={{ borderRadius: '0.5rem' }}
             >
               <div className="flex items-center justify-end mb-3">
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-2 text-white/60 hover:text-white transition-all duration-300 p-2 rounded-lg hover:bg-white/15"
+                  className="button-glow flex items-center gap-2 text-white/70 hover:text-white transition-all duration-300 p-2.5 rounded-lg bg-white/5 border border-white/10 hover:border-white/30"
                   data-cursor="hover"
                 >
                   <span 
@@ -181,12 +200,13 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
                 </button>
               </div>
               <p 
-                className="text-white/85 font-mono leading-relaxed"
+                className="iridescent-text font-mono leading-relaxed"
                 style={{
                   fontFamily: "'SF Mono', 'Consolas', monospace",
                   fontSize: '0.85rem',
                   fontWeight: '400',
-                  lineHeight: '1.7'
+                  lineHeight: '1.7',
+                  color: 'rgba(255, 255, 255, 0.95)'
                 }}
               >
                 {prompt.example}
@@ -195,30 +215,33 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
             {/* Why This Is a Hack */}
             <div 
-              className={`p-4 rounded-lg ${categoryStyles.bg} border ${categoryStyles.border} transition-all duration-500 hover:bg-opacity-80`}
+              className={`p-4 rounded-lg border transition-all duration-500`}
               style={{ 
                 borderRadius: '0.5rem',
-                backgroundColor: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.15)`
+                backgroundColor: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.15)`,
+                borderColor: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.3)`
               }}
             >
               <h4 
-                className={`${categoryStyles.text} font-medium mb-2`}
+                className={`iridescent-text font-medium mb-2`}
                 style={{
                   fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
                   fontSize: '0.95rem',
                   fontWeight: '500',
-                  letterSpacing: '0.01em'
+                  letterSpacing: '0.01em',
+                  color: `hsl(var(--level-${prompt.category.toLowerCase()}))`
                 }}
               >
                 Why This Is a Hack
               </h4>
               <p 
-                className="text-white/80 leading-relaxed"
+                className="leading-relaxed"
                 style={{
                   fontFamily: "'Inter', sans-serif",
                   fontSize: '0.875rem',
                   fontWeight: '300',
-                  lineHeight: '1.7'
+                  lineHeight: '1.7',
+                  color: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.85)`
                 }}
               >
                 {prompt.whyHack || 'Advanced prompt engineering technique that enhances AI model performance through strategic instruction design.'}
