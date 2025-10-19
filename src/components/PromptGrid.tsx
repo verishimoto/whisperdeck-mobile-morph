@@ -22,8 +22,8 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
         </p>
       </div>
 
-      {/* Grid - Cards expand individually */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3" style={{ alignItems: 'start' }}>
+      {/* Grid - Cards expand individually in columns */}
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3" style={{ alignItems: 'start', gridAutoFlow: 'row' }}>
         {prompts.map((prompt, index) => (
           <PromptCard key={prompt.id} prompt={prompt} index={index} />
         ))}

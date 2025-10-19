@@ -50,24 +50,25 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
       className={`glass-card overflow-hidden transition-all duration-500 hover:shadow-xl hover:shadow-opal-purple/10 ${expanded ? 'shadow-2xl shadow-opal-purple/15 border-white/35' : ''}`}
       style={{
         borderRadius,
-        animationDelay: `${index * 50}ms`
+        animationDelay: `${index * 50}ms`,
+        height: 'fit-content'
       }}
     >
       <CardContent className="p-5">
         {/* Top Section - Number and Title aligned top */}
         <div className="flex items-start gap-3 mb-4">
           {/* Ultra-thin massive number */}
-          <div className="flex-shrink-0 flex items-start" style={{ minWidth: '80px', maxWidth: '80px' }}>
+          <div className="flex-shrink-0 flex items-start" style={{ minWidth: '90px', maxWidth: '90px' }}>
             <span 
               className={`font-ultra-thin leading-none ${categoryStyles.text}`} 
               style={{
                 fontFamily: "'Helvetica Neue Condensed', 'Helvetica Neue', sans-serif",
-                fontSize: 'clamp(3.5rem, 8vw, 5.5rem)',
+                fontSize: 'clamp(4.5rem, 10vw, 7rem)',
                 fontWeight: '100',
                 letterSpacing: '-0.06em',
                 fontStretch: 'ultra-condensed',
                 opacity: '0.95',
-                lineHeight: '0.85'
+                lineHeight: '0.8'
               }}
             >
               {score}
@@ -75,7 +76,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </div>
           
           {/* Title - word-breakable, responsive sizing */}
-          <div className="flex-1 pt-0">
+          <div className="flex-1 pt-1">
             <h3 
               className={`${categoryStyles.text} leading-tight transition-smooth`}
               style={{ 
@@ -108,7 +109,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
         </p>
 
         {/* Category Tag */}
-        <div className="flex items-start mb-4" style={{ width: '80px' }}>
+        <div className="flex items-start mb-4" style={{ width: '90px' }}>
           <Badge
             className={`${categoryStyles.bg} ${categoryStyles.border} ${categoryStyles.text} border backdrop-blur-sm px-3 py-1.5 transition-all duration-500`}
             style={{
@@ -118,26 +119,36 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
               fontWeight: '500',
               letterSpacing: '0.02em',
               width: '100%',
-              textAlign: 'center'
+              textAlign: 'center',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
             {prompt.category}
           </Badge>
         </div>
 
-        {/* Expand Button */}
-        <button
+        {/* Expand Toggle */}
+        <div
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-center py-3 px-4 rounded-lg bg-white/6 hover:bg-white/12 transition-all duration-500 border border-white/18 hover:border-white/35 group"
-          style={{ borderRadius: '0.5rem' }}
+          className="w-full flex items-center justify-center py-2 cursor-pointer group"
           data-cursor="hover"
           aria-expanded={expanded}
           aria-label={expanded ? 'Collapse card' : 'Expand card'}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setExpanded(!expanded);
+            }
+          }}
         >
           <ChevronDown 
-            className={`h-5 w-5 text-white/70 group-hover:text-white transition-all duration-500 ${expanded ? 'rotate-180' : ''}`}
+            className={`h-5 w-5 text-white/40 group-hover:text-white/70 transition-all duration-300 ${expanded ? 'rotate-180' : ''}`}
           />
-        </button>
+        </div>
 
         {/* Expanded Content */}
         {expanded && (

@@ -4,16 +4,16 @@
 
 @layer base {
   :root {
-    /* Dark Opal Theme - Modern Grey with Opalescent Accents */
-    --background: 220 15% 8%;
+    /* Dark Opal Theme - Iridescent Opalescent */
+    --background: 240 25% 6%;
     --foreground: 0 0% 98%;
     
-    /* Opalescent Color Palette - Brighter & More Vibrant */
-    --opal-purple: 270 75% 72%;
-    --opal-cyan: 190 100% 58%;
-    --opal-pink: 330 85% 75%;
-    --opal-green: 160 65% 68%;
-    --opal-blue: 220 90% 68%;
+    /* Iridescent Opal Color Palette */
+    --opal-purple: 280 85% 75%;
+    --opal-cyan: 180 100% 65%;
+    --opal-pink: 320 90% 78%;
+    --opal-green: 150 75% 70%;
+    --opal-blue: 210 95% 72%;
     
     /* Card & Glass Effects */
     --card: 220 20% 12%;
@@ -39,15 +39,15 @@
     --ring: 270 60% 65%;
     --radius: 1rem;
     
-    /* Category Colors - Brighter Opalescent */
-    --level-ultra: 270 80% 75%;
-    --level-master: 190 100% 62%;
-    --level-advanced: 330 85% 78%;
-    --level-strategy: 160 70% 72%;
-    --level-analysis: 220 90% 72%;
-    --level-creativity: 280 75% 75%;
-    --level-psychology: 340 80% 75%;
-    --level-essential: 200 85% 68%;
+    /* Category Colors - Iridescent Opalescent */
+    --level-ultra: 280 90% 78%;
+    --level-master: 180 100% 68%;
+    --level-advanced: 320 95% 80%;
+    --level-strategy: 150 80% 75%;
+    --level-analysis: 210 95% 75%;
+    --level-creativity: 290 85% 78%;
+    --level-psychology: 340 90% 78%;
+    --level-essential: 200 90% 72%;
   }
 }
 
@@ -63,6 +63,7 @@
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
+    background-blend-mode: overlay;
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -161,7 +162,7 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* Opalescent Gradient Overlay */
+/* Iridescent Opal Gradient Overlay */
 body::before {
   content: '';
   position: fixed;
@@ -171,12 +172,12 @@ body::before {
   bottom: 0;
   z-index: 0;
   background: 
-    radial-gradient(circle at 10% 20%, rgba(255, 105, 180, 0.18) 0%, transparent 40%),
-    radial-gradient(circle at 90% 80%, rgba(100, 149, 237, 0.16) 0%, transparent 40%),
-    radial-gradient(circle at 50% 50%, rgba(152, 251, 152, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 20% 80%, rgba(186, 85, 211, 0.16) 0%, transparent 35%),
-    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.14) 0%, transparent 40%),
-    linear-gradient(180deg, rgba(13, 17, 23, 0.82) 0%, rgba(13, 17, 23, 0.90) 50%, rgba(13, 17, 23, 0.94) 100%);
+    radial-gradient(circle at 15% 25%, rgba(180, 100, 255, 0.22) 0%, transparent 35%),
+    radial-gradient(circle at 85% 75%, rgba(80, 200, 255, 0.20) 0%, transparent 38%),
+    radial-gradient(circle at 50% 50%, rgba(100, 255, 200, 0.16) 0%, transparent 42%),
+    radial-gradient(circle at 25% 75%, rgba(255, 120, 200, 0.20) 0%, transparent 32%),
+    radial-gradient(circle at 75% 25%, rgba(255, 200, 120, 0.18) 0%, transparent 38%),
+    linear-gradient(180deg, rgba(10, 12, 20, 0.75) 0%, rgba(10, 12, 20, 0.85) 50%, rgba(10, 12, 20, 0.90) 100%);
   pointer-events: none;
 }
 
