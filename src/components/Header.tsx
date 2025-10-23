@@ -1,4 +1,5 @@
-import { Search } from "lucide-react";
+import { Settings, Moon, Sun } from "lucide-react";
+import { useState } from "react";
 
 interface HeaderProps {
   searchQuery: string;
@@ -7,46 +8,72 @@ interface HeaderProps {
 }
 
 export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProps) {
+  const [darkMode, setDarkMode] = useState(true);
+
   return (
-    <header className="py-12 text-center px-4">
-      <div className="max-w-5xl mx-auto">
-        {/* Master Grid Label */}
-        <div className="mb-1">
-          <span className="inline-block text-xs tracking-[0.15em] uppercase font-light text-white/40" style={{
-            fontFamily: "'Helvetica Neue Condensed', 'Helvetica Neue', sans-serif",
-            fontWeight: '300',
-            letterSpacing: '0.15em',
-            fontSize: '0.7rem'
-          }}>
-            Master Grid
-          </span>
-        </div>
-        
-        {/* Main Title */}
-        <h1 className="mb-6 font-ultra-thin" style={{
-          fontFamily: "'Helvetica Neue Condensed', 'Helvetica Neue', sans-serif",
-          fontSize: 'clamp(3rem, 10vw, 6rem)',
-          fontWeight: '50',
-          fontStretch: 'ultra-condensed',
-          letterSpacing: '-0.04em',
-          lineHeight: '0.85',
-          color: '#ffffff',
-          textTransform: 'none'
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-black/20 border-b border-white/10">
+      {/* Top Bar */}
+      <div className="px-6 py-4 flex items-center justify-between">
+        {/* Brand Name */}
+        <h1 className="font-ultra-thin" style={{
+          fontFamily: "'Nimbus Sans Extended', 'Helvetica Neue', sans-serif",
+          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          fontWeight: '700',
+          letterSpacing: '-0.02em',
+          color: '#ffffff'
         }}>
-          Whisperer Deck
+          WhisperDeck 2.0
         </h1>
         
-        {/* Subtitle */}
-        <p className="text-white/45 mb-12 font-light mx-auto" style={{
-          fontFamily: "'Helvetica Neue', 'Inter', sans-serif",
-          fontSize: 'clamp(0.85rem, 1.8vw, 1rem)',
-          fontWeight: '200',
-          lineHeight: '1.4',
-          maxWidth: '80%',
-          letterSpacing: '0.01em'
-        }}>
-          Ultimate Advanced Prompt Hacks for Expert LLM Engineers Only
-        </p>
+        {/* Icon Buttons */}
+        <div className="flex items-center gap-3">
+          <button
+            className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+            data-cursor="hover"
+            title="Settings"
+          >
+            <Settings className="h-5 w-5 text-white/70 hover:text-white transition-colors" />
+          </button>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="p-2.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+            data-cursor="hover"
+            title="Toggle theme"
+          >
+            {darkMode ? (
+              <Sun className="h-5 w-5 text-white/70 hover:text-white transition-colors" />
+            ) : (
+              <Moon className="h-5 w-5 text-white/70 hover:text-white transition-colors" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Title Section */}
+      <div className="py-8 text-center px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-2">
+            <span className="inline-block text-xs tracking-[0.15em] uppercase font-light text-white/40" style={{
+              fontFamily: "'Nirmala UI', 'Inter', sans-serif",
+              fontWeight: '400',
+              letterSpacing: '0.15em',
+              fontSize: '0.7rem'
+            }}>
+              Opal MicroApp
+            </span>
+          </div>
+          
+          <p className="text-white/50 mb-6 font-light mx-auto" style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
+            fontWeight: '400',
+            lineHeight: '1.5',
+            maxWidth: '600px',
+            letterSpacing: '0.01em'
+          }}>
+            Advanced LLM Prompt Engineering • Where the mouse is the hero
+          </p>
+        </div>
       </div>
     </header>
   );
