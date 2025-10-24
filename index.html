@@ -1,19 +1,49 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
+    <!-- =============== META CONFIG =============== -->
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>WhisperDeck 2.0 - Opal MicroApp | Advanced LLM Prompt Engineering</title>
-    <meta name="description" content="A cinematic micro-SaaS for advanced LLM prompt engineering. 250+ expert-level prompt hacks where the mouse is the hero.">
-    <meta name="author" content="verishimoto" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="keywords" content="LLM prompts, AI prompt engineering, advanced prompts, ChatGPT hacks, Claude prompts, neural pathways, meta-learning, AI techniques">
+    <meta name="author" content="verishimoto" />
+    <meta
+      name="description"
+      content="A cinematic micro-SaaS for advanced LLM prompt engineering. 250+ expert-level prompt hacks where the mouse is the hero."
+    />
+    <meta
+      name="keywords"
+      content="LLM prompts, AI prompt engineering, advanced prompts, ChatGPT hacks, Claude prompts, neural pathways, meta-learning, AI techniques"
+    />
+    <meta name="robots" content="index, follow" />
+    <title>WhisperDeck 2.0 – Opal MicroApp | Advanced LLM Prompt Engineering</title>
+
+    <!-- =============== SEO CANONICAL =============== -->
     <link rel="canonical" href="https://whisperer-deck.lovableproject.com/" />
-    
-    <!-- Fonts - Bebas Neue, Inter, Nimbus Sans Extended, Nirmala UI -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@100;200;300;400;500;600;700&family=Inter+Tight:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+    <!-- =============== OPEN GRAPH / FACEBOOK =============== -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://whisperer-deck.lovableproject.com/" />
+    <meta property="og:title" content="Whisperer Deck – Advanced LLM Prompt Engineering Hacks" />
+    <meta property="og:description" content="250 Ultimate Advanced Prompt Hacks for Expert LLM Engineers Only" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- =============== TWITTER =============== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://whisperer-deck.lovableproject.com/" />
+    <meta name="twitter:title" content="Whisperer Deck – Advanced LLM Prompt Engineering Hacks" />
+    <meta name="twitter:description" content="250 Ultimate Advanced Prompt Hacks for Expert LLM Engineers Only" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+
+    <!-- =============== FAVICON =============== -->
+    <link rel="icon" type="image/svg+xml" href="/favicon-opal.svg" />
+
+    <!-- =============== FONTS =============== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@100;200;300;400;500;600;700&family=Inter+Tight:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
       @font-face {
         font-family: 'Nimbus Sans Extended';
@@ -27,44 +57,31 @@
       }
     </style>
 
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://whisperer-deck.lovableproject.com/" />
-    <meta property="og:title" content="Whisperer Deck - Advanced LLM Prompt Engineering Hacks" />
-    <meta property="og:description" content="250 Ultimate Advanced Prompt Hacks for Advanced LLM Prompt Engineers Only" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://whisperer-deck.lovableproject.com/" />
-    <meta name="twitter:title" content="Whisperer Deck - Advanced LLM Prompt Engineering Hacks" />
-    <meta name="twitter:description" content="250 Ultimate Advanced Prompt Hacks for Advanced LLM Prompt Engineers Only" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-    <link rel="stylesheet" href="src/assets/styles.css">
-
-
-    <!-- Structured Data for SEO -->
+    <!-- =============== STRUCTURED DATA =============== -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Whisperer Deck",
-      "description": "250 Ultimate Advanced Prompt Hacks for Advanced LLM Prompt Engineers",
-      "url": "https://whisperer-deck.lovableproject.com/",
-      "author": {
-        "@type": "Person",
-        "name": "verishimoto",
-        "url": "https://www.linkedin.com/in/verishimoto/"
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Whisperer Deck",
+        "description": "250 Ultimate Advanced Prompt Hacks for Advanced LLM Prompt Engineers",
+        "url": "https://whisperer-deck.lovableproject.com/",
+        "author": {
+          "@type": "Person",
+          "name": "verishimoto",
+          "url": "https://www.linkedin.com/in/verishimoto/"
+        }
       }
-    }
     </script>
-    
-    <link rel="icon" type="image/svg+xml" href="/favicon-opal.svg"><link rel="stylesheet" href="src/assets/styles.css">
 
-</head>
+    <!-- =============== STYLES =============== -->
+    <link rel="stylesheet" href="src/assets/styles.css" />
+  </head>
 
   <body>
+    <!-- React root -->
     <div id="root"></div>
+
+    <!-- Main React entry -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
