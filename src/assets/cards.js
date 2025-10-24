@@ -1,23 +1,25 @@
 // WhisperDeck UI Enhancer (Vite + React compatible)
 export default (function(){
   // Footer background sync
-  function syncFooterBackground(){
-    const footer = document.querySelector('footer, .site-footer, .app-footer');
-    if(!footer) return;
-    const cs = getComputedStyle(footer);
-    const bg = cs.backgroundImage && cs.backgroundImage !== 'none'
-      ? cs.backgroundImage
-      : (cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' ? cs.backgroundColor : '#0f0f12');
-    document.documentElement.style.setProperty('--app-bg', bg);
-  }
+ // Mirror footer background onto the whole page
+function syncFooterBackground() {
+  const footer = document.querySelector("footer, .site-footer, .app-footer");
+  const root = document.documentElement;
+  if (!footer) return;
 
-  // Disable tag hover
-  function neutralizeTagHover(){
-    const tags = document.querySelectorAll('.tag, .chip, .badge-tag');
-    tags.forEach(el=>{
-      el.addEventListener('mouseenter', e=>e.stopImmediatePropagation(), {passive:true});
-    });
-  }
+  const style = getComputedStyle(footer);
+  const footerBg =
+    style.backgroundImage && style.backgroundImage !== "none"
+      ? style.backgroundImage
+      : style.backgroundColor || "#0f0f12";
+
+  root.style.setProperty("--app-bg", footerBg);
+  document.querySelector("#bg-motion")?.style.setProperty("background", footerBg);
+}
+
+// Run on load + resize
+window.addEventListener("load", syncFooterBackground);
+window.addEventListener("resize", syncFooterBackground);
 
   // Add “Sort by” icon automatically
   function ensureSortIcon(){
