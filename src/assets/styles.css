@@ -1,42 +1,172 @@
-/* =========================
-   DYNAMIC GRUNGY BACKGROUND
-   ========================= */
+:root {
+  --font-body: "Inter", "Helvetica Neue", "Helvetica Pro", system-ui, sans-serif;
+  --font-display: "Helvetica Neue", "Helvetica Pro", "Inter Tight", sans-serif;
+  --radius: 8px;
+  --app-bg: #0f0f12;
+  --card-bg: rgba(255,255,255,0.03);
+  --text: #e6e6e9;
+  --muted: #a0a0a8;
+  --divider: rgba(255,255,255,0.08);
+  --active-bg: #16181c;
+  --accent: rgba(160,240,255,0.7);
+}
+
+html, body, main {
+  background: var(--app-bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ====== cards ====== */
+.cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--divider);
+  backdrop-filter: blur(6px) saturate(120%);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  overflow: hidden;
+  transition: max-height .4s ease, background .3s ease, box-shadow .3s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/src/assets/paper-texture.png");
+  mix-blend-mode: overlay;
+  opacity: .12;
+  pointer-events: none;
+}
+
+/* collapse animation */
+.card.is-collapsible {
+  overflow: hidden;
+  transition: max-height .4s ease;
+}
+.card.is-collapsible:not(.is-open) {
+  max-height: 110px;
+}
+.card.is-collapsible.is-open {
+  max-height: 2000px;
+}
+
+/* header line */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+.card .num {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1;
+  margin-right: .5em;
+}
+.card .card-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.8vw, 1.6rem);
+  line-height: 1.1;
+}
+
+/* expander */
+.btn-expander {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .25s ease, filter .25s ease;
+  filter: brightness(.8);
+}
+.btn-expander:hover {
+  filter: brightness(1.5) drop-shadow(0 0 6px var(--accent));
+}
+.card[aria-expanded="true"] .btn-expander .expander {
+  transform: rotate(180deg);
+}
+
+/* section headers */
+.card-section-title {
+  font-size: .85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin-bottom: .4rem;
+}
+
+.divider {
+  height: 1px;
+  background: var(--divider);
+  margin: 12px 0;
+  border: 0;
+}
+
+/* chips/tags */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .6rem;
+  border: 1px solid var(--divider);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  font-size: .75rem;
+  border-radius: var(--radius);
+  text-transform: uppercase;
+}
+
+/* smooth fade-in */
+@keyframes cardFadeIn {
+  from {opacity:0; transform:translateY(6px);}
+  to {opacity:1; transform:translateY(0);}
+}
+.card { animation: cardFadeIn .4s ease both; }
+
+/* ====== moving background ====== */
 #bg-motion {
   position: fixed;
   inset: 0;
   z-index: 0;
-  overflow: hidden;
   background: radial-gradient(circle at center, #0f0f12 0%, #080808 100%);
 }
-
 #bg-motion::before,
 #bg-motion::after {
-  content: "";
-  position: absolute;
-  inset: -10%;
-  background-image: url("/src/assets/paper-texture.png");
-  background-size: cover;
-  background-repeat: no-repeat;
-  opacity: 0.18;
-  mix-blend-mode: overlay;
-  animation: drift 60s linear infinite;
-  transform-origin: center;
+  content:"";
+  position:absolute;
+  inset:-10%;
+  background-image:url("/src/assets/paper-texture.png");
+  background-size:cover;
+  background-repeat:no-repeat;
+  opacity:.18;
+  mix-blend-mode:overlay;
+  animation:drift 60s linear infinite;
 }
-
 #bg-motion::after {
-  background-image: url("/src/assets/grunge-overlay.png");
-  opacity: 0.12;
-  animation: driftReverse 80s linear infinite;
+  background-image:url("/src/assets/grunge-overlay.png");
+  opacity:.12;
+  animation:driftReverse 80s linear infinite;
 }
-
 @keyframes drift {
-  0% { transform: scale(1.05) translate(0, 0); }
-  50% { transform: scale(1.08) translate(3%, 2%); }
-  100% { transform: scale(1.05) translate(0, 0); }
+  0%{transform:scale(1.05) translate(0,0);}
+  50%{transform:scale(1.08) translate(3%,2%);}
+  100%{transform:scale(1.05) translate(0,0);}
 }
-
 @keyframes driftReverse {
-  0% { transform: scale(1.1) translate(0, 0) rotate(0deg); }
-  50% { transform: scale(1.1) translate(-3%, -2%) rotate(180deg); }
-  100% { transform: scale(1.1) translate(0, 0) rotate(360deg); }
+  0%{transform:scale(1.1) translate(0,0) rotate(0);}
+  50%{transform:scale(1.1) translate(-3%,-2%) rotate(180deg);}
+  100%{transform:scale(1.1) translate(0,0) rotate(360deg);}
 }
