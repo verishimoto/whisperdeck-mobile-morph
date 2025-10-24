@@ -1,187 +1,191 @@
-/* =======================
-   GLOBAL THEME VARIABLES
-   ======================= */
-:root{
-  /* Fonts */
-  --font-body: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-numeric: "Roboto Condensed", "Helvetica Neue Condensed", "Nimbus Sans Narrow", "Inter Tight", Inter, system-ui, sans-serif;
+/* =========================
+   BASE THEME VARIABLES
+   ========================= */
+:root {
+  --font-body: "Inter", "Helvetica Neue", "Helvetica Pro", system-ui, sans-serif;
+  --font-display: "Helvetica Neue", "Helvetica Pro", "Inter Tight", sans-serif;
+  --radius: 8px;
 
-  /* Radius */
-  --radius-sm: 8px;
-  --radius-md: 10px;
-
-  /* Colors */
-  --app-bg: #0f0f12; /* will be synced from footer via JS */
+  --app-bg: #0f0f12;
   --card-bg: rgba(255,255,255,0.03);
-  --elevated-bg: rgba(255,255,255,0.06);
   --text: #e6e6e9;
-  --muted: #b8b8bf;
+  --muted: #a0a0a8;
   --divider: rgba(255,255,255,0.08);
-  --chip-bg: rgba(255,255,255,0.06);
-  --chip-text: #eaeaf1;
-  --chip-border: rgba(255,255,255,0.12);
-  --active-bg: #111216;
-  --active-text: #fff;
+  --active-bg: #16181c;
+  --accent: rgba(160,240,255,0.7);
 }
 
-/* =======================
-   GLOBAL BACKGROUND + TYPE
-   ======================= */
-html, body, .app-shell, main{
-  background: var(--app-bg) !important;
+/* =========================
+   GLOBAL STYLE
+   ========================= */
+html, body, .app-shell, main {
+  background: var(--app-bg);
   color: var(--text);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
 }
 
-/* reduce excessive roundness project-wide */
-.card, .btn, .badge, .chip, .tag, .form-control, .dropdown-menu, .modal-content{
-  border-radius: var(--radius-sm) !important;
+/* Reset overly round corners */
+.card, .btn, .chip, .tag {
+  border-radius: var(--radius);
 }
 
-/* numeric data style */
-.num, .value, .kpi, .score{
-  font-family: var(--font-numeric);
-  font-weight: 200;
-  letter-spacing: .2px;
-  font-feature-settings: "tnum" 1;
-}
-
-/* subtle card visuals */
-.card{
-  background: var(--card-bg);
-  border: 1px solid var(--divider);
-  backdrop-filter: saturate(120%) blur(4px);
-}
-
-/* =======================
-   TAGS / CHIPS (NO HOVER)
-   ======================= */
-.tag, .chip, .badge-tag{
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .4rem .7rem;
-  background: var(--chip-bg);
-  color: var(--chip-text);
-  border: 1px solid var(--chip-border);
-  border-radius: var(--radius-sm);
-  line-height: 1;
-  user-select: none;
-}
-
-/* remove hover glow */
-.tag:hover, .chip:hover, .badge-tag:hover{
-  background: var(--chip-bg);
-  color: var(--chip-text);
-  border-color: var(--chip-border);
-  box-shadow: none;
-  transform: none;
-}
-
-/* cursor default if not clickable */
-.tag:not([data-clickable="true"]),
-.chip:not([data-clickable="true"]){
-  cursor: default;
-}
-
-/* =======================
-   TOP BUTTONS (INHERIT TAG STYLE)
-   ======================= */
-.btn-top{
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  padding: .45rem .8rem;
-  background: var(--chip-bg) !important;
-  color: var(--chip-text) !important;
-  border: 1px solid var(--chip-border) !important;
-  border-radius: var(--radius-sm) !important;
-  box-shadow: none !important;
-  line-height: 1;
-}
-
-/* no hover change */
-.btn-top:hover{
-  background: var(--chip-bg) !important;
-  color: var(--chip-text) !important;
-  border-color: var(--chip-border) !important;
-}
-
-/* active (pressed) state */
-.btn-top:active, .btn-top[aria-pressed="true"]{
-  background: var(--active-bg) !important;
-  color: var(--active-text) !important;
-}
-
-/* Sort icon alignment */
-.btn-top .icon{
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  line-height: 0;
-  opacity: .8;
-}
-
-/* =======================
-   CARD LAYOUT (COLUMN)
-   ======================= */
-.cards-container{
+/* =========================
+   CARD LAYOUT
+   ========================= */
+.cards-container {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: 12px;
+  gap: 16px;
 }
 
-/* =======================
-   COLLAPSIBLE CARDS
-   ======================= */
-.card.is-collapsible{
+/* Base card */
+.card {
+  position: relative;
+  background: var(--card-bg);
+  border: 1px solid var(--divider);
+  backdrop-filter: blur(6px) saturate(120%);
   overflow: hidden;
-  transition: max-height 220ms ease, transform 220ms ease, background 160ms ease;
+  padding: 1.25rem 1.5rem;
+  transition: max-height .4s ease, background .3s ease, box-shadow .3s ease;
 }
 
-/* collapsed by default */
-.card.is-collapsible:not(.is-open){
-  max-height: 88px; /* header height */
+/* Paper texture overlay */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("/src/assets/paper-texture.png");
+  mix-blend-mode: overlay;
+  opacity: .12;
+  pointer-events: none;
 }
 
-/* expanded */
-.card.is-collapsible.is-open{
-  max-height: 1800px;
+/* Collapse behavior */
+.card.is-collapsible {
+  overflow: hidden;
+  transition: max-height .4s ease;
+}
+.card.is-collapsible:not(.is-open) {
+  max-height: 110px;
+}
+.card.is-collapsible.is-open {
+  max-height: 2000px;
 }
 
-/* caret icon */
-.card .expander{
-  margin-left: auto;
-  display: inline-flex;
+/* =========================
+   HEADER (Score + Title)
+   ========================= */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: .75rem;
+}
+
+.card .num,
+.card .score {
+  font-family: var(--font-display);
+  font-weight: 200;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  line-height: 1;
+  margin-right: .5em;
+  color: var(--text);
+}
+
+.card .card-title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.8vw, 1.6rem);
+  line-height: 1.1;
+  color: var(--text);
+  flex-grow: 1;
+}
+
+/* =========================
+   EXPANDER BUTTON
+   ========================= */
+.btn-expander {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px; height: 24px;
-  opacity: .75;
-  transition: transform 200ms ease, opacity 150ms ease;
+  transition: transform .25s ease, filter .25s ease;
+  filter: brightness(.8);
 }
-.card[aria-expanded="true"] .expander{
+
+.btn-expander:hover {
+  filter: brightness(1.5) drop-shadow(0 0 6px var(--accent));
+}
+
+.card[aria-expanded="true"] .btn-expander .expander {
   transform: rotate(180deg);
-  opacity: 1;
 }
 
-/* titles */
-.card .card-title{
+/* =========================
+   CARD BODY SECTIONS
+   ========================= */
+.card-section-title {
+  font-size: .85rem;
   font-weight: 500;
-  letter-spacing: .1px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+  margin-bottom: .4rem;
 }
 
-/* numbers light */
-.card .stat .num{
+.stat .num {
+  font-family: var(--font-display);
   font-weight: 200;
+  color: var(--text);
 }
 
-/* dividers */
-.hr, .divider{
+.divider, .hr {
   height: 1px;
   background: var(--divider);
   border: 0;
   margin: 12px 0;
+}
+
+/* =========================
+   TAGS
+   ========================= */
+.tag, .chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .3rem .6rem;
+  border: 1px solid var(--divider);
+  background: rgba(255,255,255,0.04);
+  color: var(--muted);
+  font-size: .75rem;
+  border-radius: var(--radius);
+  text-transform: uppercase;
+}
+.tag:hover, .chip:hover {
+  background: rgba(255,255,255,0.04);
+  box-shadow: none;
+}
+
+/* =========================
+   ACTIVE / ACCENT STATES
+   ========================= */
+.btn-top:active, .btn-top[aria-pressed="true"] {
+  background: var(--active-bg);
+  color: #fff;
+}
+
+/* =========================
+   SMOOTH ANIMATIONS
+   ========================= */
+@keyframes cardFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.card {
+  animation: cardFadeIn .4s ease both;
 }
