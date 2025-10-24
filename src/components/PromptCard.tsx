@@ -72,33 +72,42 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           }}
         />
         
-        <CardContent className="p-5 relative z-10 flex-1 flex flex-col" style={{ height: '100%' }}>
-          {/* Adjusted Title - Top Section */}
-          <div className="mb-3">
+        <CardContent className="p-4 relative z-10 flex-1 flex flex-col" style={{ height: '100%' }}>
+          {/* Score + Title */}
+          <div className="flex items-start gap-3 mb-2">
+            <div 
+              className="text-white/20 font-light flex-shrink-0"
+              style={{ 
+                fontFamily: "'Nimbus Sans Extended', sans-serif",
+                fontSize: '3rem',
+                lineHeight: '1',
+                fontWeight: '200'
+              }}
+            >
+              {String(index + 1).padStart(2, '0')}
+            </div>
             <h3
-              className={`${categoryStyles.text} leading-tight transition-smooth`}
+              className={`${categoryStyles.text} leading-tight transition-smooth flex-1`}
               style={{ 
                 fontFamily: "'Nimbus Sans Extended', 'Helvetica Neue', 'Inter', sans-serif",
-                fontSize: 'clamp(1.1rem, 2.5vw, 1.35rem)',
+                fontSize: 'clamp(1.05rem, 2.5vw, 1.25rem)',
                 fontWeight: '700',
-                lineHeight: '1.15',
+                lineHeight: '1.2',
                 letterSpacing: '-0.01em',
-                textTransform: 'none',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                minHeight: '2.5rem'
+                textOverflow: 'ellipsis'
               }}
             >
               {prompt.title}
             </h3>
           </div>
 
-          {/* Why This Works - 2 lines */}
+          {/* Why This Works */}
           <p 
-            className="text-white/65 mb-4 leading-relaxed flex-shrink-0"
+            className="text-white/65 mb-3 leading-relaxed flex-shrink-0"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: '0.875rem',
@@ -108,43 +117,33 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              minHeight: '2.625rem'
+              textOverflow: 'ellipsis'
             }}
           >
             {prompt.description}
           </p>
 
-          {/* Spacer to push buttons to bottom */}
           <div className="flex-1"></div>
 
-          {/* Buttons at Bottom - Expand ▾ / Copy ⧉ */}
-          <div className="flex items-center gap-2 pt-3 border-t border-white/10">
+          {/* Icon Buttons */}
+          <div className="flex items-center gap-2 pt-2 border-t border-white/10">
             <button
               onClick={() => setExpanded(!expanded)}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white text-sm font-medium"
-              style={{
-                borderRadius: '12px',
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: '500'
-              }}
+              className="flex items-center justify-center w-10 h-10 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
+              style={{ borderRadius: '10px' }}
               data-cursor="hover"
+              aria-label="Expand details"
             >
-              <span>Expand</span>
               <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
             </button>
             
             <button
               onClick={handleCopy}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white text-sm font-medium"
-              style={{
-                borderRadius: '12px',
-                fontFamily: "'Inter', sans-serif",
-                fontWeight: '500'
-              }}
+              className="flex items-center justify-center w-10 h-10 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
+              style={{ borderRadius: '10px' }}
               data-cursor="hover"
+              aria-label="Copy prompt"
             >
-              <span>Copy</span>
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
