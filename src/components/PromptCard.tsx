@@ -73,18 +73,18 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
         />
         
         <CardContent className="p-5 relative z-10 flex-1 flex flex-col" style={{ height: '100%' }}>
-          {/* Score Number - Massive */}
+          {/* Score Number - Bebas Neue Ultra Thin */}
           <div 
-            className="text-white/15 font-light mb-3"
+            className="text-white/12 mb-3"
             style={{ 
-              fontFamily: "'Nimbus Sans Extended', sans-serif",
-              fontSize: '4.75rem',
+              fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: '5.5rem',
               lineHeight: '1',
-              fontWeight: '100',
-              letterSpacing: '-0.03em'
+              fontWeight: '400',
+              letterSpacing: '0.05em'
             }}
           >
-            {String(index + 1).padStart(3, '0')}
+            {index + 1}
           </div>
 
           {/* Title */}
