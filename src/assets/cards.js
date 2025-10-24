@@ -1,86 +1,64 @@
-/* ==========================================
-   WhisperDeck UI Enhancer
-   ========================================== */
-(function(){
-
-  // 1️⃣ Copy footer background color or gradient to --app-bg
+// WhisperDeck UI Enhancer (Vite + React compatible)
+export default (function(){
+  // Footer background sync
   function syncFooterBackground(){
-    try{
-      const footer = document.querySelector('footer, .site-footer, .app-footer');
-      if(!footer) return;
-      const cs = getComputedStyle(footer);
-      const bgImage = cs.backgroundImage && cs.backgroundImage !== 'none' ? cs.backgroundImage : null;
-      const bgColor = cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' ? cs.backgroundColor : null;
-      const bg = bgImage || bgColor || '#0f0f12';
-      document.documentElement.style.setProperty('--app-bg', bg);
-    }catch(e){
-      console.warn('[WhisperDeck] Footer sync error:', e);
-    }
+    const footer = document.querySelector('footer, .site-footer, .app-footer');
+    if(!footer) return;
+    const cs = getComputedStyle(footer);
+    const bg = cs.backgroundImage && cs.backgroundImage !== 'none'
+      ? cs.backgroundImage
+      : (cs.backgroundColor && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' ? cs.backgroundColor : '#0f0f12');
+    document.documentElement.style.setProperty('--app-bg', bg);
   }
 
-  // 2️⃣ Disable hover effects on tags (just in case some JS re-adds them)
+  // Disable tag hover
   function neutralizeTagHover(){
     const tags = document.querySelectorAll('.tag, .chip, .badge-tag');
     tags.forEach(el=>{
-      el.addEventListener('mouseenter', e=>{
-        e.stopImmediatePropagation();
-        return false;
-      }, {passive:true});
+      el.addEventListener('mouseenter', e=>e.stopImmediatePropagation(), {passive:true});
     });
   }
 
-  // 3️⃣ Add “Sort by” icon automatically if not already added
+  // Add “Sort by” icon automatically
   function ensureSortIcon(){
     const sortBtn = document.querySelector('.btn-top.sort, .btn-top[data-role="sort"]');
-    if(!sortBtn) return;
-    if(sortBtn.querySelector('.icon')) return; // already added
-
+    if(!sortBtn || sortBtn.querySelector('.icon')) return;
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.classList.add('icon');
     svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.innerHTML = `
-      <path d="M3 7h14M3 12h10M3 17h6"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round" />
-    `;
+    svg.innerHTML = `<path d="M3 7h14M3 12h10M3 17h6"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>`;
     sortBtn.insertBefore(svg, sortBtn.firstChild);
   }
 
-  // 4️⃣ Enable per-card expand/collapse (column pushdown)
+  // Card expand/collapse behavior
   function setupCollapsibleCards(){
-    const cards = document.querySelectorAll('.card.is-collapsible');
-    cards.forEach(card=>{
+    document.querySelectorAll('.card.is-collapsible').forEach(card=>{
       const btn = card.querySelector('.btn-expander');
       if(!btn) return;
-
       const id = card.id || ('card-' + Math.random().toString(36).slice(2));
       card.id = id;
       btn.setAttribute('aria-controls', id);
 
-      const toggle = (open)=>{
+      function toggle(open){
         const isOpen = typeof open === 'boolean' ? open : !card.classList.contains('is-open');
         card.classList.toggle('is-open', isOpen);
         card.setAttribute('aria-expanded', String(isOpen));
         btn.setAttribute('aria-expanded', String(isOpen));
-      };
+      }
 
       btn.addEventListener('click', e=>{
         e.preventDefault();
         toggle();
       });
 
-      // Default collapsed
       toggle(false);
     });
   }
 
-  // 5️⃣ Initialize on DOM ready
-  function ready(fn){
-    if(document.readyState !== 'loading') fn();
-    else document.addEventListener('DOMContentLoaded', fn);
+  // Initialize after DOM loads
+  function ready(fn){ 
+    document.readyState !== 'loading' ? fn() : document.addEventListener('DOMContentLoaded', fn);
   }
 
   ready(()=>{
@@ -90,7 +68,5 @@
     setupCollapsibleCards();
   });
 
-  // Re-sync background on resize (for responsive footers)
   window.addEventListener('resize', syncFooterBackground);
-
 })();
