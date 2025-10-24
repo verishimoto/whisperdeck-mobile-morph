@@ -1,81 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <!-- =============== META CONFIG =============== -->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="author" content="verishimoto" />
-    <meta
-      name="description"
-      content="A cinematic micro-SaaS for advanced LLM prompt engineering. 250+ expert-level prompt hacks where the mouse is the hero."
-    />
-    <meta
-      name="keywords"
-      content="LLM prompts, AI prompt engineering, advanced prompts, ChatGPT hacks, Claude prompts, neural pathways, meta-learning, AI techniques"
-    />
-    <meta name="robots" content="index, follow" />
-    <title>WhisperDeck 2.0 – Opal MicroApp | Advanced LLM Prompt Engineering</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="author" content="verishimoto" />
 
-    <!-- =============== SEO CANONICAL =============== -->
-    <link rel="canonical" href="https://whisperer-deck.lovableproject.com/" />
+  <title>Enterprise Prompt Engineering Toolkit – 250+ LLM Prompt Workflows</title>
+  <meta name="description" content="WhisperDeck: Advanced prompt engineering toolkit for AI professionals. 250+ expert-level prompt hacks, optimized for large language models and scalable workflows." />
+  <meta name="keywords" content="prompt engineering toolkit, advanced prompt engineering, LLM prompt optimization, enterprise prompt workflows, AI prompt engineering for professionals" />
 
-    <!-- =============== OPEN GRAPH / FACEBOOK =============== -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://whisperer-deck.lovableproject.com/" />
-    <meta property="og:title" content="Whisperer Deck – Advanced LLM Prompt Engineering Hacks" />
-    <meta property="og:description" content="250 Ultimate Advanced Prompt Hacks for Expert LLM Engineers Only" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  <link rel="canonical" href="https://whisperdeck.io/" />
 
-    <!-- =============== TWITTER =============== -->
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:url" content="https://whisperer-deck.lovableproject.com/" />
-    <meta name="twitter:title" content="Whisperer Deck – Advanced LLM Prompt Engineering Hacks" />
-    <meta name="twitter:description" content="250 Ultimate Advanced Prompt Hacks for Expert LLM Engineers Only" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@100;200;300;400;500;600;700&family=Inter+Tight:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@700&display=swap" rel="stylesheet">
 
-    <!-- =============== FAVICON =============== -->
-    <link rel="icon" type="image/svg+xml" href="/favicon-opal.svg" />
+  <style>
+    @font-face { font-family: 'Nimbus Sans Extended'; src: local('Helvetica Neue Bold'), local('Arial Black'), local('Roboto'); font-weight: 700; }
+    @font-face { font-family: 'Nirmala UI'; src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue'); font-weight: 400; }
+  </style>
 
-    <!-- =============== FONTS =============== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@100;200;300;400;500;600;700&family=Inter+Tight:wght@100;200;300;400;500;600;700;800;900&family=Roboto:wght@700&display=swap"
-      rel="stylesheet"
-    />
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://whisperdeck.io/" />
+  <meta property="og:title" content="WhisperDeck – Enterprise Prompt Engineering Toolkit for AI Professionals" />
+  <meta property="og:description" content="Unlock 250+ expert-level prompt workflows for large language models. Built for AI engineers, prompt architects & LLM power users." />
+  <meta property="og:image" content="https://whisperdeck.io/assets/og-prompttoolkit.png" />
 
-    <style>
-      @font-face {
-        font-family: 'Nimbus Sans Extended';
-        src: local('Helvetica Neue Bold'), local('Arial Black'), local('Roboto');
-        font-weight: 700;
-      }
-      @font-face {
-        font-family: 'Nirmala UI';
-        src: local('Segoe UI'), local('Roboto'), local('Helvetica Neue');
-        font-weight: 400;
-      }
-    </style>
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:url" content="https://whisperdeck.io/" />
+  <meta name="twitter:title" content="WhisperDeck – Enterprise Prompt Engineering Toolkit" />
+  <meta name="twitter:description" content="Prompt engineering for professionals: manage 250+ prompt patterns, scale your LLM workflows, optimize for AI-driven search." />
+  <meta name="twitter:image" content="https://whisperdeck.io/assets/og-prompttoolkit.png" />
 
-    <!-- =============== STRUCTURED DATA =============== -->
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "Whisperer Deck",
-        "description": "250 Ultimate Advanced Prompt Hacks for Advanced LLM Prompt Engineers",
-        "url": "https://whisperer-deck.lovableproject.com/",
-        "author": {
-          "@type": "Person",
-          "name": "verishimoto",
-          "url": "https://www.linkedin.com/in/verishimoto/"
-        }
-      }
-    </script>
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "WhisperDeck",
+    "description": "An enterprise prompt engineering toolkit with 250+ prompt workflows for large language models and AI professionals.",
+    "url": "https://whisperdeck.io/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "creator": {
+      "@type": "Person",
+      "name": "verishimoto"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
 
-    <!-- =============== STYLES =============== -->
-    <link rel="stylesheet" href="src/assets/styles.css" />
-  </head>
+  <link rel="stylesheet" href="src/assets/styles.css" />
+</head>
+
 
   <body>
     <!-- React root -->
