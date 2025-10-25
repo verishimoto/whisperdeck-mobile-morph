@@ -11,9 +11,7 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   const [darkMode, setDarkMode] = useState(true);
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-xl border-b border-white/10" style={{
-      background: 'rgba(30, 35, 45, 0.6)'
-    }}>
+    <header className="sticky top-0 z-50 backdrop-blur-xl bg-black/20 border-b border-white/10">
       {/* Top Bar */}
       <div className="px-6 py-4 flex items-center justify-between">
         {/* Brand Name */}

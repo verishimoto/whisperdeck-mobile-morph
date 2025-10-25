@@ -37,7 +37,7 @@
     --border: 220 25% 25%;
     --input: 220 25% 20%;
     --ring: 270 60% 65%;
-    --radius: 0.25rem;
+    --radius: 1rem;
     
     /* Category Colors - Iridescent Opalescent - Enhanced */
     --level-ultra: 280 98% 85%;
@@ -56,10 +56,9 @@
     @apply border-border;
   }
   body {
-    @apply text-foreground;
-    font-family: "Inter", "Helvetica Neue", system-ui, sans-serif;
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
-    background: rgba(25, 30, 40, 0.95);
     background-image: url('/src/assets/opal-bg.jpg');
     background-size: cover;
     background-position: center;
@@ -68,23 +67,7 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: "Helvetica Neue", "SF Pro Display", "Nimbus Sans", sans-serif;
-    font-weight: 300;
-  }
-  
-  .font-number {
-    font-family: "Helvetica Neue", "SF Pro Display", sans-serif;
-    font-weight: 100;
-    font-stretch: ultra-condensed;
-    letter-spacing: -0.05em;
-  }
-  
-  .font-body {
-    font-family: "Inter", sans-serif;
-  }
-  
-  .font-display {
-    font-family: "Helvetica Neue", "SF Pro Display", "Nimbus Sans", sans-serif;
+    font-family: 'Helvetica Neue', 'Inter Tight', -apple-system, sans-serif;
   }
 }
 

@@ -1,84 +1,43 @@
-import React, { useState } from "react";
-import "@/assets/styles.css";
+import * as React from "react";
 
-interface CardProps {
-  title: string;
-  score: string | number;
-  promptBlueprint: string;
-  methodInsight: string;
-  tags?: string[];
-}
+import { cn } from "@/lib/utils";
 
-const Card: React.FC<CardProps> = ({
-  title,
-  score,
-  promptBlueprint,
-  methodInsight,
-  tags = [],
-}) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Card = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(({ className, ...props }, ref) => (
+  <div ref={ref} className={cn("rounded-lg border bg-card text-card-foreground shadow-sm", className)} {...props} />
+));
+Card.displayName = "Card";
 
-  return (
-    <div
-      className={`card is-collapsible ${isOpen ? "is-open" : ""}`}
-      aria-expanded={isOpen}
-    >
-      {/* HEADER */}
-      <div className="card-header">
-        <div style={{ display: "flex", alignItems: "flex-start" }}>
-          <span className="num">{score}</span>
-          <h3 className="card-title">{title}</h3>
-        </div>
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props} />
+  ),
+);
+CardHeader.displayName = "CardHeader";
 
-        {/* Expander Button */}
-        <button
-          className="btn-expander"
-          aria-expanded={isOpen}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          <span className="expander" aria-hidden="true">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="6 9 12 15 18 9"></polyline>
-            </svg>
-          </span>
-        </button>
-      </div>
+const CardTitle = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLHeadingElement>>(
+  ({ className, ...props }, ref) => (
+    <h3 ref={ref} className={cn("text-2xl font-semibold leading-none tracking-tight", className)} {...props} />
+  ),
+);
+CardTitle.displayName = "CardTitle";
 
-      {/* CARD BODY */}
-      <div className="card-body">
-        <div className="card-section">
-          <h4 className="card-section-title">Prompt Blueprint</h4>
-          <p>{promptBlueprint}</p>
-        </div>
+const CardDescription = React.forwardRef<HTMLParagraphElement, React.HTMLAttributes<HTMLParagraphElement>>(
+  ({ className, ...props }, ref) => (
+    <p ref={ref} className={cn("text-sm text-muted-foreground", className)} {...props} />
+  ),
+);
+CardDescription.displayName = "CardDescription";
 
-        <hr className="divider" />
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />,
+);
+CardContent.displayName = "CardContent";
 
-        <div className="card-section">
-          <h4 className="card-section-title">Method Insight</h4>
-          <p>{methodInsight}</p>
-        </div>
+const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn("flex items-center p-6 pt-0", className)} {...props} />
+  ),
+);
+CardFooter.displayName = "CardFooter";
 
-        {tags.length > 0 && (
-          <div style={{ marginTop: "1rem", display: "flex", flexWrap: "wrap", gap: ".4rem" }}>
-            {tags.map((tag, i) => (
-              <span key={i} className="chip">
-                {tag}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-export default Card;
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent };

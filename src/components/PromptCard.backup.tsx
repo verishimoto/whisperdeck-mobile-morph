@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Copy, Check, ChevronDown, ChevronUp } from "lucide-react";
-import Card from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -117,8 +117,8 @@ export function PromptCard({
       });
     }
   };
-  return <div 
-    className={`group relative overflow-hidden transition-all duration-500 animate-slide-up glass-card border-2 ${categoryStyles.border} ${categoryStyles.hover}`}
+  return <Card 
+    className={`group relative overflow-hidden transition-all duration-500 animate-slide-up glass-card border-2 ${categoryStyles.border} ${categoryStyles.hover}`} 
     style={{
       animationDelay: `${index * 0.05}s`,
       background: 'var(--glass-bg)',
@@ -134,7 +134,7 @@ export function PromptCard({
         }} 
       />
       
-      <div className="p-6 relative z-10 card-body">
+      <CardContent className="p-6 relative z-10">
         {/* Header with Score and Toggle */}
         <div className="flex items-start justify-between mb-4">
           {/* Left Column: Number + Title */}
@@ -280,6 +280,6 @@ export function PromptCard({
             </div>
           </div>
         </div>
-      </div>
-    </div>;
+      </CardContent>
+    </Card>;
 }

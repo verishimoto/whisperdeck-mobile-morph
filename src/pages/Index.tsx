@@ -49,8 +49,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen text-foreground" style={{
-      background: 'rgba(25, 30, 40, 0.95)'
+    <div className="min-h-screen bg-background text-foreground" style={{
+      background: `linear-gradient(180deg, rgba(20, 25, 30, 0.8) 0%, rgba(13, 17, 23, 0.95) 50%, rgba(13, 17, 23, 1) 100%)`,
+      backgroundAttachment: 'fixed'
     }}>
       <Header 
         searchQuery=""
