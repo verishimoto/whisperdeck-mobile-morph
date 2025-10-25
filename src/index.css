@@ -56,9 +56,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply text-foreground;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
+    background: rgba(25, 30, 40, 0.95);
     background-image: url('/src/assets/opal-bg.jpg');
     background-size: cover;
     background-position: center;
@@ -67,7 +68,14 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Helvetica Neue', 'Inter Tight', -apple-system, sans-serif;
+    font-family: 'Helvetica Neue', 'SF Pro Display', 'Nimbus Sans', -apple-system, sans-serif;
+  }
+  
+  .font-number {
+    font-family: 'Helvetica Neue', 'SF Pro Display', sans-serif;
+    font-weight: 100;
+    font-stretch: ultra-condensed;
+    letter-spacing: -0.05em;
   }
 }
 

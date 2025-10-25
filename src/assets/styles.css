@@ -1,14 +1,15 @@
 :root {
-  --font-body: "Inter", "Helvetica Neue", "Helvetica Pro", system-ui, sans-serif;
-  --font-display: "Helvetica Neue", "Helvetica Pro", "Inter Tight", sans-serif;
-  --radius: 8px;
-  --app-bg: #0f0f12;
-  --card-bg: rgba(255,255,255,0.03);
-  --text: #e6e6e9;
-  --muted: #a0a0a8;
+  --font-body: "Inter", "Helvetica Neue", system-ui, sans-serif;
+  --font-display: "Helvetica Neue", "SF Pro Display", "Nimbus Sans", sans-serif;
+  --font-number: "Helvetica Neue", "SF Pro Display", sans-serif;
+  --radius: 4px;
+  --app-bg: rgba(25, 30, 40, 0.85);
+  --card-bg: rgba(30, 35, 45, 0.6);
+  --text: #ffffff;
+  --muted: #a8b2c0;
   --divider: rgba(255,255,255,0.08);
-  --active-bg: #16181c;
-  --accent: rgba(160,240,255,0.7);
+  --active-bg: rgba(40, 45, 55, 0.8);
+  --accent: rgba(180,220,255,0.9);
 }
 html, body {
   margin: 0;
@@ -95,11 +96,13 @@ body::before {
   margin-bottom: .75rem;
 }
 .card .num {
-  font-family: var(--font-display);
-  font-weight: 200;
+  font-family: var(--font-number);
+  font-weight: 100;
+  font-stretch: ultra-condensed;
   font-size: clamp(2rem, 3.5vw, 3rem);
   line-height: 1;
   margin-right: .5em;
+  letter-spacing: -0.05em;
 }
 .card .card-title {
   font-family: var(--font-display);
@@ -148,13 +151,15 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: .4rem;
-  padding: .3rem .6rem;
-  border: 1px solid var(--divider);
-  background: rgba(255,255,255,0.04);
-  color: var(--muted);
+  padding: .4rem .75rem;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.12);
+  color: var(--text);
   font-size: .75rem;
   border-radius: var(--radius);
   text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 /* smooth fade-in */
