@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../assets/styles.css";
+import "@/assets/styles.css";
 
 interface CardProps {
   title: string;
