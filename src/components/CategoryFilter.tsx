@@ -1,4 +1,4 @@
-import { ArrowUpDown, Search, ArrowDownUp } from "lucide-react";
+import { Search, ArrowUpDown } from "lucide-react";
 
 interface CategoryFilterProps {
   selectedCategory: string | null;
@@ -39,7 +39,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
           <button
             key={category}
             onClick={() => onCategoryChange(category)}
-            className="whitespace-nowrap flex items-center gap-1.5 text-sm px-4 border backdrop-blur-xl h-[38px] text-white bg-white/12 border-white/25 font-medium"
+            className="whitespace-nowrap text-sm px-4 border backdrop-blur-xl h-[38px] text-white/90 bg-white/12 border-white/25 font-medium"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontWeight: '500',
@@ -50,7 +50,6 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
             }}
             data-cursor="hover"
           >
-            <ArrowDownUp className="h-3 w-3 opacity-70" />
             {category}
           </button>
         ))}
