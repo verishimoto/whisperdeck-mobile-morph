@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import Card from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check, ChevronDown } from "lucide-react";
 import { HackPrompt } from "@/types";
@@ -44,7 +44,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
   return (
     <div className="relative">
-      <Card 
+      <div 
         className={`glass-card overflow-hidden transition-all duration-500 group/card relative ${expanded ? 'shadow-2xl border-white/35' : ''}`}
         style={{
           borderRadius: '20px',
@@ -72,7 +72,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           }}
         />
         
-        <CardContent className="p-5 relative z-10 flex-1 flex flex-col" style={{ height: '100%' }}>
+        <div className="p-5 relative z-10 flex-1 flex flex-col card-body" style={{ height: '100%' }}>
           {/* Score Number - Bebas Neue Ultra Thin */}
           <div 
             className="text-white/12 mb-3"
@@ -160,8 +160,8 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
               {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
             </button>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* Expanded Content - Panel Below Card */}
       {expanded && (
