@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Card from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, ChevronDown } from "lucide-react";
+import { Copy, Check, ChevronDown, Square, CheckSquare } from "lucide-react";
 import { HackPrompt } from "@/types";
 import { useToast } from "@/hooks/use-toast";
+import { useSelection } from "@/contexts/SelectionContext";
 
 interface PromptCardProps {
   prompt: HackPrompt;
@@ -27,25 +28,45 @@ const getCategoryColor = (category: string) => {
 export function PromptCard({ prompt, index }: PromptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [showGlassOverlay, setShowGlassOverlay] = useState(false);
   const { toast } = useToast();
+  const { togglePrompt, isSelected, canSelectMore } = useSelection();
   
   const categoryStyles = getCategoryColor(prompt.category);
+  const selected = isSelected(prompt.id);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(prompt.example);
     setCopied(true);
+    setShowGlassOverlay(true);
     toast({
       title: "Copied to clipboard!",
       description: "Prompt example has been copied.",
       duration: 2000,
     });
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => {
+      setCopied(false);
+      setShowGlassOverlay(false);
+    }, 3000);
+  };
+
+  const handleSelect = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!selected && !canSelectMore) {
+      toast({
+        title: "Maximum selection reached",
+        description: "You can select up to 5 prompts.",
+        duration: 2000,
+      });
+      return;
+    }
+    togglePrompt(prompt);
   };
 
   return (
     <div className="relative">
       <div 
-        className={`glass-card overflow-hidden transition-all duration-500 group/card relative ${expanded ? 'shadow-2xl border-white/35' : ''}`}
+        className={`glass-card overflow-hidden transition-all duration-300 group/card relative ${expanded ? 'shadow-2xl border-white/35' : ''} ${selected ? 'ring-2 ring-level-ultra/50' : ''}`}
         style={{
           borderRadius: '20px',
           animationDelay: `${index * 50}ms`,
@@ -65,12 +86,25 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
       >
         {/* Radial gradient border glow on hover */}
         <div 
-          className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-500 pointer-events-none rounded-[20px]"
+          className="absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300 pointer-events-none rounded-[20px]"
           style={{
             background: `radial-gradient(600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), hsl(var(${categoryStyles.text.replace('text-', '--')}) / 0.15), transparent 40%)`,
             zIndex: 0
           }}
         />
+
+        {/* Selection Checkbox */}
+        <button
+          onClick={handleSelect}
+          className={`absolute top-4 right-4 z-20 p-2 rounded-lg transition-all duration-200 ${
+            selected 
+              ? 'bg-level-ultra/20 text-level-ultra border border-level-ultra/30' 
+              : 'bg-white/5 text-white/40 hover:text-white/70 border border-white/10 hover:border-white/20'
+          }`}
+          aria-label="Select prompt"
+        >
+          {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
+        </button>
         
         <div className="p-5 relative z-10 flex-1 flex flex-col card-body" style={{ height: '100%' }}>
           {/* Score Number - Bebas Neue Ultra Thin */}
@@ -190,16 +224,29 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
             </p>
           </div>
 
-          {/* Why This Is a Hack */}
+          {/* Why This Is a Hack with Glass Overlay */}
           <div 
-            className={`p-4 rounded-lg border transition-all duration-500`}
+            className={`p-4 rounded-lg border transition-all duration-500 relative overflow-hidden`}
             style={{ 
               borderRadius: '12px',
               backgroundColor: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.15)`,
               borderColor: `hsl(var(--level-${prompt.category.toLowerCase()}) / 0.3)`
             }}
           >
-            <h4 
+            {/* Grainy Glass Overlay on Copy */}
+            {showGlassOverlay && (
+              <div 
+                className="absolute inset-0 animate-in fade-in duration-500"
+                style={{
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  backdropFilter: 'blur(8px) saturate(120%)',
+                  backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noise\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noise)\' opacity=\'0.3\'/%3E%3C/svg%3E")',
+                  mixBlendMode: 'overlay',
+                  zIndex: 10
+                }}
+              />
+            )}
+            <h4
               className={`iridescent-text font-medium mb-2`}
               style={{
                 fontFamily: "'Nimbus Sans Extended', 'Helvetica Neue', 'Inter', sans-serif",

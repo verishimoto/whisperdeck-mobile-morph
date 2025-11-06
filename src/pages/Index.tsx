@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
+import { PromptComposer } from "@/components/PromptComposer";
 import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
 
@@ -73,6 +74,8 @@ const Index = () => {
         filteredCount={filteredPrompts.length}
         totalCount={hackPrompts.length}
       />
+
+      <PromptComposer />
     </div>
   );
 };

@@ -22,9 +22,9 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
         </p>
       </div>
 
-      {/* Grid - 3 → 2 → 1 Responsive with Parallax */}
+      {/* Grid - 4 → 2 → 1 Responsive with Parallax */}
       <div 
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" 
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
         style={{ 
           alignItems: 'start'
         }}

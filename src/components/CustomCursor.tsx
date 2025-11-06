@@ -27,7 +27,7 @@ export function CustomCursor() {
     const handleMouseDown = () => setIsClicking(true);
     const handleMouseUp = () => setIsClicking(false);
 
-    // Mouse move tracking - optimized with passive
+    // Mouse move tracking - optimized with passive and throttled
     document.addEventListener('mousemove', updateMousePosition, { passive: true });
     
     // Hover detection
@@ -35,8 +35,8 @@ export function CustomCursor() {
     document.addEventListener('mouseleave', handleMouseLeave, true);
     
     // Click detection
-    document.addEventListener('mousedown', handleMouseDown);
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousedown', handleMouseDown, { passive: true });
+    document.addEventListener('mouseup', handleMouseUp, { passive: true });
 
     return () => {
       document.removeEventListener('mousemove', updateMousePosition);
@@ -55,6 +55,7 @@ export function CustomCursor() {
         left: `${mousePosition.x}px`,
         top: `${mousePosition.y}px`,
         transform: 'translate(-50%, -50%)',
+        willChange: 'transform',
       }}
     />
   );

@@ -1,32 +1,31 @@
-import React from "react";
-import Card from "./components/ui/card";
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CustomCursor } from "@/components/CustomCursor";
+import { SelectionProvider } from "@/contexts/SelectionContext";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
 
-const App: React.FC = () => {
-  return (
-    <>
-      {/* Motion Background */}
-      <div id="bg-motion"></div>
+const queryClient = new QueryClient();
 
-      {/* Main Content */}
-      <main className="cards-container" style={{ position: "relative", zIndex: 1 }}>
-        <Card
-          title="Neural Pathway Reconstruction"
-          score="97.3"
-          promptBlueprint="Reconstructs multi-agent cognitive reasoning pathways for improved model synthesis."
-          methodInsight="Uses chained contextual analysis and pattern memory prompts to simulate continuous awareness."
-          tags={["Expert", "LLM", "Optimization"]}
-        />
-
-        <Card
-          title="Dynamic Chain Injection"
-          score="89.6"
-          promptBlueprint="Injects context dynamically mid-generation to increase coherence and recall."
-          methodInsight="Balances temperature with context depth for modular agent reasoning."
-          tags={["Pro", "Prompt Flow", "Adaptive"]}
-        />
-      </main>
-    </>
-  );
-};
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <SelectionProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <CustomCursor />
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </SelectionProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
 export default App;
