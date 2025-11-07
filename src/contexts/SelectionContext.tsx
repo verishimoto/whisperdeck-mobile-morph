@@ -7,13 +7,18 @@ interface SelectionContextType {
   clearSelection: () => void;
   isSelected: (id: number) => boolean;
   canSelectMore: boolean;
+  copyCount: number;
+  incrementCopyCount: () => void;
+  canCopy: boolean;
 }
 
 const SelectionContext = createContext<SelectionContextType | undefined>(undefined);
 
 export function SelectionProvider({ children }: { children: ReactNode }) {
   const [selectedPrompts, setSelectedPrompts] = useState<HackPrompt[]>([]);
+  const [copyCount, setCopyCount] = useState(0);
   const MAX_SELECTION = 5;
+  const MAX_COPIES = 3;
 
   const togglePrompt = (prompt: HackPrompt) => {
     setSelectedPrompts(current => {
@@ -31,9 +36,11 @@ export function SelectionProvider({ children }: { children: ReactNode }) {
   const clearSelection = () => setSelectedPrompts([]);
   const isSelected = (id: number) => selectedPrompts.some(p => p.id === id);
   const canSelectMore = selectedPrompts.length < MAX_SELECTION;
+  const incrementCopyCount = () => setCopyCount(prev => prev + 1);
+  const canCopy = copyCount < MAX_COPIES;
 
   return (
-    <SelectionContext.Provider value={{ selectedPrompts, togglePrompt, clearSelection, isSelected, canSelectMore }}>
+    <SelectionContext.Provider value={{ selectedPrompts, togglePrompt, clearSelection, isSelected, canSelectMore, copyCount, incrementCopyCount, canCopy }}>
       {children}
     </SelectionContext.Provider>
   );

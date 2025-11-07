@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 
 export function PromptComposer() {
-  const { selectedPrompts, clearSelection } = useSelection();
+  const { selectedPrompts, clearSelection, copyCount, canCopy } = useSelection();
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
@@ -26,7 +26,7 @@ export function PromptComposer() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-96 glass-card p-6 animate-in slide-in-from-bottom-4" style={{ borderRadius: '16px', backdropFilter: 'blur(20px) saturate(180%)', background: 'rgba(10, 10, 15, 0.85)' }}>
+    <div className="fixed bottom-6 right-6 z-50 w-96 glass-card p-5 animate-in slide-in-from-bottom-4" style={{ borderRadius: '12px', backdropFilter: 'blur(20px) saturate(180%)', background: 'rgba(10, 10, 15, 0.9)' }}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-level-ultra" />
@@ -59,7 +59,7 @@ export function PromptComposer() {
       </div>
 
       <p className="text-xs text-white/40 mt-3 text-center">
-        Selected {selectedPrompts.length}/5 prompts
+        Selected {selectedPrompts.length}/5 prompts • {copyCount}/3 copies used
       </p>
     </div>
   );

@@ -27,7 +27,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
             fontFamily: "'Inter', sans-serif",
             fontWeight: selectedCategory === null ? '500' : '400',
             letterSpacing: '0.01em',
-            borderRadius: '12px',
+            borderRadius: '8px',
             minWidth: '80px'
           }}
           data-cursor="hover"
@@ -49,7 +49,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
               fontFamily: "'Inter', sans-serif",
               fontWeight: selectedCategory === category ? '500' : '400',
               letterSpacing: '0.01em',
-              borderRadius: '12px',
+              borderRadius: '8px',
               minWidth: '100px'
             }}
             data-cursor="hover"
@@ -70,7 +70,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
               fontFamily: "'Inter', sans-serif",
               fontSize: '0.875rem',
               fontWeight: '400',
-              borderRadius: '12px'
+              borderRadius: '8px'
             }}
             data-cursor="hover"
           />
@@ -83,7 +83,7 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
           className="p-2.5 h-[40px] w-[40px] text-white/60 hover:text-white transition-all backdrop-blur-xl border border-white/10 hover:bg-white/10 hover:border-white/25 flex items-center justify-center"
           title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
           style={{
-            borderRadius: '12px'
+            borderRadius: '8px'
           }}
           data-cursor="hover"
         >

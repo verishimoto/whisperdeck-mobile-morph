@@ -50,10 +50,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground" style={{
-      background: `linear-gradient(180deg, rgba(20, 25, 30, 0.8) 0%, rgba(13, 17, 23, 0.95) 50%, rgba(13, 17, 23, 1) 100%)`,
-      backgroundAttachment: 'fixed'
-    }}>
+    <div className="min-h-screen bg-background text-foreground">
       <Header 
         searchQuery=""
         onSearchChange={() => {}}
@@ -69,11 +66,13 @@ const Index = () => {
         onSearchChange={handleSearchChange}
       />
       
-      <PromptGrid
-        prompts={filteredPrompts}
-        filteredCount={filteredPrompts.length}
-        totalCount={hackPrompts.length}
-      />
+      <div className="max-w-[1400px] mx-auto px-6">
+        <PromptGrid
+          prompts={filteredPrompts}
+          filteredCount={filteredPrompts.length}
+          totalCount={hackPrompts.length}
+        />
+      </div>
 
       <PromptComposer />
     </div>

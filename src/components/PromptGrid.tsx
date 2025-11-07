@@ -9,12 +9,12 @@ interface PromptGridProps {
 
 export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridProps) {
   return (
-    <div className="container px-4 pb-16">
+    <div className="px-6 pb-16">
       {/* Results Summary */}
       <div className="text-center mb-8">
         <p className="text-white/50 font-light" style={{
-          fontFamily: "'Nirmala UI', 'Inter', sans-serif",
-          fontSize: '0.9rem',
+          fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+          fontSize: '0.875rem',
           fontWeight: '400'
         }}>
           Showing <span className="font-semibold text-white">{filteredCount}</span> of{" "}
@@ -22,9 +22,9 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
         </p>
       </div>
 
-      {/* Grid - 4 → 2 → 1 Responsive with Parallax */}
+      {/* Grid - 4 → 2 → 1 Responsive */}
       <div 
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-5 md:grid-cols-2 lg:grid-cols-4"
         style={{ 
           alignItems: 'start'
         }}
@@ -32,10 +32,10 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
         {prompts.map((prompt, index) => (
           <div
             key={prompt.id}
-            className="animate-in fade-in slide-in-from-bottom-4"
+            className="animate-in fade-in slide-in-from-bottom-2"
             style={{
-              animationDelay: `${index * 50}ms`,
-              animationDuration: '600ms',
+              animationDelay: `${index * 30}ms`,
+              animationDuration: '400ms',
               animationFillMode: 'backwards'
             }}
           >
