@@ -1790,7 +1790,7 @@ export const hackPrompts: HackPrompt[] = [
     category: "Analysis",
     example: "Trace evolution of thinking about [CONCEPT]. What assumptions were discarded? Why?",
     whyHack: "Understanding how ideas evolved reveals which assumptions are fundamental and which are historical accidents we've inherited.",
-    score: 95
+    score: 25
   },
   {
     id: 200,
