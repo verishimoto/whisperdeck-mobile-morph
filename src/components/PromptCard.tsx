@@ -69,10 +69,11 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   return (
     <div className="relative">
       <div 
-        className={`glass-card overflow-hidden transition-all duration-200 relative ${selected ? 'ring-1 ring-white/30' : ''}`}
+        className={`glass-card transition-all duration-200 relative ${selected ? 'ring-1 ring-white/30' : ''}`}
         style={{
           borderRadius: '12px',
           animationDelay: `${index * 30}ms`,
+          overflow: 'visible'
         }}
       >
         {/* Selection Checkbox */}
@@ -164,10 +165,13 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           <div className="flex-1"></div>
 
           {/* Centered Expand Button */}
-          <div className="flex items-center justify-center pt-3 border-t border-white/10">
+          <div className="flex items-center justify-center pt-3 border-t border-white/10 relative z-20">
             <button
-              onClick={() => setExpanded(!expanded)}
-              className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white"
+              onClick={() => {
+                console.log('Expand button clicked, current expanded:', expanded);
+                setExpanded(!expanded);
+              }}
+              className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white cursor-pointer"
               data-cursor="hover"
               aria-label="Expand details"
             >
@@ -179,7 +183,10 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
       {/* Expanded Content - Below Card */}
       {expanded && (
-        <div className="mt-3 space-y-3 animate-in fade-in slide-in-from-top-2 duration-200 glass-card p-4" style={{ borderRadius: '12px' }}>
+        <div 
+          className="mt-3 space-y-3 glass-card p-4 relative z-10" 
+          style={{ borderRadius: '12px' }}
+        >
           {/* Prompt with Copy Button */}
           <div 
             className="p-3 rounded-lg bg-white/5 border border-white/15 transition-all duration-300 hover:bg-white/8 hover:border-white/25 relative group"
