@@ -33,7 +33,8 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   const categoryStyles = getCategoryColor(prompt.category);
   const selected = isSelected(prompt.id);
 
-  const handleCopy = async () => {
+  const handleCopy = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!canCopy) {
       toast({
         title: "Copy limit reached",
@@ -67,58 +68,73 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div 
-        className={`glass-card transition-all duration-200 relative ${selected ? 'ring-1 ring-white/30' : ''}`}
+        className={`glass-card transition-all duration-300 ease-out relative ${selected ? 'ring-1 ring-white/20' : ''}`}
         style={{
-          borderRadius: '12px',
+          borderRadius: '16px',
           animationDelay: `${index * 30}ms`,
-          overflow: 'visible'
+          overflow: 'visible',
+          border: 'none'
         }}
       >
-        {/* Selection Checkbox */}
-        <button
-          onClick={handleSelect}
-          className={`absolute top-3 right-3 z-20 p-1.5 rounded-md transition-all duration-200 ${
-            selected 
-              ? `${categoryStyles.text} bg-white/10 border ${categoryStyles.border}` 
-              : 'bg-white/5 text-white/40 hover:text-white/70 border border-white/10 hover:border-white/20'
-          }`}
-          aria-label="Select prompt"
-        >
-          {selected ? <CheckSquare className="h-3.5 w-3.5" /> : <Square className="h-3.5 w-3.5" />}
-        </button>
+        {/* Top-right buttons */}
+        <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
+          {/* Copy Button - Always Visible */}
+          <button
+            onClick={handleCopy}
+            disabled={!canCopy}
+            className={`p-2 rounded-lg transition-all duration-200 ${
+              !canCopy 
+                ? 'bg-white/5 text-white/20 cursor-not-allowed' 
+                : `bg-white/10 hover:bg-white/15 ${categoryStyles.text} border border-white/20 hover:border-white/30`
+            }`}
+            aria-label="Copy prompt"
+          >
+            {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+          </button>
+          
+          {/* Selection Checkbox */}
+          <button
+            onClick={handleSelect}
+            className={`p-1.5 rounded-lg transition-all duration-200 ${
+              selected 
+                ? `${categoryStyles.text} bg-white/10 border ${categoryStyles.border}` 
+                : 'bg-white/5 text-white/40 hover:text-white/70 border border-white/10 hover:border-white/20'
+            }`}
+            aria-label="Select prompt"
+          >
+            {selected ? <CheckSquare className="h-3.5 w-3.5" /> : <Square className="h-3.5 w-3.5" />}
+          </button>
+        </div>
         
-        <div className="p-4 relative z-10 flex flex-col" style={{ minHeight: '280px' }}>
+        <div className="p-5 pt-14 relative z-10 flex flex-col">
           {/* Number and Title - Side by Side */}
-          <div className="flex items-center gap-4 mb-3">
-            {/* Ultra-thin Number */}
+          <div className="flex items-center gap-4 mb-4">
             <div 
               className="flex-shrink-0"
               style={{ 
-                color: 'rgba(255, 255, 255, 0.15)',
-                fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif",
-                fontSize: 'clamp(3.5rem, 7vw, 5rem)',
+                color: 'rgba(255, 255, 255, 0.12)',
+                fontFamily: "'Helvetica Neue', -apple-system, sans-serif",
+                fontSize: 'clamp(3.5rem, 6vw, 4.5rem)',
                 lineHeight: '0.85',
                 fontWeight: '100',
                 fontStretch: 'ultra-condensed',
                 letterSpacing: '-0.05em',
-                WebkitFontSmoothing: 'antialiased',
-                MozOsxFontSmoothing: 'grayscale'
+                WebkitFontSmoothing: 'antialiased'
               }}
             >
               {index + 1}
             </div>
 
-            {/* Title - 2-3 lines max */}
             <h3
               className={`${categoryStyles.text} transition-all flex-1`}
               style={{ 
-                fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
-                fontSize: 'clamp(0.9rem, 1.8vw, 1.05rem)',
+                fontFamily: "'Helvetica Neue', -apple-system, 'SF Pro Display', sans-serif",
+                fontSize: 'clamp(0.9rem, 1.7vw, 1rem)',
                 fontWeight: '500',
                 fontStretch: 'condensed',
-                lineHeight: '1.25',
+                lineHeight: '1.3',
                 letterSpacing: '-0.015em',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
@@ -134,14 +150,14 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
 
           {/* Description */}
           <p 
-            className="text-white/60 mb-3 leading-relaxed flex-shrink-0"
+            className="text-white/60 mb-4 leading-relaxed"
             style={{
-              fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+              fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
               fontSize: '0.8rem',
               fontWeight: '400',
-              lineHeight: '1.4',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
+              lineHeight: '1.5',
+              display: expanded ? 'block' : '-webkit-box',
+              WebkitLineClamp: expanded ? 'unset' : 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
               textOverflow: 'ellipsis'
@@ -151,112 +167,86 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           </p>
 
           {/* Category Badge */}
-          <div className="mb-3">
+          <div className="mb-4">
             <Badge 
-              className={`bg-white/5 ${categoryStyles.border} ${categoryStyles.text} border text-xs px-2.5 py-0.5`}
+              className={`bg-white/5 ${categoryStyles.border} ${categoryStyles.text} border text-xs px-3 py-1`}
               style={{
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
+                fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
                 fontWeight: '500',
-                letterSpacing: '0.01em',
-                borderRadius: '6px'
+                letterSpacing: '0.02em',
+                borderRadius: '8px'
               }}
             >
               {prompt.category}
             </Badge>
           </div>
 
-          <div className="flex-1"></div>
+          {/* Expanded Content - Inline */}
+          {expanded && (
+            <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300 mt-2">
+              {/* Full Prompt */}
+              <div 
+                className="p-4 rounded-xl bg-white/5 border border-white/10"
+              >
+                <p 
+                  className="text-white/90 leading-relaxed"
+                  style={{
+                    fontFamily: "'SF Mono', 'Consolas', monospace",
+                    fontSize: '0.8rem',
+                    fontWeight: '400',
+                    lineHeight: '1.7'
+                  }}
+                >
+                  {prompt.example}
+                </p>
+              </div>
 
-          {/* Centered Expand Button */}
-          <div className="flex items-center justify-center pt-3 border-t border-white/10 relative z-20">
+              {/* Why This Is a Hack */}
+              <div 
+                className="p-4 rounded-xl border"
+                style={{ 
+                  backgroundColor: `${categoryStyles.glow.replace('0.4', '0.06')}`,
+                  borderColor: `${categoryStyles.glow.replace('0.4', '0.2')}`
+                }}
+              >
+                <h4
+                  className={`${categoryStyles.text} font-semibold mb-2`}
+                  style={{
+                    fontFamily: "-apple-system, 'SF Pro Display', sans-serif",
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    letterSpacing: '0.01em'
+                  }}
+                >
+                  Why This Is a Hack
+                </h4>
+                <p 
+                  className="text-white/70 leading-relaxed"
+                  style={{
+                    fontFamily: "-apple-system, 'SF Pro Text', sans-serif",
+                    fontSize: '0.8rem',
+                    fontWeight: '400',
+                    lineHeight: '1.7'
+                  }}
+                >
+                  {prompt.whyHack || 'Advanced prompt engineering technique that enhances AI model performance through strategic instruction design.'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Expand Toggle */}
+          <div className="flex items-center justify-center pt-4 mt-4 border-t border-white/10">
             <button
-              onClick={() => {
-                console.log('Expand button clicked, current expanded:', expanded);
-                setExpanded(!expanded);
-              }}
-              className="flex items-center justify-center w-10 h-10 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/70 hover:text-white cursor-pointer"
-              data-cursor="hover"
-              aria-label="Expand details"
+              onClick={() => setExpanded(!expanded)}
+              className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all text-white/60 hover:text-white"
+              aria-label={expanded ? "Collapse details" : "Expand details"}
             >
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
             </button>
           </div>
         </div>
       </div>
-
-      {/* Expanded Content - Below Card */}
-      {expanded && (
-        <div 
-          className="mt-3 space-y-3 glass-card p-4 relative z-10" 
-          style={{ borderRadius: '12px' }}
-        >
-          {/* Prompt with Copy Button */}
-          <div 
-            className="p-3 rounded-lg bg-white/5 border border-white/15 transition-all duration-300 hover:bg-white/8 hover:border-white/25 relative group"
-            style={{ borderRadius: '10px' }}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <p 
-                className="text-white/90 font-mono leading-relaxed flex-1"
-                style={{
-                  fontFamily: "'SF Mono', 'Consolas', monospace",
-                  fontSize: '0.8rem',
-                  fontWeight: '400',
-                  lineHeight: '1.6'
-                }}
-              >
-                {prompt.example}
-              </p>
-              <button
-                onClick={handleCopy}
-                disabled={!canCopy}
-                className={`flex-shrink-0 p-2 rounded-lg transition-all ${
-                  !canCopy 
-                    ? 'bg-white/5 text-white/20 cursor-not-allowed' 
-                    : `bg-white/5 hover:bg-white/10 ${categoryStyles.text} hover:border ${categoryStyles.border}`
-                } border border-transparent`}
-                style={{ borderRadius: '8px' }}
-                aria-label="Copy prompt"
-              >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Why This Is a Hack */}
-          <div 
-            className="p-3 rounded-lg border transition-all duration-300"
-            style={{ 
-              borderRadius: '10px',
-              backgroundColor: `${categoryStyles.glow.replace('0.4', '0.08')}`,
-              borderColor: `${categoryStyles.glow.replace('0.4', '0.25')}`
-            }}
-          >
-            <h4
-              className={`${categoryStyles.text} font-semibold mb-2`}
-              style={{
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
-                fontSize: '0.875rem',
-                fontWeight: '600',
-                letterSpacing: '0.01em'
-              }}
-            >
-              Why This Is a Hack
-            </h4>
-            <p 
-              className="text-white/70 leading-relaxed"
-              style={{
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif",
-                fontSize: '0.8rem',
-                fontWeight: '400',
-                lineHeight: '1.6'
-              }}
-            >
-              {prompt.whyHack || 'Advanced prompt engineering technique that enhances AI model performance through strategic instruction design.'}
-            </p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

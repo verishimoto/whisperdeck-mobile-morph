@@ -22,17 +22,18 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
         </p>
       </div>
 
-      {/* Grid - 4 → 2 → 1 Responsive */}
+      {/* Grid - 4 → 2 → 1 Responsive with column-based expansion */}
       <div 
-        className="grid gap-5 md:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 auto-rows-min"
         style={{ 
-          alignItems: 'start'
+          alignItems: 'start',
+          gridAutoFlow: 'row dense'
         }}
       >
         {prompts.map((prompt, index) => (
           <div
             key={prompt.id}
-            className="animate-in fade-in slide-in-from-bottom-2"
+            className="animate-in fade-in slide-in-from-bottom-2 w-full"
             style={{
               animationDelay: `${index * 30}ms`,
               animationDuration: '400ms',
