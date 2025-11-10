@@ -91,38 +91,41 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
         
         <div className="p-4 relative z-10 flex flex-col" style={{ minHeight: '280px' }}>
           {/* Number and Title - Side by Side */}
-          <div className="flex items-start gap-3 mb-3">
+          <div className="flex items-center gap-4 mb-3">
             {/* Ultra-thin Number */}
             <div 
-              className="text-white/10 font-number flex-shrink-0"
+              className="flex-shrink-0"
               style={{ 
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif",
-                fontSize: 'clamp(3rem, 8vw, 4.5rem)',
-                lineHeight: '1',
+                color: 'rgba(255, 255, 255, 0.15)',
+                fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif",
+                fontSize: 'clamp(3.5rem, 7vw, 5rem)',
+                lineHeight: '0.85',
                 fontWeight: '100',
-                letterSpacing: '-0.03em',
-                width: 'auto',
-                minWidth: 'fit-content'
+                fontStretch: 'ultra-condensed',
+                letterSpacing: '-0.05em',
+                WebkitFontSmoothing: 'antialiased',
+                MozOsxFontSmoothing: 'grayscale'
               }}
             >
               {index + 1}
             </div>
 
-            {/* Title */}
+            {/* Title - 2-3 lines max */}
             <h3
-              className={`${categoryStyles.text} leading-tight transition-all flex-1`}
+              className={`${categoryStyles.text} transition-all flex-1`}
               style={{ 
-                fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif",
-                fontSize: 'clamp(0.95rem, 2vw, 1.1rem)',
-                fontWeight: '600',
-                lineHeight: '1.2',
-                letterSpacing: '-0.01em',
+                fontFamily: "'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif",
+                fontSize: 'clamp(0.9rem, 1.8vw, 1.05rem)',
+                fontWeight: '500',
+                fontStretch: 'condensed',
+                lineHeight: '1.25',
+                letterSpacing: '-0.015em',
                 display: '-webkit-box',
-                WebkitLineClamp: 3,
+                WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                marginTop: '0.25rem'
+                alignSelf: 'center'
               }}
             >
               {prompt.title}
