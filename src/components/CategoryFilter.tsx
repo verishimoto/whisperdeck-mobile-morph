@@ -12,6 +12,17 @@ interface CategoryFilterProps {
 export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, onSortChange, searchQuery, onSearchChange }: CategoryFilterProps) {
   const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology'];
   
+  const getCategoryStyles = (category: string) => {
+    const styles: Record<string, { border: string; text: string; bg: string; hoverBg: string }> = {
+      "Advanced": { border: "border-[#3B82F6]", text: "text-[#3B82F6]", bg: "bg-[#3B82F6]/20", hoverBg: "hover:bg-[#3B82F6]/30" },
+      "Strategy": { border: "border-[#10B981]", text: "text-[#10B981]", bg: "bg-[#10B981]/20", hoverBg: "hover:bg-[#10B981]/30" },
+      "Analysis": { border: "border-[#F59E0B]", text: "text-[#F59E0B]", bg: "bg-[#F59E0B]/20", hoverBg: "hover:bg-[#F59E0B]/30" },
+      "Creativity": { border: "border-[#F43F5E]", text: "text-[#F43F5E]", bg: "bg-[#F43F5E]/20", hoverBg: "hover:bg-[#F43F5E]/30" },
+      "Psychology": { border: "border-[#A855F7]", text: "text-[#A855F7]", bg: "bg-[#A855F7]/20", hoverBg: "hover:bg-[#A855F7]/30" }
+    };
+    return styles[category] || { border: "border-white/20", text: "text-white", bg: "bg-white/10", hoverBg: "hover:bg-white/15" };
+  };
+  
   return (
     <div className="sticky top-[160px] z-40 mb-8 px-4 py-4 backdrop-blur-xl bg-black/10 border-b border-white/5">
       <div className="flex items-center justify-center gap-2 flex-wrap max-w-7xl mx-auto">
@@ -35,28 +46,31 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
           All
         </button>
 
-        {/* Category Buttons - Show 10 on large screens, 5 on mobile */}
-        {categories.slice(0, 5).map((category) => (
-          <button
-            key={category}
-            onClick={() => onCategoryChange(category)}
-            className={`whitespace-nowrap transition-all duration-300 text-sm px-4 border backdrop-blur-xl h-[40px] ${
-              selectedCategory === category
-                ? 'text-white bg-white/15 border-white/30 font-medium underline decoration-2 underline-offset-4' 
-                : 'text-white/60 border-white/10 bg-white/5 hover:bg-white/10 hover:text-white/80 font-light'
-            }`}
-            style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: selectedCategory === category ? '500' : '400',
-              letterSpacing: '0.01em',
-              borderRadius: '8px',
-              minWidth: '100px'
-            }}
-            data-cursor="hover"
-          >
-            {category}
-          </button>
-        ))}
+        {/* Category Buttons - Colored borders and hover fills */}
+        {categories.slice(0, 5).map((category) => {
+          const styles = getCategoryStyles(category);
+          return (
+            <button
+              key={category}
+              onClick={() => onCategoryChange(category)}
+              className={`whitespace-nowrap transition-all duration-300 text-sm px-4 border-2 backdrop-blur-xl h-[40px] ${styles.border} ${
+                selectedCategory === category
+                  ? `${styles.text} ${styles.bg} font-semibold` 
+                  : `text-white/70 bg-white/5 ${styles.hoverBg} hover:${styles.text} hover:${styles.border} font-normal`
+              }`}
+              style={{
+                fontFamily: "'Inter', sans-serif",
+                fontWeight: selectedCategory === category ? '600' : '400',
+                letterSpacing: '0.02em',
+                borderRadius: '10px',
+                minWidth: '110px'
+              }}
+              data-cursor="hover"
+            >
+              {category}
+            </button>
+          );
+        })}
 
         {/* Search Bar */}
         <div className="relative flex-1 max-w-xs h-[40px]">

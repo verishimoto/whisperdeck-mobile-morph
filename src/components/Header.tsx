@@ -49,27 +49,27 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
         </div>
       </div>
 
-      {/* Title Section */}
-      <div className="py-8 text-center px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-2">
-            <span className="inline-block text-xs tracking-[0.15em] uppercase font-light text-white/40" style={{
-              fontFamily: "'Nirmala UI', 'Inter', sans-serif",
-              fontWeight: '400',
-              letterSpacing: '0.15em',
+      {/* Hero Section - Centered */}
+      <div className="py-12 text-center">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="mb-3">
+            <span className="inline-block text-xs tracking-[0.2em] uppercase font-medium text-white/50" style={{
+              fontFamily: "'Inter', sans-serif",
+              fontWeight: '500',
+              letterSpacing: '0.2em',
               fontSize: '0.7rem'
             }}>
-              Opal MicroApp
+              OPAL MICROAPP
             </span>
           </div>
           
-          <p className="text-white/50 mb-6 font-light mx-auto" style={{
+          <p className="text-white/60 font-light mx-auto" style={{
             fontFamily: "'Inter', sans-serif",
-            fontSize: 'clamp(0.85rem, 1.5vw, 0.95rem)',
+            fontSize: 'clamp(0.9rem, 1.6vw, 1rem)',
             fontWeight: '400',
-            lineHeight: '1.5',
-            maxWidth: '600px',
-            letterSpacing: '0.01em'
+            lineHeight: '1.6',
+            maxWidth: '560px',
+            letterSpacing: '0.015em'
           }}>
             Advanced LLM Prompt Engineering • Where the mouse is the hero
           </p>
