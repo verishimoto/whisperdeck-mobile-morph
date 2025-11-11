@@ -17,12 +17,12 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
         {/* Brand Name */}
         <h1 className="font-ultra-thin" style={{
           fontFamily: "'Nimbus Sans Extended', 'Helvetica Neue', sans-serif",
-          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
+          fontSize: 'clamp(2rem, 4vw, 2.5rem)',
           fontWeight: '700',
           letterSpacing: '-0.02em',
           color: '#ffffff'
         }}>
-          WhisperDeck 2.0
+          WhispererDeck
         </h1>
         
         {/* Icon Buttons */}
@@ -51,27 +51,16 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
 
       {/* Hero Section - Centered */}
       <div className="py-12 text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <div className="mb-3">
-            <span className="inline-block text-xs tracking-[0.2em] uppercase font-medium text-white/50" style={{
-              fontFamily: "'Inter', sans-serif",
-              fontWeight: '500',
-              letterSpacing: '0.2em',
-              fontSize: '0.7rem'
-            }}>
-              OPAL MICROAPP
-            </span>
-          </div>
-          
+        <div className="max-w-3xl mx-auto px-6">
           <p className="text-white/60 font-light mx-auto" style={{
             fontFamily: "'Inter', sans-serif",
             fontSize: 'clamp(0.9rem, 1.6vw, 1rem)',
             fontWeight: '400',
-            lineHeight: '1.6',
+            lineHeight: '1.8',
             maxWidth: '560px',
             letterSpacing: '0.015em'
           }}>
-            Advanced LLM Prompt Engineering • Where the mouse is the hero
+            Advanced LLM Prompt Engineering
           </p>
         </div>
       </div>

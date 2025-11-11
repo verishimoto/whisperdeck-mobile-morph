@@ -57,8 +57,8 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Header 
+    <div className="min-h-screen bg-background text-foreground pb-24">
+      <Header
         searchQuery=""
         onSearchChange={() => {}}
         totalPrompts={hackPrompts.length}

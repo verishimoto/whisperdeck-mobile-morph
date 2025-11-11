@@ -114,7 +114,8 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
             <div 
               className="flex-shrink-0"
               style={{ 
-                color: 'rgba(255, 255, 255, 0.12)',
+                color: 'rgba(255, 255, 255, 0.85)',
+                textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
                 fontFamily: "'Helvetica Neue', -apple-system, sans-serif",
                 fontSize: 'clamp(3.5rem, 6vw, 4.5rem)',
                 lineHeight: '0.85',

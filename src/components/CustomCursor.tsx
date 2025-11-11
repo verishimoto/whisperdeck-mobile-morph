@@ -54,8 +54,9 @@ export function CustomCursor() {
       style={{
         left: `${mousePosition.x}px`,
         top: `${mousePosition.y}px`,
-        transform: 'translate(-50%, -50%)',
+        transform: `translate(-50%, -50%) ${isHovering ? 'scale(1)' : 'scale(1)'}`,
         willChange: 'transform',
+        transition: 'all 0.18s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     />
   );

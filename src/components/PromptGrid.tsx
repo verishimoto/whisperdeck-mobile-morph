@@ -24,10 +24,11 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
 
       {/* Grid - 4 → 2 → 1 Responsive with column-based expansion */}
       <div 
-        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4 auto-rows-min"
+        className="grid gap-6 md:grid-cols-2 lg:grid-cols-4"
         style={{ 
-          alignItems: 'start',
-          gridAutoFlow: 'row dense'
+          alignItems: 'stretch',
+          gridAutoRows: 'minmax(min-content, max-content)',
+          gridAutoFlow: 'row'
         }}
       >
         {prompts.map((prompt, index) => (
