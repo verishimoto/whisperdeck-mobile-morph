@@ -2,9 +2,12 @@ import { useState, useMemo } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
+import { PromptCarousel } from "@/components/PromptCarousel";
 import { PromptComposer } from "@/components/PromptComposer";
 import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
+import { createFuzzySearch } from "@/lib/fuzzy-search";
+import { LayoutGrid, Layout } from "lucide-react";
 
 const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
@@ -12,25 +15,29 @@ const Index = () => {
     category: "",
     sort: "desc",
   });
+  const [viewMode, setViewMode] = useState<'grid' | 'carousel'>('grid');
 
   const filteredPrompts = useMemo(() => {
-    let filtered = hackPrompts.filter((prompt) => {
-      const matchesSearch = filters.search === "" || 
-        prompt.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-        prompt.description.toLowerCase().includes(filters.search.toLowerCase()) ||
-        prompt.category.toLowerCase().includes(filters.search.toLowerCase());
-        
-      const matchesCategory = filters.category === "" || prompt.category === filters.category;
-      
-      return matchesSearch && matchesCategory;
-    });
+    let filtered = hackPrompts;
+
+    // Apply category filter first
+    if (filters.category) {
+      filtered = filtered.filter((prompt) => prompt.category === filters.category);
+    }
+
+    // Apply fuzzy search if there's a search query
+    if (filters.search.trim()) {
+      const fuse = createFuzzySearch(filtered);
+      const results = fuse.search(filters.search);
+      filtered = results.map(result => result.item);
+    }
 
     // Sort by score (descending = high to low, ascending = low to high)
     filtered.sort((a, b) => {
       if (filters.sort === 'asc') {
-        return a.score - b.score; // Low to high (250 to 1)
+        return (a.score || 0) - (b.score || 0);
       } else {
-        return b.score - a.score; // High to low (1 to 250)
+        return (b.score || 0) - (a.score || 0);
       }
     });
 
@@ -65,13 +72,47 @@ const Index = () => {
         searchQuery={filters.search}
         onSearchChange={handleSearchChange}
       />
+
+      {/* View Mode Toggle */}
+      <div className="max-w-7xl mx-auto px-6 mb-6 flex justify-end gap-2">
+        <button
+          onClick={() => setViewMode('grid')}
+          className={`p-2.5 h-[40px] w-[40px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+            viewMode === 'grid'
+              ? 'text-white bg-white/15 border-white/30'
+              : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+          }`}
+          style={{ borderRadius: '8px' }}
+          title="Grid View"
+          data-cursor="hover"
+        >
+          <LayoutGrid className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => setViewMode('carousel')}
+          className={`p-2.5 h-[40px] w-[40px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+            viewMode === 'carousel'
+              ? 'text-white bg-white/15 border-white/30'
+              : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+          }`}
+          style={{ borderRadius: '8px' }}
+          title="Carousel View"
+          data-cursor="hover"
+        >
+          <Layout className="h-4 w-4" />
+        </button>
+      </div>
       
-      <div className="max-w-[1400px] mx-auto px-6">
-        <PromptGrid
-          prompts={filteredPrompts}
-          filteredCount={filteredPrompts.length}
-          totalCount={hackPrompts.length}
-        />
+      <div className="max-w-[1400px] mx-auto px-6 mb-12">
+        {viewMode === 'grid' ? (
+          <PromptGrid
+            prompts={filteredPrompts}
+            filteredCount={filteredPrompts.length}
+            totalCount={hackPrompts.length}
+          />
+        ) : (
+          <PromptCarousel prompts={filteredPrompts} />
+        )}
       </div>
 
       <PromptComposer />
