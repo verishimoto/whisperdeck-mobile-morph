@@ -3,11 +3,12 @@ import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
 import { PromptCarousel } from "@/components/PromptCarousel";
+import { PromptTree } from "@/components/PromptTree";
 import { PromptComposer } from "@/components/PromptComposer";
 import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
-import { LayoutGrid, Layout } from "lucide-react";
+import { LayoutGrid, Layout, Network } from "lucide-react";
 
 const Index = () => {
   const [filters, setFilters] = useState<FilterState>({
@@ -15,7 +16,7 @@ const Index = () => {
     category: "",
     sort: "desc",
   });
-  const [viewMode, setViewMode] = useState<'grid' | 'carousel'>('grid');
+  const [viewMode, setViewMode] = useState<'grid' | 'carousel' | 'tree'>('grid');
 
   const filteredPrompts = useMemo(() => {
     let filtered = hackPrompts;
@@ -77,7 +78,7 @@ const Index = () => {
       <div className="max-w-7xl mx-auto px-6 mb-6 flex justify-end gap-2">
         <button
           onClick={() => setViewMode('grid')}
-          className={`p-2.5 h-[40px] w-[40px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+          className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
             viewMode === 'grid'
               ? 'text-white bg-white/15 border-white/30'
               : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
@@ -90,7 +91,7 @@ const Index = () => {
         </button>
         <button
           onClick={() => setViewMode('carousel')}
-          className={`p-2.5 h-[40px] w-[40px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+          className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
             viewMode === 'carousel'
               ? 'text-white bg-white/15 border-white/30'
               : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
@@ -101,6 +102,19 @@ const Index = () => {
         >
           <Layout className="h-4 w-4" />
         </button>
+        <button
+          onClick={() => setViewMode('tree')}
+          className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+            viewMode === 'tree'
+              ? 'text-white bg-white/15 border-white/30'
+              : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+          }`}
+          style={{ borderRadius: '8px' }}
+          title="Tree View"
+          data-cursor="hover"
+        >
+          <Network className="h-4 w-4" />
+        </button>
       </div>
       
       <div className="max-w-[1400px] mx-auto px-6 mb-12">
@@ -110,8 +124,10 @@ const Index = () => {
             filteredCount={filteredPrompts.length}
             totalCount={hackPrompts.length}
           />
-        ) : (
+        ) : viewMode === 'carousel' ? (
           <PromptCarousel prompts={filteredPrompts} />
+        ) : (
+          <PromptTree prompts={filteredPrompts} />
         )}
       </div>
 
