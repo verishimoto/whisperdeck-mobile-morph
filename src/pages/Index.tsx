@@ -5,6 +5,7 @@ import { PromptGrid } from "@/components/PromptGrid";
 import { PromptCarousel } from "@/components/PromptCarousel";
 import { PromptTree } from "@/components/PromptTree";
 import { PromptComposer } from "@/components/PromptComposer";
+import { ProgressDashboard } from "@/components/ProgressDashboard";
 import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
@@ -132,6 +133,7 @@ const Index = () => {
       </div>
 
       <PromptComposer />
+      <ProgressDashboard />
     </div>
   );
 };

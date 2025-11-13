@@ -1,11 +1,22 @@
 import { useSelection } from '@/contexts/SelectionContext';
-import { X, Sparkles, Copy, Check } from 'lucide-react';
+import { useGamification } from '@/contexts/GamificationContext';
+import { X, Sparkles, Copy, Check, Lock } from 'lucide-react';
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
 
 export function PromptComposer() {
-  const { selectedPrompts, clearSelection, copyCount, canCopy } = useSelection();
+  const { selectedPrompts, clearSelection } = useSelection();
+  const { dailyCopiesRemaining, useCopy, buildChain, getTimeUntilReset } = useGamification();
   const [copied, setCopied] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { toast } = useToast();
 
   if (selectedPrompts.length === 0) return null;
@@ -15,11 +26,17 @@ export function PromptComposer() {
   ).join('\n');
 
   const handleCopy = async () => {
+    if (!useCopy()) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    
     await navigator.clipboard.writeText(composedPrompt);
+    buildChain(); // Track chain building
     setCopied(true);
     toast({
       title: "Composed Prompt Copied!",
-      description: "Your merged prompt is ready to use.",
+      description: `Your merged prompt is ready to use. ${dailyCopiesRemaining - 1} copies remaining today.`,
       duration: 2000,
     });
     setTimeout(() => setCopied(false), 2000);
@@ -59,8 +76,63 @@ export function PromptComposer() {
       </div>
 
       <p className="text-xs text-white/40 mt-3 text-center">
-        Selected {selectedPrompts.length}/5 prompts • {copyCount}/3 copies used
+        Selected {selectedPrompts.length}/5 prompts • Daily Copies: {dailyCopiesRemaining}/5
       </p>
+
+      {/* Upgrade Modal */}
+      <Dialog open={showUpgradeModal} onOpenChange={setShowUpgradeModal}>
+        <DialogContent className="glass-card border-white/10">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-foreground">
+              <Lock className="h-5 w-5 text-destructive" />
+              Daily Limit Reached
+            </DialogTitle>
+            <DialogDescription className="text-foreground/70">
+              You've used all 5 free copies today. Your quota resets in <span className="font-semibold text-foreground">{getTimeUntilReset()}</span>.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 my-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                <h4 className="font-semibold text-sm mb-2 text-foreground/90">Community (Current)</h4>
+                <ul className="text-xs text-foreground/60 space-y-1">
+                  <li>• 5 copies/day</li>
+                  <li>• Build & test chains</li>
+                  <li>• Community features</li>
+                  <li>• Public leaderboard</li>
+                </ul>
+              </div>
+              
+              <div className="p-4 rounded-lg border-2" style={{ borderColor: 'hsl(var(--level-ultra))' }}>
+                <h4 className="font-semibold text-sm mb-2" style={{ color: 'hsl(var(--level-ultra))' }}>Enterprise</h4>
+                <ul className="text-xs text-foreground/60 space-y-1">
+                  <li>• Unlimited copies</li>
+                  <li>• API access</li>
+                  <li>• Validated routes</li>
+                  <li>• Priority support</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <div className="flex gap-2">
+            <Button 
+              className="flex-1"
+              style={{ 
+                backgroundColor: 'hsl(var(--level-ultra) / 0.2)',
+                borderColor: 'hsl(var(--level-ultra) / 0.3)',
+                color: 'hsl(var(--level-ultra))'
+              }}
+            >
+              Contact Sales
+            </Button>
+            <Button variant="ghost" onClick={() => setShowUpgradeModal(false)}>
+              Maybe Later
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

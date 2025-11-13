@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, ChevronDown, Square, CheckSquare } from "lucide-react";
+import { Copy, Check, ChevronDown, Square, CheckSquare, Lock, Star, Target } from "lucide-react";
 import { HackPrompt } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useSelection } from "@/contexts/SelectionContext";
+import { useGamification } from "@/contexts/GamificationContext";
 
 interface PromptCardProps {
   prompt: HackPrompt;
@@ -28,24 +29,44 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
-  const { togglePrompt, isSelected, canSelectMore, incrementCopyCount, canCopy } = useSelection();
+  const { togglePrompt, isSelected, canSelectMore } = useSelection();
+  const { useCopy, usePrompt, promptUsageCount, currentLevel } = useGamification();
   
   const categoryStyles = getCategoryColor(prompt.category);
   const selected = isSelected(prompt.id);
+  
+  // Calculate prompt state
+  const usageCount = promptUsageCount.get(prompt.id) || 0;
+  const isMastered = usageCount >= 3;
+  const isRecommended = index < 10; // Top 10 are always recommended
+  
+  // Lock logic: Top 10 are always unlocked, others based on level
+  const isLocked = index >= 10 && currentLevel === 0;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!canCopy) {
+    
+    if (isLocked) {
       toast({
-        title: "Copy limit reached",
-        description: "You've reached the maximum of 3 copies.",
+        title: "Prompt Locked",
+        description: "Use 10 different prompts to unlock this one.",
         duration: 2000,
       });
       return;
     }
+    
+    if (!useCopy()) {
+      toast({
+        title: "Daily limit reached",
+        description: "You've used all 5 copies today.",
+        duration: 2000,
+      });
+      return;
+    }
+    
     await navigator.clipboard.writeText(prompt.example);
+    usePrompt(prompt.id); // Track usage
     setCopied(true);
-    incrementCopyCount();
     toast({
       title: "Copied!",
       description: "Prompt copied to clipboard.",
@@ -70,7 +91,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   return (
     <div className="relative w-full">
       <div 
-        className={`glass-card transition-all duration-300 ease-out relative ${selected ? 'ring-1 ring-white/20' : ''}`}
+        className={`glass-card transition-all duration-300 ease-out relative ${selected ? 'ring-1 ring-white/20' : ''} ${isLocked ? 'opacity-60' : ''}`}
         style={{
           borderRadius: '16px',
           animationDelay: `${index * 30}ms`,
@@ -78,14 +99,40 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           border: 'none'
         }}
       >
+        {/* Lock Overlay */}
+        {isLocked && (
+          <div className="absolute inset-0 backdrop-blur-sm bg-black/40 flex flex-col items-center justify-center z-30 rounded-2xl">
+            <Lock className="h-12 w-12 text-white/60 mb-2" />
+            <p className="text-xs text-white/70 text-center px-4">
+              Use 10 prompts to unlock
+            </p>
+          </div>
+        )}
+
+        {/* Status Badges */}
+        <div className="absolute top-3 left-3 z-20 flex items-center gap-1">
+          {isMastered && (
+            <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1">
+              <Star className="h-3 w-3" />
+              Mastered
+            </Badge>
+          )}
+          {isRecommended && !isMastered && (
+            <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1">
+              <Target className="h-3 w-3" />
+              Recommended
+            </Badge>
+          )}
+        </div>
+
         {/* Top-right buttons */}
         <div className="absolute top-3 right-3 z-20 flex items-center gap-2">
-          {/* Copy Button - Always Visible */}
+          {/* Copy Button */}
           <button
             onClick={handleCopy}
-            disabled={!canCopy}
+            disabled={isLocked}
             className={`p-2 rounded-lg transition-all duration-200 ${
-              !canCopy 
+              isLocked 
                 ? 'bg-white/5 text-white/20 cursor-not-allowed' 
                 : `bg-white/10 hover:bg-white/15 ${categoryStyles.text} border border-white/20 hover:border-white/30`
             }`}
