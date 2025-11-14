@@ -7,6 +7,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { SelectionProvider } from "@/contexts/SelectionContext";
 import { GamificationProvider } from "@/contexts/GamificationContext";
 import Index from "./pages/Index";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
             <CustomCursor />
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>

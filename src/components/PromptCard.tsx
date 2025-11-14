@@ -96,7 +96,9 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           borderRadius: '16px',
           animationDelay: `${index * 30}ms`,
           overflow: 'visible',
-          border: 'none'
+          border: 'none',
+          willChange: 'transform',
+          transform: 'translateZ(0)'
         }}
       >
         {/* Lock Overlay */}
@@ -159,10 +161,10 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
           {/* Number and Title - Side by Side */}
           <div className="flex items-center gap-4 mb-4">
             <div 
-              className="flex-shrink-0"
+              className="flex-shrink-0 relative"
               style={{ 
-                color: 'rgba(255, 255, 255, 0.85)',
-                textShadow: '0 2px 8px rgba(0, 0, 0, 0.3)',
+                color: 'rgba(255, 255, 255, 0.95)',
+                textShadow: '0 2px 12px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.3)',
                 fontFamily: "'Helvetica Neue', -apple-system, sans-serif",
                 fontSize: 'clamp(3.5rem, 6vw, 4.5rem)',
                 lineHeight: '0.85',
@@ -171,8 +173,9 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
                 letterSpacing: '-0.05em',
                 WebkitFontSmoothing: 'antialiased'
               }}
+              title={`Socratic Pattern ID: ${prompt.id}`}
             >
-              {index + 1}
+              {prompt.id}
             </div>
 
             <h3
