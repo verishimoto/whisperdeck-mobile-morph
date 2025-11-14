@@ -7,6 +7,7 @@ import { PromptTree } from "@/components/PromptTree";
 import { PromptComposer } from "@/components/PromptComposer";
 import { ProgressDashboard } from "@/components/ProgressDashboard";
 import { ModelToggle } from "@/components/ModelToggle";
+import { ChainBuilder } from "@/components/ChainBuilder";
 import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
@@ -60,7 +61,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground pb-24">
+    <div className="min-h-screen bg-background text-foreground pb-[320px]">
       <Header
         searchQuery=""
         onSearchChange={() => {}}
@@ -136,6 +137,7 @@ const Index = () => {
       <PromptComposer />
       <ProgressDashboard />
       <ModelToggle />
+      <ChainBuilder />
     </div>
   );
 };

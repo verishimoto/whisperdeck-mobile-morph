@@ -42,7 +42,7 @@ export function ModelToggle() {
 
   return (
     <div 
-      className="fixed bottom-24 right-6 z-20 backdrop-blur-xl bg-white/5 border border-white/10 p-4 rounded-2xl"
+      className="fixed bottom-[300px] left-6 z-20 backdrop-blur-xl bg-white/5 border border-white/10 p-4 rounded-2xl"
       style={{ 
         willChange: 'transform',
         transform: 'translateZ(0)'
