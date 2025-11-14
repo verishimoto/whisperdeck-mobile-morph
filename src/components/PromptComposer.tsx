@@ -43,7 +43,7 @@ export function PromptComposer() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-96 glass-card p-5 animate-in slide-in-from-bottom-4" style={{ borderRadius: '12px', backdropFilter: 'blur(20px) saturate(180%)', background: 'rgba(10, 10, 15, 0.9)' }}>
+    <div className="fixed bottom-[300px] right-6 z-50 w-96 glass-card p-5 animate-in slide-in-from-bottom-4" style={{ borderRadius: '12px', backdropFilter: 'blur(20px) saturate(180%)', background: 'rgba(10, 10, 15, 0.9)' }}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-level-ultra" />
