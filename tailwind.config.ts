@@ -79,14 +79,20 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        xl: "calc(var(--radius) + 4px)",
+        "2xl": "calc(var(--radius) + 8px)",
+        "3xl": "calc(var(--radius) + 16px)",
       },
       fontFamily: {
+        'nimbus': ['Nimbus Sans Extended', 'Helvetica Neue', 'sans-serif'],
         'display': ['Helvetica Neue', 'Inter Tight', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         'condensed': ['Helvetica Neue Condensed', 'Helvetica Neue', 'Inter Tight', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
         'body': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
         'sans': ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        'mono': ['SF Mono', 'Consolas', 'monospace'],
       },
       fontSize: {
+        'hero': ['clamp(2rem, 4vw, 2.5rem)', { lineHeight: '1.1' }],
         'number-xs': ['0.5rem', { lineHeight: '0.6rem' }],      // Tiny # symbol
         'number-massive': ['5rem', { lineHeight: '0.85' }],     // Ultra-thin massive numbers
         'score-lg': ['2.5rem', { lineHeight: '1' }],            // Large score numbers

@@ -18,76 +18,47 @@ interface PromptTreeProps {
   prompts: HackPrompt[];
 }
 
-const categoryColors = {
-  'Advanced': { bg: 'rgba(59, 130, 246, 0.2)', border: '#3B82F6' },
-  'Strategy': { bg: 'rgba(16, 185, 129, 0.2)', border: '#10B981' },
-  'Analysis': { bg: 'rgba(240, 165, 107, 0.2)', border: '#F0A56B' },
-  'Creativity': { bg: 'rgba(200, 156, 232, 0.2)', border: '#C89CE8' },
-  'Psychology': { bg: 'rgba(93, 222, 223, 0.2)', border: '#5DDEDF' },
-};
+const categoryColorMap: Record<string, string> = {
+    Advanced: 'level-advanced',
+    Strategy: 'level-strategy',
+    Analysis: 'level-analysis',
+    Creativity: 'level-creativity',
+    Psychology: 'level-psychology',
+  };
 
 export function PromptTree({ prompts }: PromptTreeProps) {
   const { toast } = useToast();
 
-  // Create nodes and edges from prompts
   const { initialNodes, initialEdges } = useMemo(() => {
     const nodes: Node[] = [];
     const edges: Edge[] = [];
 
-    // Root node
     nodes.push({
       id: 'root',
-      data: { 
-        label: 'WhisperDeck Prompts',
-        type: 'root'
-      },
+      data: { label: 'The Whisperer Deck' },
       position: { x: 400, y: 50 },
-      style: {
-        background: 'rgba(255, 255, 255, 0.1)',
-        border: '2px solid rgba(255, 255, 255, 0.3)',
-        borderRadius: '12px',
-        padding: '16px 24px',
-        color: 'white',
-        fontSize: '18px',
-        fontWeight: '700',
-        backdropFilter: 'blur(20px)',
-      },
+      className: 'bg-white/10 border-2 border-white/30 rounded-2xl p-6 text-white text-xl font-bold backdrop-blur-2xl font-display tracking-wider',
+      type: 'input',
     });
 
-    // Category nodes
     const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology'];
     const categoryPositions = [
-      { x: 100, y: 200 },
-      { x: 300, y: 200 },
-      { x: 500, y: 200 },
-      { x: 700, y: 200 },
-      { x: 900, y: 200 },
+      { x: 100, y: 250 },
+      { x: 300, y: 250 },
+      { x: 500, y: 250 },
+      { x: 700, y: 250 },
+      { x: 900, y: 250 },
     ];
 
     categories.forEach((category, idx) => {
       const categoryPrompts = prompts.filter(p => p.category === category);
-      const colors = categoryColors[category as keyof typeof categoryColors];
+      const colorName = categoryColorMap[category] || 'primary';
 
       nodes.push({
         id: `category-${category}`,
-        data: { 
-          label: `${category}\n(${categoryPrompts.length} prompts)`,
-          type: 'category',
-          category,
-        },
+        data: { label: `${category} (${categoryPrompts.length})` },
         position: categoryPositions[idx],
-        style: {
-          background: colors.bg,
-          border: `2px solid ${colors.border}`,
-          borderRadius: '10px',
-          padding: '12px 20px',
-          color: 'white',
-          fontSize: '14px',
-          fontWeight: '600',
-          backdropFilter: 'blur(16px)',
-          whiteSpace: 'pre-line',
-          textAlign: 'center',
-        },
+        className: `bg-${colorName}/20 border-2 border-${colorName}/80 rounded-xl p-4 text-white text-base font-semibold backdrop-blur-lg text-center whitespace-pre-line font-sans`,
       });
 
       edges.push({
@@ -96,43 +67,18 @@ export function PromptTree({ prompts }: PromptTreeProps) {
         target: `category-${category}`,
         type: 'smoothstep',
         animated: true,
-        style: { 
-          stroke: colors.border,
-          strokeWidth: 2,
-        },
-        markerEnd: {
-          type: MarkerType.ArrowClosed,
-          color: colors.border,
-        },
+        style: { stroke: `hsl(var(--${colorName}))`, strokeWidth: 2 },
+        markerEnd: { type: MarkerType.ArrowClosed, color: `hsl(var(--${colorName}))` },
       });
 
-      // Add top 5 prompts per category
-      categoryPrompts.slice(0, 5).forEach((prompt, pIdx) => {
+      categoryPrompts.slice(0, 3).forEach((prompt, pIdx) => {
         const nodeId = `prompt-${prompt.id}`;
-        const yOffset = 350 + (pIdx * 80);
-        const xOffset = categoryPositions[idx].x;
-
         nodes.push({
           id: nodeId,
-          data: { 
-            label: `#${prompt.score || prompt.id}\n${prompt.title}`,
-            type: 'prompt',
-            prompt,
-          },
-          position: { x: xOffset - 20, y: yOffset },
-          style: {
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: `1px solid ${colors.border}`,
-            borderRadius: '8px',
-            padding: '10px 14px',
-            color: 'rgba(255, 255, 255, 0.9)',
-            fontSize: '11px',
-            fontWeight: '400',
-            backdropFilter: 'blur(12px)',
-            whiteSpace: 'pre-line',
-            textAlign: 'center',
-            maxWidth: '180px',
-          },
+          data: { label: `#${prompt.id}: ${prompt.title}` },
+          position: { x: categoryPositions[idx].x - 50, y: 400 + pIdx * 100 },
+          className: `bg-white/5 border border-${colorName}/30 rounded-lg p-3 text-white/90 text-xs font-light backdrop-blur-md text-center whitespace-pre-line w-48 h-20 flex items-center justify-center font-body`,
+          type: 'output',
         });
 
         edges.push({
@@ -140,10 +86,7 @@ export function PromptTree({ prompts }: PromptTreeProps) {
           source: `category-${category}`,
           target: nodeId,
           type: 'smoothstep',
-          style: { 
-            stroke: `${colors.border}40`,
-            strokeWidth: 1,
-          },
+          style: { stroke: `hsl(var(--${colorName}-muted))`, strokeWidth: 1.5, strokeDasharray: '5,5' },
         });
       });
     });
@@ -154,23 +97,18 @@ export function PromptTree({ prompts }: PromptTreeProps) {
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
 
-  const onNodeClick = useCallback((event: React.MouseEvent, node: Node) => {
-    if (node.data.type === 'prompt') {
-      const prompt = node.data.prompt as HackPrompt;
-      navigator.clipboard.writeText(prompt.example);
-      toast({
-        title: "Copied!",
-        description: `"${prompt.title}" copied to clipboard`,
-      });
+  const onNodeClick = useCallback((_: React.MouseEvent, node: Node) => {
+    if (node.type === 'output') {
+        const prompt = prompts.find(p => `prompt-${p.id}` === node.id);
+        if(prompt) {
+            navigator.clipboard.writeText(prompt.example);
+            toast({ title: "Copied!", description: `"${prompt.title}" copied to clipboard.` });
+        }
     }
-  }, [toast]);
+  }, [prompts, toast]);
 
   return (
-    <div className="w-full h-[800px] rounded-lg overflow-hidden" style={{ 
-      background: 'rgba(0, 0, 0, 0.2)',
-      backdropFilter: 'blur(10px)',
-      border: '1px solid rgba(255, 255, 255, 0.1)',
-    }}>
+    <div className="w-full h-[800px] rounded-3xl overflow-hidden bg-black/30 backdrop-blur-2xl border border-white/10">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -179,38 +117,18 @@ export function PromptTree({ prompts }: PromptTreeProps) {
         onNodeClick={onNodeClick}
         connectionMode={ConnectionMode.Loose}
         fitView
-        minZoom={0.5}
-        maxZoom={1.5}
-        defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
       >
-        <Background 
-          color="rgba(255, 255, 255, 0.1)" 
-          gap={20}
-          size={1}
-        />
-        <Controls 
-          style={{
-            background: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '8px',
-          }}
-        />
+        <Background color="rgba(255, 255, 255, 0.1)" gap={24} size={1} />
+        <Controls className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-lg text-white" />
         <MiniMap 
-          style={{
-            background: 'rgba(0, 0, 0, 0.3)',
-            backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            borderRadius: '8px',
-          }}
-          nodeColor={(node) => {
-            if (node.data.type === 'root') return 'rgba(255, 255, 255, 0.3)';
-            if (node.data.type === 'category') {
-              const colors = categoryColors[node.data.category as keyof typeof categoryColors];
-              return colors?.border || 'white';
-            }
-            return 'rgba(255, 255, 255, 0.2)';
-          }}
+            className="bg-black/30 backdrop-blur-lg border border-white/20 rounded-lg"
+            nodeColor={(node) => {
+                if (node.type === 'input') return 'rgba(255, 255, 255, 0.4)';
+                const colorName = categoryColorMap[node.data.label?.split(' ')[0]];
+                if (colorName) return `hsl(var(--${colorName}))`;
+                return 'rgba(255, 255, 255, 0.2)';
+            }}
+            nodeStrokeWidth={3}
         />
       </ReactFlow>
     </div>

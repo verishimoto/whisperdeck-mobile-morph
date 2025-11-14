@@ -23,7 +23,7 @@ export function ProgressDashboard() {
   const copyPercentage = (dailyCopiesRemaining / 5) * 100;
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 w-72 glass-card p-4 animate-in slide-in-from-bottom-4">
+    <div className="fixed bottom-[300px] left-6 z-40 w-72 glass-card p-4 animate-in slide-in-from-bottom-4">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-foreground/90 font-semibold text-sm flex items-center gap-2">
