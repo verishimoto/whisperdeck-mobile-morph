@@ -1,7 +1,7 @@
 import { useSelection } from '@/contexts/SelectionContext';
 import { useGamification } from '@/contexts/GamificationContext';
-import { X, Sparkles, Copy, Check, Lock } from 'lucide-react';
-import { useState } from 'react';
+import { X, Sparkles, Copy, Check, Lock, Minimize2, Maximize2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -18,6 +18,14 @@ export function PromptComposer() {
   const [copied, setCopied] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { toast } = useToast();
+  const [isMinimized, setIsMinimized] = useState(() => {
+    const saved = localStorage.getItem('promptComposerMinimized');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('promptComposerMinimized', JSON.stringify(isMinimized));
+  }, [isMinimized]);
 
   if (selectedPrompts.length === 0) return null;
 
@@ -43,7 +51,7 @@ export function PromptComposer() {
   };
 
   return (
-    <div className="fixed bottom-[300px] right-6 z-50 w-96 glass-card p-5 animate-in slide-in-from-bottom-4" style={{ borderRadius: '12px', backdropFilter: 'blur(20px) saturate(180%)', background: 'rgba(10, 10, 15, 0.9)' }}>
+    <div className="fixed bottom-[300px] right-6 z-50 w-96 glass-card p-5 animate-in slide-in-from-bottom-4 transition-all duration-300" style={{ borderRadius: '12px', backdropFilter: 'blur(20px) saturate(180%)', background: 'rgba(10, 10, 15, 0.9)' }}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-level-ultra" />
@@ -51,12 +59,27 @@ export function PromptComposer() {
             Prompt Composer
           </h3>
         </div>
-        <button onClick={clearSelection} className="text-white/50 hover:text-white transition-colors">
-          <X className="h-5 w-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="p-1 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-all"
+            title={isMinimized ? "Expand" : "Minimize"}
+          >
+            {isMinimized ? (
+              <Maximize2 className="h-3 w-3 text-white/80" />
+            ) : (
+              <Minimize2 className="h-3 w-3 text-white/80" />
+            )}
+          </button>
+          <button onClick={clearSelection} className="text-white/50 hover:text-white transition-colors">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
       </div>
 
-      <div className="space-y-3 mb-4">
+      {!isMinimized && (
+        <>
+          <div className="space-y-3 mb-4">
         {selectedPrompts.map((prompt, i) => (
           <div key={prompt.id} className="text-xs text-white/70 p-2 rounded bg-white/5 border border-white/10">
             <span className="text-level-ultra font-semibold">#{i + 1}</span> {prompt.title}
@@ -75,9 +98,11 @@ export function PromptComposer() {
         </button>
       </div>
 
-      <p className="text-xs text-white/40 mt-3 text-center">
-        Selected {selectedPrompts.length}/5 prompts • Daily Copies: {dailyCopiesRemaining}/5
-      </p>
+          <p className="text-xs text-white/40 mt-3 text-center">
+            Selected {selectedPrompts.length}/5 prompts • Daily Copies: {dailyCopiesRemaining}/5
+          </p>
+        </>
+      )}
 
       {/* Upgrade Modal */}
       <Dialog open={showUpgradeModal} onOpenChange={setShowUpgradeModal}>

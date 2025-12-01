@@ -1,8 +1,8 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSelection } from "@/contexts/SelectionContext";
 import { useGamification } from "@/contexts/GamificationContext";
 import { HackPrompt } from "@/types";
-import { X, Play, Save, RotateCcw, ArrowRight, Zap } from "lucide-react";
+import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -21,6 +21,14 @@ export function ChainBuilder() {
   const [draggedNode, setDraggedNode] = useState<ChainNode | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem('chainBuilderCollapsed');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('chainBuilderCollapsed', JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
 
   // Convert selected prompts to chain nodes when they change
   const handleAddToChain = (prompt: HackPrompt) => {
@@ -147,18 +155,28 @@ export function ChainBuilder() {
 
   return (
     <div 
-      className="fixed inset-x-0 bottom-0 z-30 backdrop-blur-xl bg-black/60 border-t border-white/10"
+      className="fixed inset-x-0 bottom-0 z-30 backdrop-blur-xl bg-black/60 border-t border-white/10 transition-all duration-300"
       style={{
-        height: chainNodes.length > 0 ? '280px' : '180px',
-        transition: 'height 0.3s ease-out',
+        height: isCollapsed ? '48px' : (chainNodes.length > 0 ? '280px' : '180px'),
         willChange: 'transform',
         transform: 'translateZ(0)'
       }}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 h-full flex flex-col">
+      <div className="max-w-7xl mx-auto px-6 py-3 h-full flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-1.5 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-all"
+              title={isCollapsed ? "Expand" : "Collapse"}
+            >
+              {isCollapsed ? (
+                <ChevronUp className="h-4 w-4 text-white/80" />
+              ) : (
+                <ChevronDown className="h-4 w-4 text-white/80" />
+              )}
+            </button>
             <h3 className="text-lg font-semibold text-white/90">
               Chain Builder
             </h3>
@@ -208,10 +226,12 @@ export function ChainBuilder() {
         </div>
 
         {/* Canvas */}
-        <div
-          ref={canvasRef}
-          className="flex-1 overflow-x-auto overflow-y-hidden"
-        >
+        {!isCollapsed && (
+          <>
+            <div
+              ref={canvasRef}
+              className="flex-1 overflow-x-auto overflow-y-hidden mt-3"
+            >
           {chainNodes.length === 0 ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center">
@@ -295,7 +315,7 @@ export function ChainBuilder() {
         </div>
 
         {/* Selected Prompts Staging Area */}
-        {selectedPrompts.length > 0 && chainNodes.length < 10 && (
+        {!isCollapsed && selectedPrompts.length > 0 && chainNodes.length < 10 && (
           <div className="mt-3 pt-3 border-t border-white/10">
             <p className="text-xs text-white/50 mb-2">
               Click to add to chain:
@@ -318,6 +338,8 @@ export function ChainBuilder() {
                 ))}
             </div>
           </div>
+        )}
+          </>
         )}
       </div>
     </div>

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Zap, Brain, DollarSign } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Zap, Brain, DollarSign, Minimize2, Maximize2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 type ModelType = "flash" | "pro";
@@ -35,6 +35,14 @@ const models: Record<ModelType, ModelConfig> = {
 export function ModelToggle() {
   const [selectedModel, setSelectedModel] = useState<ModelType>("flash");
   const [estimatedTokens] = useState(1000); // Placeholder for real token estimation
+  const [isMinimized, setIsMinimized] = useState(() => {
+    const saved = localStorage.getItem('modelToggleMinimized');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('modelToggleMinimized', JSON.stringify(isMinimized));
+  }, [isMinimized]);
 
   const currentModel = models[selectedModel];
   const Icon = currentModel.icon;
@@ -42,23 +50,38 @@ export function ModelToggle() {
 
   return (
     <div 
-      className="fixed bottom-[300px] left-6 z-20 backdrop-blur-xl bg-white/5 border border-white/10 p-4 rounded-2xl"
+      className="fixed top-24 left-6 z-20 backdrop-blur-xl bg-white/5 border border-white/10 p-4 rounded-2xl transition-all duration-300"
       style={{ 
         willChange: 'transform',
-        transform: 'translateZ(0)'
+        transform: 'translateZ(0)',
+        width: isMinimized ? '160px' : 'auto'
       }}
     >
       <div className="flex flex-col gap-3">
         {/* Header */}
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-sm font-semibold text-white/90">LLM Model</h3>
-          <Badge className="bg-white/10 border-white/20 text-white/80 text-xs">
-            Vertex AI
-          </Badge>
+          <button
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="p-1 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-all"
+            title={isMinimized ? "Expand" : "Minimize"}
+          >
+            {isMinimized ? (
+              <Maximize2 className="h-3 w-3 text-white/80" />
+            ) : (
+              <Minimize2 className="h-3 w-3 text-white/80" />
+            )}
+          </button>
         </div>
 
-        {/* Model Toggle Buttons */}
-        <div className="flex gap-2">
+        {!isMinimized && (
+          <>
+            <Badge className="bg-white/10 border-white/20 text-white/80 text-xs w-fit">
+              Vertex AI
+            </Badge>
+
+            {/* Model Toggle Buttons */}
+            <div className="flex gap-2">
           <button
             onClick={() => setSelectedModel("flash")}
             className={`flex-1 p-3 rounded-xl border transition-all ${
@@ -116,6 +139,8 @@ export function ModelToggle() {
             </div>
           </div>
         </div>
+          </>
+        )}
       </div>
     </div>
   );

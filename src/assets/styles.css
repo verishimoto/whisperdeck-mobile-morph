@@ -13,8 +13,9 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   background: #0e0f12; /* fallback for dark mode */
 }
 
@@ -208,13 +209,6 @@ section {
 }
 
 /* === Global Background Animation === */
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  background: #0e0f12;
-  overflow: hidden;
-}
 
 body::before {
   content: "";
