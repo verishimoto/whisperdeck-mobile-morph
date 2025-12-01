@@ -13,14 +13,17 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   return (
     <header className="sticky top-0 z-50 backdrop-blur-2xl bg-black/30 border-b border-white/20">
       {/* Top Bar */}
-      <div className="px-6 py-4 flex items-center justify-between">
-        {/* Brand Name */}
-        <h1 className="font-nimbus text-hero font-bold tracking-tighter text-white">
+      <div className="px-6 py-4 grid grid-cols-3 items-center">
+        {/* Left: Empty spacer */}
+        <div></div>
+        
+        {/* Center: Brand Name */}
+        <h1 className="font-nimbus text-hero font-bold tracking-tighter text-white text-center">
           WhispererDeck
         </h1>
         
-        {/* Icon Buttons */}
-        <div className="flex items-center gap-3">
+        {/* Right: Icon Buttons */}
+        <div className="flex items-center gap-3 justify-end">
           <button
             className="p-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all"
             data-cursor="hover"

@@ -1,6 +1,7 @@
 import { useGamification } from '@/contexts/GamificationContext';
-import { TrendingUp, Award, Zap } from 'lucide-react';
+import { TrendingUp, Award, Zap, Minimize2, Maximize2 } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { useState, useEffect } from 'react';
 
 export function ProgressDashboard() {
   const {
@@ -10,6 +11,15 @@ export function ProgressDashboard() {
     currentLevel,
     getTimeUntilReset,
   } = useGamification();
+
+  const [isMinimized, setIsMinimized] = useState(() => {
+    const saved = localStorage.getItem('progressDashboardMinimized');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('progressDashboardMinimized', JSON.stringify(isMinimized));
+  }, [isMinimized]);
 
   const levelNames = ['Beginner', 'Intermediate', 'Advanced', 'Expert', 'Master'];
   const levelColors = [
@@ -23,17 +33,30 @@ export function ProgressDashboard() {
   const copyPercentage = (dailyCopiesRemaining / 5) * 100;
 
   return (
-    <div className="fixed bottom-[300px] left-6 z-40 w-72 glass-card p-4 animate-in slide-in-from-bottom-4">
+    <div className="fixed bottom-[300px] left-6 z-40 w-72 glass-card p-4 animate-in slide-in-from-bottom-4 transition-all duration-300">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-foreground/90 font-semibold text-sm flex items-center gap-2">
           <Award className="h-4 w-4" style={{ color: levelColors[currentLevel] }} />
           Progress
         </h3>
+        <button
+          onClick={() => setIsMinimized(!isMinimized)}
+          className="p-1 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-all"
+          title={isMinimized ? "Expand" : "Minimize"}
+        >
+          {isMinimized ? (
+            <Maximize2 className="h-3 w-3 text-white/80" />
+          ) : (
+            <Minimize2 className="h-3 w-3 text-white/80" />
+          )}
+        </button>
       </div>
 
-      {/* Daily Copies Quota */}
-      <div className="mb-4">
+      {!isMinimized && (
+        <>
+          {/* Daily Copies Quota */}
+          <div className="mb-4">
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs text-foreground/60">Daily Copies</span>
           <span className="text-xs font-semibold text-foreground/90">
@@ -103,6 +126,8 @@ export function ProgressDashboard() {
           </p>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }
