@@ -60,6 +60,13 @@
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', 'Inter', sans-serif;
     font-feature-settings: 'rlig' 1, 'calt' 1;
   }
+
+  /* Ensure the page can ALWAYS scroll vertically */
+  html, body {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+  }
   
   body, #root {
     min-height: 100vh;
@@ -155,8 +162,8 @@
     animation: none !important;
   }
   
-  body::before,
-  body::after {
+  #root::before,
+  #root::after {
     animation: none !important;
   }
 }
@@ -226,7 +233,7 @@
 }
 
 /* 5-Color Motion Blur Gradient - Opal Colorimetry Dark Theme */
-body::before {
+#root::before {
   content: '';
   position: fixed;
   top: 0;
@@ -257,7 +264,7 @@ body::before {
 }
 
 /* Fine noise texture overlay */
-body::after {
+#root::after {
   content: '';
   position: fixed;
   top: 0;
