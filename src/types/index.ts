@@ -1,5 +1,6 @@
 export interface HackPrompt {
   id: number;
+  rank?: string;
   title: string;
   description: string;
   category: string;

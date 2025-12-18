@@ -5,6 +5,7 @@ import { HackPrompt } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useSelection } from "@/contexts/SelectionContext";
 import { useGamification } from "@/contexts/GamificationContext";
+import { useArchitect } from "@/contexts/ArchitectContext";
 
 interface PromptCardProps {
   prompt: HackPrompt;
@@ -28,14 +29,18 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   const { toast } = useToast();
   const { togglePrompt, isSelected, canSelectMore } = useSelection();
   const { useCopy, usePrompt, promptUsageCount, currentLevel } = useGamification();
+  const { isArchitect } = useArchitect();
 
   const selected = isSelected(prompt.id);
   const usageCount = promptUsageCount.get(prompt.id) || 0;
   const isMastered = usageCount >= 3;
-  const isRecommended = index < 10;
-  const isLocked = index >= 10 && currentLevel === 0;
+  const isRecommended = index < 10 && !isArchitect;
+  const isLocked = index >= 10 && currentLevel === 0 && !isArchitect;
 
   const categoryColor = categoryColorMap[prompt.category] || "primary";
+  
+  // Compute rank from index (1-based)
+  const rank = `${index + 1}.`;
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -43,12 +48,15 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
       toast({ title: "Prompt Locked", description: "Use 10 different prompts to unlock this one.", duration: 2000 });
       return;
     }
-    if (!useCopy()) {
+    // Skip copy limit check for architects
+    if (!isArchitect && !useCopy()) {
       toast({ title: "Daily limit reached", description: "You've used all 5 copies today.", duration: 2000 });
       return;
     }
     await navigator.clipboard.writeText(prompt.example);
-    usePrompt(prompt.id);
+    if (!isArchitect) {
+      usePrompt(prompt.id);
+    }
     setCopied(true);
     toast({ title: "Copied!", description: "Prompt copied to clipboard.", duration: 2000 });
     setTimeout(() => setCopied(false), 2000);
@@ -66,7 +74,7 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   return (
     <div className={`relative w-full transform-gpu transition-all duration-300 will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}>
       <div
-        className={`bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-2xl border border-white/10 rounded-2xl transition-all duration-300 ease-out  ${selected ? 'border-white/30' : ''}`}>
+        className={`bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-2xl border border-white/10 rounded-2xl transition-all duration-300 ease-out ${selected ? 'border-white/30' : ''}`}>
         {isLocked && (
           <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center z-30 rounded-2xl">
             <Lock className="h-10 w-10 text-white/70 mb-2" />
@@ -81,19 +89,24 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
               <button onClick={handleCopy} disabled={isLocked} className={`p-2 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/15 text-white/80 border border-white/20 hover:border-white/30 ${isLocked ? 'cursor-not-allowed' : ''}`}>
                 {copied ? <Check className="h-4 w-4 text-level-advanced" /> : <Copy className="h-4 w-4" />}
               </button>
-              <button onClick={handleSelect} className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryColor}/20 text-${categoryColor} border border-${categoryColor}/50` : 'bg-white/5 text-white/50 hover:text-white/80 border border-white/10 hover:border-white/20'}`}>
-                {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
-              </button>
+              {!isArchitect && (
+                <button onClick={handleSelect} className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryColor}/20 text-${categoryColor} border border-${categoryColor}/50` : 'bg-white/5 text-white/50 hover:text-white/80 border border-white/10 hover:border-white/20'}`}>
+                  {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
+                </button>
+              )}
             </div>
           </div>
           
-          <h3 className="font-display text-lg font-medium text-white mb-2 line-clamp-2">{prompt.title}</h3>
+          <h3 className="font-display text-lg font-medium text-white mb-2 line-clamp-2">
+            <span className="font-mono text-xl font-light text-white/50 mr-2">{rank}</span>
+            {prompt.title}
+          </h3>
           <p className="font-body text-sm text-white/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>
 
           <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
             <div className="flex items-center gap-2">
-                {isMastered && <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1"><Star className="h-3 w-3" />Mastered</Badge>}
-                {isRecommended && !isMastered && <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1"><Target className="h-3 w-3" />Recommended</Badge>}
+              {!isArchitect && isMastered && <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1"><Star className="h-3 w-3" />Mastered</Badge>}
+              {!isArchitect && isRecommended && !isMastered && <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1"><Target className="h-3 w-3" />Recommended</Badge>}
             </div>
             <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 border border-white/20 hover:bg-white/15 transition-all text-white/70 hover:text-white">
               <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />

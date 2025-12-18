@@ -9,7 +9,7 @@ interface PromptGridProps {
 
 export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridProps) {
   return (
-    <div className="px-6 pb-16">
+    <div className="pb-16">
       {/* Results Summary */}
       <div className="text-center mb-8">
         <p className="text-sm font-light text-white/60 font-sans">
@@ -18,13 +18,13 @@ export function PromptGrid({ prompts, filteredCount, totalCount }: PromptGridPro
         </p>
       </div>
 
-      {/* Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {/* Masonry Grid */}
+      <div className="masonry-grid">
         {prompts.map((prompt, index) => (
           <div
             key={prompt.id}
-            className="animate-fade-in slide-in-from-bottom-4"
-            style={{ animationDelay: `${index * 50}ms`, animationFillMode: 'backwards' }}
+            className="masonry-item animate-fade-in"
+            style={{ animationDelay: `${Math.min(index * 30, 300)}ms`, animationFillMode: 'backwards' }}
           >
             <PromptCard prompt={prompt} index={index} />
           </div>

@@ -46,13 +46,11 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
         </div>
       </div>
 
-      {/* Hero Section - Centered */}
-      <div className="py-16 text-center">
-        <div className="max-w-4xl mx-auto px-6">
-          <p className="font-body text-lg font-light text-white/70 leading-relaxed max-w-2xl mx-auto tracking-wide">
-            Advanced LLM Prompt Engineering
-          </p>
-        </div>
+      {/* Hero Section - Compact */}
+      <div className="py-3 text-center">
+        <p className="font-body text-sm font-light text-white/60 tracking-wide">
+          Advanced LLM Prompt Engineering
+        </p>
       </div>
     </header>
   );
