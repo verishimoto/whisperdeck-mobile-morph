@@ -134,6 +134,7 @@ const Index = () => {
             prompts={filteredPrompts}
             filteredCount={filteredPrompts.length}
             totalCount={hackPrompts.length}
+            onCategoryFilter={(category) => handleCategoryChange(category)}
           />
         ) : viewMode === 'carousel' ? (
           <PromptCarousel prompts={filteredPrompts} />

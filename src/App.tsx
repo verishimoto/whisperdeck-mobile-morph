@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "next-themes";
 import { CustomCursor } from "@/components/CustomCursor";
 import { SelectionProvider } from "@/contexts/SelectionContext";
 import { GamificationProvider } from "@/contexts/GamificationContext";
@@ -15,24 +16,26 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <ArchitectProvider>
-        <GamificationProvider>
-          <SelectionProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <CustomCursor />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </SelectionProvider>
-        </GamificationProvider>
-      </ArchitectProvider>
-    </TooltipProvider>
+    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+      <TooltipProvider>
+        <ArchitectProvider>
+          <GamificationProvider>
+            <SelectionProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <CustomCursor />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </SelectionProvider>
+          </GamificationProvider>
+        </ArchitectProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 

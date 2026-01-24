@@ -1,5 +1,5 @@
-import { Settings, Moon, Sun } from "lucide-react";
-import { useState } from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 
 interface HeaderProps {
   searchQuery: string;
@@ -8,49 +8,35 @@ interface HeaderProps {
 }
 
 export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProps) {
-  const [darkMode, setDarkMode] = useState(true);
+  const { theme, setTheme } = useTheme();
 
   return (
-    <header className="sticky top-0 z-50 backdrop-blur-2xl bg-black/30 border-b border-white/20">
+    <header className="sticky top-0 z-50 liquid-glass-header">
       {/* Top Bar */}
-      <div className="px-6 py-4 grid grid-cols-3 items-center">
-        {/* Left: Empty spacer */}
-        <div></div>
-        
-        {/* Center: Brand Name */}
-        <h1 className="font-nimbus text-hero font-bold tracking-tighter text-white text-center">
+      <div className="px-6 py-3 flex items-center justify-between">
+        {/* Brand - San Francisco inspired */}
+        <h1 className="text-2xl font-semibold tracking-tight text-foreground">
           WhispererDeck
         </h1>
         
-        {/* Right: Icon Buttons */}
-        <div className="flex items-center gap-3 justify-end">
-          <button
-            className="p-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all"
-            data-cursor="hover"
-            title="Settings"
-          >
-            <Settings className="h-5 w-5 text-white/80 hover:text-white transition-colors" />
-          </button>
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className="p-2.5 rounded-xl bg-white/10 border border-white/20 hover:bg-white/15 hover:border-white/30 transition-all"
-            data-cursor="hover"
-            title="Toggle theme"
-          >
-            {darkMode ? (
-              <Sun className="h-5 w-5 text-white/80 hover:text-white transition-colors" />
-            ) : (
-              <Moon className="h-5 w-5 text-white/80 hover:text-white transition-colors" />
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Hero Section - Compact */}
-      <div className="py-3 text-center">
-        <p className="font-body text-sm font-light text-white/60 tracking-wide">
-          Advanced LLM Prompt Engineering
+        {/* Tagline - minimal */}
+        <p className="hidden md:block text-xs text-muted-foreground font-light tracking-widest uppercase">
+          Advanced LLM Prompts
         </p>
+        
+        {/* Theme Toggle */}
+        <button
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          className="p-2.5 rounded-xl liquid-glass-button"
+          data-cursor="hover"
+          title="Toggle theme"
+        >
+          {theme === 'dark' ? (
+            <Sun className="h-5 w-5 text-foreground/80 hover:text-foreground transition-colors" />
+          ) : (
+            <Moon className="h-5 w-5 text-foreground/80 hover:text-foreground transition-colors" />
+          )}
+        </button>
       </div>
     </header>
   );
