@@ -9,35 +9,35 @@ interface CategoryFilterProps {
   onSearchChange: (search: string) => void;
 }
 
+const categoryColorMap: Record<string, string> = {
+  Advanced: 'level-advanced',
+  Strategy: 'level-strategy',
+  Analysis: 'level-analysis',
+  Creativity: 'level-creativity',
+  Psychology: 'level-psychology',
+};
+
 export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, onSortChange, searchQuery, onSearchChange }: CategoryFilterProps) {
   const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology'];
 
-  const categoryColorMap: Record<string, string> = {
-    Advanced: 'level-advanced',
-    Strategy: 'level-strategy',
-    Analysis: 'level-analysis',
-    Creativity: 'level-creativity',
-    Psychology: 'level-psychology',
-  };
-
   return (
-    <div className="sticky top-[160px] z-40 mb-8 px-4 py-4 backdrop-blur-2xl bg-black/20 border-b border-white/10">
+    <div className="sticky top-[56px] z-40 mb-8 px-4 py-4 liquid-glass-header">
       <div className="flex items-center justify-center gap-2 flex-wrap max-w-7xl mx-auto">
         {/* All Button */}
         <button
           onClick={() => onCategoryChange(null)}
-          className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg backdrop-blur-xl font-sans tracking-wide
+          className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide
             ${
               selectedCategory === null
-                ? 'text-white bg-white/20 border border-white/30 font-medium'
-                : 'text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white/90 font-light'
+                ? 'text-foreground bg-foreground/10 border-foreground/30 font-medium'
+                : 'text-foreground/70 hover:text-foreground/90 font-light'
             }`}
           data-cursor="hover"
         >
           All
         </button>
 
-        {/* Category Buttons */}
+        {/* Category Buttons - Color coded */}
         {categories.map((category) => {
           const colorName = categoryColorMap[category];
           const isSelected = selectedCategory === category;
@@ -45,11 +45,11 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
             <button
               key={category}
               onClick={() => onCategoryChange(category)}
-              className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg backdrop-blur-xl font-sans tracking-wide border
+              className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide
                 ${
                   isSelected
-                    ? `text-white bg-${colorName}/30 border-${colorName}/80 font-semibold`
-                    : `text-white/80 bg-white/5 border-white/10 hover:border-${colorName}/60 hover:bg-${colorName}/20 hover:text-white`
+                    ? `text-${colorName} bg-${colorName}/20 border-${colorName}/60 font-semibold shadow-[0_0_20px_hsl(var(--${colorName})/0.3)]`
+                    : `text-foreground/80 hover:text-${colorName} hover:border-${colorName}/40 hover:bg-${colorName}/10`
                 }`}
               data-cursor="hover"
             >
@@ -65,16 +65,16 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
             placeholder="Search..."
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full h-full px-4 pr-10 bg-white/5 border border-white/10 text-white rounded-lg placeholder:text-white/50 focus:outline-none focus:border-white/40 focus:bg-white/10 transition-all backdrop-blur-xl text-sm font-sans"
+            className="w-full h-full px-4 pr-10 liquid-glass-button text-foreground rounded-lg placeholder:text-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm font-sans"
             data-cursor="hover"
           />
-          <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-white/50 pointer-events-none" />
+          <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/50 pointer-events-none" />
         </div>
 
         {/* Sort Button */}
         <button
           onClick={() => onSortChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-          className="h-10 w-10 text-white/70 hover:text-white transition-all backdrop-blur-xl border border-white/10 rounded-lg hover:bg-white/10 hover:border-white/25 flex items-center justify-center"
+          className="h-10 w-10 liquid-glass-button rounded-lg flex items-center justify-center text-foreground/70 hover:text-foreground transition-all"
           title={`Sort ${sortOrder === 'asc' ? 'Descending' : 'Ascending'}`}
           data-cursor="hover"
         >

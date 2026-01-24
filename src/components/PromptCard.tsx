@@ -10,20 +10,21 @@ import { useArchitect } from "@/contexts/ArchitectContext";
 interface PromptCardProps {
   prompt: HackPrompt;
   index: number;
+  onCategoryFilter?: (category: string) => void;
 }
 
-const categoryColorMap: Record<string, string> = {
-  Ultra: "level-ultra",
-  Master: "level-master",
-  Advanced: "level-advanced",
-  Strategy: "level-strategy",
-  Analysis: "level-analysis",
-  Creativity: "level-creativity",
-  Psychology: "level-psychology",
-  Essential: "level-essential",
+const categoryColorMap: Record<string, { css: string; tag: string }> = {
+  Ultra: { css: "level-ultra", tag: "tag-ultra" },
+  Master: { css: "level-master", tag: "tag-master" },
+  Advanced: { css: "level-advanced", tag: "tag-advanced" },
+  Strategy: { css: "level-strategy", tag: "tag-strategy" },
+  Analysis: { css: "level-analysis", tag: "tag-analysis" },
+  Creativity: { css: "level-creativity", tag: "tag-creativity" },
+  Psychology: { css: "level-psychology", tag: "tag-psychology" },
+  Essential: { css: "level-essential", tag: "tag-essential" },
 };
 
-export function PromptCard({ prompt, index }: PromptCardProps) {
+export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
@@ -37,9 +38,9 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
   const isRecommended = index < 10 && !isArchitect;
   const isLocked = index >= 10 && currentLevel === 0 && !isArchitect;
 
-  const categoryColor = categoryColorMap[prompt.category] || "primary";
+  const categoryStyle = categoryColorMap[prompt.category] || { css: "primary", tag: "" };
   
-  // Compute rank from index (1-based)
+  // Compute rank from index (1-based) - this uses the ORIGINAL dataset index
   const rank = `${index + 1}.`;
 
   const handleCopy = async (e: React.MouseEvent) => {
@@ -48,7 +49,6 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
       toast({ title: "Prompt Locked", description: "Use 10 different prompts to unlock this one.", duration: 2000 });
       return;
     }
-    // Skip copy limit check for architects
     if (!isArchitect && !useCopy()) {
       toast({ title: "Daily limit reached", description: "You've used all 5 copies today.", duration: 2000 });
       return;
@@ -71,56 +71,66 @@ export function PromptCard({ prompt, index }: PromptCardProps) {
     togglePrompt(prompt);
   };
 
+  const handleCategoryClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onCategoryFilter?.(prompt.category);
+  };
+
   return (
     <div className={`relative w-full transform-gpu transition-all duration-300 will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}>
-      <div
-        className={`bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-2xl border border-white/10 rounded-2xl transition-all duration-300 ease-out ${selected ? 'border-white/30' : ''}`}>
+      <div className={`liquid-glass-card ${selected ? 'ring-2 ring-white/30' : ''}`}>
         {isLocked && (
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center justify-center z-30 rounded-2xl">
-            <Lock className="h-10 w-10 text-white/70 mb-2" />
-            <p className="text-xs text-white/70 text-center px-4 font-sans">Use 10 prompts to unlock</p>
+          <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex flex-col items-center justify-center z-30 rounded-2xl">
+            <Lock className="h-10 w-10 text-foreground/70 mb-2" />
+            <p className="text-xs text-foreground/70 text-center px-4 font-sans">Use 10 prompts to unlock</p>
           </div>
         )}
 
-        <div className="p-5 flex flex-col h-full">
+        <div className="p-5 flex flex-col h-full relative z-10">
           <div className="flex items-start justify-between mb-4">
-            <Badge className={`bg-${categoryColor}/20 border-${categoryColor}/30 text-${categoryColor} text-xs px-2.5 py-1 rounded-full font-sans`}>{prompt.category}</Badge>
+            {/* Clickable Category Tag */}
+            <Badge 
+              onClick={handleCategoryClick}
+              className={`tag-interactive ${categoryStyle.tag} bg-${categoryStyle.css}/15 border-${categoryStyle.css}/25 text-${categoryStyle.css} text-xs px-2.5 py-1 rounded-full font-sans hover:bg-${categoryStyle.css}/25 hover:border-${categoryStyle.css}/50 cursor-pointer`}
+            >
+              {prompt.category}
+            </Badge>
             <div className="flex items-center gap-2">
-              <button onClick={handleCopy} disabled={isLocked} className={`p-2 rounded-lg transition-all duration-200 bg-white/10 hover:bg-white/15 text-white/80 border border-white/20 hover:border-white/30 ${isLocked ? 'cursor-not-allowed' : ''}`}>
+              <button onClick={handleCopy} disabled={isLocked} className={`p-2 rounded-lg transition-all duration-200 liquid-glass-button text-foreground/80 ${isLocked ? 'cursor-not-allowed' : ''}`}>
                 {copied ? <Check className="h-4 w-4 text-level-advanced" /> : <Copy className="h-4 w-4" />}
               </button>
               {!isArchitect && (
-                <button onClick={handleSelect} className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryColor}/20 text-${categoryColor} border border-${categoryColor}/50` : 'bg-white/5 text-white/50 hover:text-white/80 border border-white/10 hover:border-white/20'}`}>
+                <button onClick={handleSelect} className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryStyle.css}/20 text-${categoryStyle.css} border border-${categoryStyle.css}/50` : 'liquid-glass-button text-foreground/50 hover:text-foreground/80'}`}>
                   {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
                 </button>
               )}
             </div>
           </div>
           
-          <h3 className="font-display text-lg font-medium text-white mb-2 line-clamp-2">
-            <span className="font-mono text-xl font-light text-white/50 mr-2">{rank}</span>
+          <h3 className="font-display text-lg font-medium text-foreground mb-2 line-clamp-2">
+            <span className="font-mono text-xl font-light text-foreground/50 mr-2">{rank}</span>
             {prompt.title}
           </h3>
-          <p className="font-body text-sm text-white/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>
+          <p className="font-body text-sm text-foreground/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>
 
-          <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
+          <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
             <div className="flex items-center gap-2">
               {!isArchitect && isMastered && <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1"><Star className="h-3 w-3" />Mastered</Badge>}
               {!isArchitect && isRecommended && !isMastered && <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1"><Target className="h-3 w-3" />Recommended</Badge>}
             </div>
-            <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 border border-white/20 hover:bg-white/15 transition-all text-white/70 hover:text-white">
+            <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-center w-8 h-8 rounded-full liquid-glass-button text-foreground/70 hover:text-foreground">
               <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
           {expanded && (
-            <div className="mt-4 pt-4 border-t border-white/10 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="p-4 rounded-xl bg-black/20 border border-white/10">
-                <p className="font-mono text-sm text-white/90 leading-loose">{prompt.example}</p>
+            <div className="mt-4 pt-4 border-t border-border/50 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="p-4 rounded-xl bg-background/30 border border-border/50">
+                <p className="font-mono text-sm text-foreground/90 leading-loose">{prompt.example}</p>
               </div>
-              <div className={`p-4 rounded-xl border bg-${categoryColor}/10 border-${categoryColor}/20`}>
-                <h4 className={`font-display text-base font-semibold mb-2 text-${categoryColor}`}>Why This Is a Hack</h4>
-                <p className="font-body text-sm text-white/70 leading-relaxed">{prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}</p>
+              <div className={`p-4 rounded-xl border bg-${categoryStyle.css}/10 border-${categoryStyle.css}/20`}>
+                <h4 className={`font-display text-base font-semibold mb-2 text-${categoryStyle.css}`}>Why This Is a Hack</h4>
+                <p className="font-body text-sm text-foreground/70 leading-relaxed">{prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}</p>
               </div>
             </div>
           )}

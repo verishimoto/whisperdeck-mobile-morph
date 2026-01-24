@@ -12,11 +12,22 @@ const ArchitectContext = createContext<ArchitectState | undefined>(undefined);
 
 const ARCHITECT_PASSWORD = "rootsbeforebranches";
 const STORAGE_KEY = "whisperdeck_architect";
+const SESSION_DATE_KEY = "whisperdeck_architect_date";
 const LAST_POPUP_KEY = "whisperdeck_last_popup";
 
 export function ArchitectProvider({ children }: { children: ReactNode }) {
   const [isArchitect, setIsArchitect] = useState(() => {
-    return localStorage.getItem(STORAGE_KEY) === 'true';
+    const storedValue = localStorage.getItem(STORAGE_KEY);
+    const storedDate = localStorage.getItem(SESSION_DATE_KEY);
+    const today = new Date().toDateString();
+    
+    // Expire architect session if it's a new day
+    if (storedDate !== today) {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(SESSION_DATE_KEY);
+      return false;
+    }
+    return storedValue === 'true';
   });
   
   const [showGate, setShowGate] = useState(() => {
@@ -31,7 +42,13 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, isArchitect.toString());
+    if (isArchitect) {
+      localStorage.setItem(STORAGE_KEY, 'true');
+      localStorage.setItem(SESSION_DATE_KEY, new Date().toDateString());
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(SESSION_DATE_KEY);
+    }
   }, [isArchitect]);
 
   useEffect(() => {
@@ -52,6 +69,7 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setIsArchitect(false);
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(SESSION_DATE_KEY);
   };
 
   return (
