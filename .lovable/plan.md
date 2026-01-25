@@ -1,499 +1,376 @@
 
-# Liquid Glass Apple UI Overhaul - Complete Implementation Plan
+# WhispererDeck Premium Enhancement Plan
 
-## Overview
-Transform WhispererDeck into a modern 2026 iOS-inspired liquid glass interface with mouse-reactive iridescent effects, proper light/dark theme support, and refined glassmorphism aesthetics.
-
----
-
-## Phase 1: Theme System & Light Mode
-
-### 1.1 Add Light Mode CSS Variables (`src/index.css`)
-Create a complete light mode palette with Apple-style iridescent colors:
-
-```css
-.light {
-  --background: 220 20% 98%;
-  --foreground: 220 15% 10%;
-  
-  /* Light mode opal palette - soft pastels */
-  --opal-purple: 280 60% 75%;
-  --opal-cyan: 180 50% 65%;
-  --opal-pink: 320 55% 80%;
-  --opal-green: 150 45% 70%;
-  --opal-blue: 210 55% 72%;
-  
-  /* Glass effects - frosted white */
-  --card: 0 0% 100%;
-  --glass-bg: 0 0% 100% / 0.65;
-  --glass-border: 220 30% 80% / 0.4;
-}
-```
-
-### 1.2 Integrate next-themes (`src/App.tsx`)
-Add ThemeProvider wrapper for proper theme switching:
-
-```tsx
-import { ThemeProvider } from 'next-themes';
-
-<ThemeProvider attribute="class" defaultTheme="dark">
-  <ArchitectProvider>
-    {/* ... */}
-  </ArchitectProvider>
-</ThemeProvider>
-```
-
-### 1.3 Connect Theme Toggle (`src/components/Header.tsx`)
-Replace local state with `useTheme()` hook:
-
-```tsx
-import { useTheme } from 'next-themes';
-
-const { theme, setTheme } = useTheme();
-
-<button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
-  {theme === 'dark' ? <Sun /> : <Moon />}
-</button>
-```
+## Executive Summary
+This plan addresses a comprehensive overhaul spanning favorites, typography, cursor effects, backgrounds, authentication, keyboard shortcuts, and a new Prompt Chaining Composer system for architects.
 
 ---
 
-## Phase 2: Liquid Glass Card System
+## Phase 1: Favorites System (User Feature)
 
-### 2.1 Pure Glass Card Styling (`src/index.css`)
-Create truly transparent glass cards with refined effects:
+### 1.1 Create FavoritesContext
+**New File: `src/contexts/FavoritesContext.tsx`**
 
-```css
-.liquid-glass-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.08) 0%,
-    rgba(255, 255, 255, 0.03) 50%,
-    rgba(255, 255, 255, 0.05) 100%
-  );
-  backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.15),
-    inset 0 0 0 0.5px rgba(255, 255, 255, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
+- Store `favoriteIds: Set<number>` persisted to localStorage
+- Functions: `toggleFavorite(promptId)`, `isFavorite(promptId)`, `getFavorites()`
+- Auto-save on change
 
-/* Noise texture for glass realism */
-.liquid-glass-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,...noise...");
-  opacity: 0.025;
-  pointer-events: none;
-  border-radius: inherit;
-}
+### 1.2 Add Star Button to PromptCard
+**Modify: `src/components/PromptCard.tsx`**
 
-/* Light mode glass */
-.light .liquid-glass-card {
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.75) 0%,
-    rgba(255, 255, 255, 0.5) 100%
-  );
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-}
-```
+- Add Heart/Star icon next to copy button
+- Filled when favorited, outline when not
+- Click toggles favorite state with animation
 
-### 2.2 Iridescent Border Flares (`src/index.css`)
-Add animated rainbow edge effects that respond to hover:
+### 1.3 Create Favorites Filter Tab
+**Modify: `src/components/CategoryFilter.tsx`**
 
-```css
-.liquid-glass-card::after {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  background: linear-gradient(
-    var(--iridescent-angle, 135deg),
-    hsl(280 95% 82% / 0),
-    hsl(180 100% 70% / 0.3),
-    hsl(320 95% 85% / 0.4),
-    hsl(150 85% 75% / 0.3),
-    hsl(210 100% 78% / 0)
-  );
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  pointer-events: none;
-  z-index: -1;
-}
-
-.liquid-glass-card:hover::after {
-  opacity: 1;
-  animation: iridescent-shift 3s linear infinite;
-}
-
-@keyframes iridescent-shift {
-  0% { --iridescent-angle: 0deg; }
-  100% { --iridescent-angle: 360deg; }
-}
-```
-
-### 2.3 Update PromptCard Component (`src/components/PromptCard.tsx`)
-Replace current glass styling with new liquid glass class:
-
-```tsx
-<div className={`
-  liquid-glass-card 
-  relative w-full rounded-2xl 
-  transform-gpu transition-all duration-400
-  ${isHovered ? 'scale-[1.02] shadow-2xl' : ''}
-`}>
-```
+- Add "Favorites" button with heart icon
+- When active, filter prompts to only show favorited ones
 
 ---
 
-## Phase 3: Mouse-Reactive Effects
+## Phase 2: Typography Overhaul
 
-### 3.1 Enhanced Custom Cursor (`src/components/CustomCursor.tsx`)
-Add iridescent glow that intensifies near card edges:
-
-```tsx
-const [nearCard, setNearCard] = useState(false);
-const [cardDistance, setCardDistance] = useState(100);
-
-// Detect proximity to cards
-const checkCardProximity = (x: number, y: number) => {
-  const cards = document.querySelectorAll('.liquid-glass-card');
-  let minDist = Infinity;
-  
-  cards.forEach(card => {
-    const rect = card.getBoundingClientRect();
-    const dist = distanceToRect(x, y, rect);
-    if (dist < minDist) minDist = dist;
-  });
-  
-  setNearCard(minDist < 50);
-  setCardDistance(minDist);
-};
-```
-
-### 3.2 Cursor Iridescent Glow Styles (`src/index.css`)
+### 2.1 Bebas Neue-style Numbers
+**Modify: `src/index.css`**
 
 ```css
-#custom-cursor {
+.number-display {
+  font-family: 'Helvetica Neue', sans-serif;
+  font-weight: 200;  /* Ultra-light */
+  font-stretch: ultra-condensed;
+  letter-spacing: -0.04em;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+```
+
+### 2.2 Update PromptCard Number Styling
+**Modify: `src/components/PromptCard.tsx`**
+
+Replace current number span with:
+```tsx
+<span className="number-display text-foreground/40">{rank}</span>
+```
+
+### 2.3 H1 Header Enhancement (Antigravity-inspired)
+**Modify: `src/components/Header.tsx`**
+
+- Large, clean, minimal typography
+- Weight: 500-600, tracking tight
+- Subtle gradient text effect on hover
+
+---
+
+## Phase 3: Enhanced Cursor & Card Refraction Effects
+
+### 3.1 "Burning" Cursor Near Card Edges
+**Modify: `src/components/CustomCursor.tsx`**
+
+- Calculate distance to nearest card edge (not just center)
+- Apply intensity gradient: closer = brighter iridescent glow
+- Add pulsing animation when very close (<20px)
+
+### 3.2 Glass Refraction Lighting
+**Modify: `src/index.css`**
+
+Add new class `.liquid-glass-card-active` for expanded cards:
+```css
+.liquid-glass-card-active {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+}
+
+.liquid-glass-card-active::before {
   background: radial-gradient(
-    circle,
-    rgba(255, 255, 255, 0.4) 0%,
-    transparent 70%
+    circle at var(--mouse-x) var(--mouse-y),
+    rgba(255, 255, 255, 0.15) 0%,
+    transparent 60%
   );
-  transition: all 0.15s ease-out;
-}
-
-#custom-cursor.near-card {
-  width: 48px;
-  height: 48px;
-  background: radial-gradient(
-    circle,
-    hsl(var(--opal-purple) / 0.4) 0%,
-    hsl(var(--opal-cyan) / 0.3) 35%,
-    hsl(var(--opal-pink) / 0.2) 60%,
-    transparent 80%
-  );
-  border: 1px solid hsl(var(--opal-purple) / 0.5);
-  box-shadow: 
-    0 0 30px hsl(var(--opal-purple) / 0.4),
-    0 0 60px hsl(var(--opal-cyan) / 0.2);
 }
 ```
 
-### 3.3 Mouse-Reactive Background Gradient (`src/index.css`)
-Add subtle mouse-following glow to background:
+### 3.3 Opposite-Side Glare Effect
+**Modify: `src/components/PromptCard.tsx`**
 
-```css
-#mouse-glow {
-  position: fixed;
-  width: 600px;
-  height: 600px;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    hsl(var(--opal-purple) / 0.08) 0%,
-    transparent 70%
-  );
-  filter: blur(100px);
-  pointer-events: none;
-  z-index: -1;
-  transition: transform 0.3s ease-out;
-}
-```
+- Track mouse position within expanded card
+- Calculate opposite position for glare highlight
+- Apply CSS custom properties for dynamic gradient
 
 ---
 
-## Phase 4: Background & Visual Effects
+## Phase 4: Background & Light Mode Improvements
 
-### 4.1 Optimized Motion Background (`src/index.css`)
-Keep opal gradient but optimize for GPU performance:
+### 4.1 Optimize Motion Background
+**Modify: `src/index.css`**
 
+Replace image-based background with pure CSS gradient:
 ```css
 #root::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -2;
   background: 
-    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.35), transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(180 100% 70% / 0.3), transparent 45%),
-    radial-gradient(ellipse at 40% 70%, hsl(320 95% 85% / 0.35), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, hsl(150 85% 75% / 0.3), transparent 48%),
-    radial-gradient(ellipse at 50% 50%, hsl(210 100% 78% / 0.25), transparent 55%),
-    linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0a0a12 100%);
-  filter: blur(80px) saturate(1.3);
-  will-change: transform;
-  animation: bg-drift 30s ease-in-out infinite alternate;
-}
-
-/* Light mode background */
-.light #root::before {
-  background:
-    radial-gradient(ellipse at 20% 30%, hsl(280 60% 85% / 0.4), transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(180 50% 80% / 0.35), transparent 45%),
-    radial-gradient(ellipse at 40% 70%, hsl(320 55% 88% / 0.35), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, hsl(150 45% 82% / 0.3), transparent 48%),
-    radial-gradient(ellipse at 50% 50%, hsl(210 55% 85% / 0.3), transparent 55%),
-    linear-gradient(135deg, #f8f9fc 0%, #f0f2f8 50%, #f5f7fc 100%);
-  filter: blur(60px) saturate(1.1);
-}
-
-@keyframes bg-drift {
-  0% { transform: scale(1) translate(0, 0); }
-  100% { transform: scale(1.05) translate(2%, 2%); }
+    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.4), transparent 45%),
+    /* ... more gradients */
+    linear-gradient(135deg, #0a0a0f, #12121a);
+  animation: bg-morph 45s ease-in-out infinite alternate;
 }
 ```
 
-### 4.2 Subtle Noise Texture Overlay (`src/index.css`)
+### 4.2 Enhanced Light Mode
+**Modify: `src/index.css`**
 
-```css
-#root::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
-  opacity: 0.4;
-  pointer-events: none;
-}
-```
+- Increase iridescent saturation in light mode
+- Add more visible glassmorphism borders
+- Deeper shadows for card depth
+- Light mode variables adjusted for better contrast
+
+### 4.3 Remove `body::before` from styles.css
+**Modify: `src/assets/styles.css`**
+
+Remove the duplicate background image animation that conflicts with index.css
 
 ---
 
-## Phase 5: Header Refinement
+## Phase 5: Header & UI Cleanup
 
-### 5.1 Compact Header with Better Heuristics (`src/components/Header.tsx`)
+### 5.1 Remove "Notifications alt+T" aria-label
+**Search & Remove**: Find and remove this element (not found in current search - may be in a component not yet viewed)
+
+### 5.2 Antigravity-Inspired Header
+**Modify: `src/components/Header.tsx`**
 
 ```tsx
 <header className="sticky top-0 z-50 liquid-glass-header">
-  <div className="px-6 py-3 flex items-center justify-between">
-    {/* Brand - San Francisco inspired */}
-    <h1 className="font-sf text-2xl font-semibold tracking-tight text-white/90">
+  <div className="px-8 py-4 flex items-center justify-between">
+    <h1 className="text-3xl font-medium tracking-tight text-foreground">
       WhispererDeck
     </h1>
-    
-    {/* Tagline - minimal */}
-    <p className="hidden md:block text-xs text-white/50 font-light tracking-widest uppercase">
-      Advanced LLM Prompts
-    </p>
-    
-    {/* Actions */}
-    <div className="flex gap-2">
-      {/* Hide Settings button for now */}
-      <ThemeToggle />
-    </div>
+    {/* Clean, minimal - just theme toggle */}
+    <ThemeToggle />
   </div>
 </header>
 ```
 
-### 5.2 Header Glass Styling
+---
+
+## Phase 6: Scroll & Touch Animations
+
+### 6.1 Scroll-Triggered Card Animations
+**Modify: `src/components/PromptGrid.tsx`**
+
+- Use Intersection Observer API
+- Cards fade in + slide up when entering viewport
+- Staggered animation delay based on column position
+
+### 6.2 Touch Feedback for Mobile
+**Modify: `src/index.css`**
 
 ```css
-.liquid-glass-header {
-  background: linear-gradient(
-    180deg,
-    rgba(10, 10, 15, 0.7) 0%,
-    rgba(10, 10, 15, 0.5) 100%
-  );
-  backdrop-filter: blur(40px) saturate(150%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.liquid-glass-card:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease;
 }
 
-.light .liquid-glass-header {
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.7) 100%
-  );
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-```
-
----
-
-## Phase 6: Interactive Tags & Category Menu
-
-### 6.1 Hoverable Tags with Glow (`src/components/PromptCard.tsx`)
-
-```tsx
-<Badge 
-  className={`
-    cursor-pointer
-    bg-${categoryColor}/10 
-    border-${categoryColor}/20 
-    text-${categoryColor}
-    transition-all duration-200
-    hover:bg-${categoryColor}/20
-    hover:border-${categoryColor}/50
-    hover:shadow-[0_0_12px_hsl(var(--${categoryColor})/0.3)]
-  `}
-  onClick={(e) => {
-    e.stopPropagation();
-    onCategoryFilter?.(prompt.category);
-  }}
->
-  {prompt.category}
-</Badge>
-```
-
-### 6.2 Color-Coded Category Menu (`src/components/CategoryFilter.tsx`)
-Match menu buttons to their category tag colors:
-
-```tsx
-{categories.map((category) => {
-  const colorVar = categoryColorMap[category];
-  return (
-    <button
-      className={`
-        liquid-glass-button
-        border-${colorVar}/30
-        hover:border-${colorVar}/60
-        hover:bg-${colorVar}/15
-        ${isSelected ? `bg-${colorVar}/25 border-${colorVar}/70` : ''}
-      `}
-    >
-      {category}
-    </button>
-  );
-})}
-```
-
-### 6.3 Preserve Static Prompt Numbers
-Ensure prompt `index` is computed from original dataset position, not filtered position:
-
-```tsx
-// In PromptGrid.tsx
-{prompts.map((prompt) => {
-  // Use the prompt's original ID for rank, not filtered index
-  const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
-  return (
-    <PromptCard 
-      prompt={prompt} 
-      index={originalIndex}  // Static rank based on original position
-    />
-  );
-})}
-```
-
----
-
-## Phase 7: Architect Mode - Daily Reset
-
-### 7.1 Update ArchitectContext (`src/contexts/ArchitectContext.tsx`)
-Make architect session expire daily:
-
-```tsx
-const STORAGE_KEY = "whisperdeck_architect";
-const SESSION_DATE_KEY = "whisperdeck_architect_date";
-
-const [isArchitect, setIsArchitect] = useState(() => {
-  const storedValue = localStorage.getItem(STORAGE_KEY);
-  const storedDate = localStorage.getItem(SESSION_DATE_KEY);
-  const today = new Date().toDateString();
-  
-  // Expire architect session if it's a new day
-  if (storedDate !== today) {
-    localStorage.removeItem(STORAGE_KEY);
-    return false;
+@media (hover: none) {
+  .liquid-glass-card {
+    transition: transform 0.15s ease;
   }
-  return storedValue === 'true';
-});
-
-// When setting architect mode, also store the date
-const checkPassword = (input: string): boolean => {
-  if (input.toLowerCase().trim() === ARCHITECT_PASSWORD) {
-    setIsArchitect(true);
-    localStorage.setItem(STORAGE_KEY, 'true');
-    localStorage.setItem(SESSION_DATE_KEY, new Date().toDateString());
-    return true;
-  }
-  return false;
-};
-```
-
----
-
-## Phase 8: Typography Refinement
-
-### 8.1 San Francisco Font Stack for H1/H2 (`src/index.css`)
-
-```css
-h1, h2 {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 
-               'Helvetica Neue', 'Inter', sans-serif;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-
-h1 {
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  line-height: 1.1;
-}
-
-h2 {
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
-  line-height: 1.2;
 }
 ```
 
 ---
 
-## Files Modified Summary
+## Phase 7: OAuth Authentication System
 
-| File | Changes |
-|------|---------|
-| `src/index.css` | Light mode variables, liquid glass classes, iridescent effects, background optimization, noise texture, header glass, typography |
-| `src/App.tsx` | Add ThemeProvider wrapper |
-| `src/components/Header.tsx` | Connect useTheme, compact layout, hide Settings |
-| `src/components/PromptCard.tsx` | Liquid glass styling, hoverable tags with click |
-| `src/components/PromptGrid.tsx` | Static prompt numbering from original dataset |
-| `src/components/CategoryFilter.tsx` | Color-coded buttons matching tags |
-| `src/components/CustomCursor.tsx` | Iridescent glow near cards |
-| `src/contexts/ArchitectContext.tsx` | Daily session expiry |
+### 7.1 Create Auth Context
+**New File: `src/contexts/AuthContext.tsx`**
+
+- Integrate with Supabase Auth
+- Handle sign-in, sign-up, sign-out
+- Session persistence
+
+### 7.2 Auth Pages
+**New File: `src/pages/Auth.tsx`**
+
+- Sign in with email/password
+- Google OAuth button (using Supabase)
+- Clean glassmorphism design matching app theme
+
+### 7.3 Protected Routes
+**Modify: `src/App.tsx`**
+
+- Wrap routes with auth check
+- Redirect unauthenticated users to auth page
+- Persist user session
 
 ---
 
-## Technical Considerations
+## Phase 8: Keyboard Shortcuts
 
-### GPU Performance
-- Use `will-change: transform` sparingly
-- Limit blur radius to 40-80px
-- Use CSS transforms instead of position changes
-- Reduce animation complexity on mobile with `@media (prefers-reduced-motion)`
+### 8.1 Create KeyboardShortcuts Hook
+**New File: `src/hooks/useKeyboardShortcuts.ts`**
 
-### Accessibility
-- Maintain WCAG contrast ratios in both themes
-- Respect `prefers-reduced-motion` for all animations
-- Ensure focus states remain visible
+Shortcuts:
+- `Cmd/Ctrl + K` - Focus search
+- `Cmd/Ctrl + /` - Show shortcuts help
+- `1-5` - Switch categories
+- `Escape` - Close expanded card/modal
+- `T` - Toggle theme
 
-### Browser Compatibility
-- Fallback for `backdrop-filter` on unsupported browsers
-- CSS custom properties with fallback values
-- `-webkit-backdrop-filter` prefix for Safari
+### 8.2 Shortcuts Help Modal
+**New File: `src/components/KeyboardShortcutsModal.tsx`**
+
+- Glassmorphism modal listing all shortcuts
+- Triggered by `Cmd/Ctrl + /`
+
+---
+
+## Phase 9: Architect Mode - Prompt Chaining Composer
+
+### 9.1 Pre-Made Prompt Chain Panels
+**New File: `src/components/PromptChainPanels.tsx`**
+
+Structure:
+```typescript
+interface PromptChain {
+  id: string;
+  name: string;          // "VIBE CODING PROMPT CHAIN"
+  description: string;   // Purpose/use case
+  promptIds: number[];   // [172, 199, 229, 238, 249]
+  reasoning: string;     // Why these prompts together
+  category: 'vibe-coding' | 'prompt-engineering' | 'analysis' | 'creative';
+}
+```
+
+Display:
+- Large glassmorphism panels in a grid
+- Show prompt IDs in Helvetica Neue condensed
+- Hover to reveal prompt titles
+- Copy button for formatted chain output
+- Optional flowchart visualization
+
+### 9.2 Inquiry-Based Chain Generator
+**New File: `src/components/ChainInquiry.tsx`**
+
+Features:
+- Glassmorphism text input centered at top
+- Placeholder: "Describe the prompt chain you need..."
+- Recent searches displayed below
+- Submit generates suggested prompt combination
+- Uses RAG-like matching against prompt metadata
+
+### 9.3 Architect Prompt Chain View Toggle
+**Modify: `src/pages/Index.tsx`**
+
+For architects:
+- Add toggle: "Cards" | "Chains"
+- Chains view shows pre-made panels
+- Inquiry box at top
+- Unlimited selection for custom chains
+
+### 9.4 Chain Visualization Flowchart
+**New File: `src/components/ChainFlowchart.tsx`**
+
+- Use React Flow library (already installed)
+- Display prompt chain as connected nodes
+- Category-colored nodes
+- Arrows showing flow direction
+
+---
+
+## Phase 10: Prompt Category Reorganization
+
+### 10.1 Balanced Category Distribution
+**Analysis Task (No Code Change Yet)**
+
+Current prompts need redistribution to ensure 50 prompts per category:
+- Advanced: 50
+- Strategy: 50
+- Analysis: 50
+- Creativity: 50
+- Psychology: 50
+
+### 10.2 Static Ranking Preservation
+**Already Implemented**: Prompt numbers remain fixed (1-250) regardless of filter
+
+---
+
+## Technical Notes
+
+### Files to Create
+1. `src/contexts/FavoritesContext.tsx`
+2. `src/contexts/AuthContext.tsx`
+3. `src/pages/Auth.tsx`
+4. `src/hooks/useKeyboardShortcuts.ts`
+5. `src/components/KeyboardShortcutsModal.tsx`
+6. `src/components/PromptChainPanels.tsx`
+7. `src/components/ChainInquiry.tsx`
+8. `src/components/ChainFlowchart.tsx`
+
+### Files to Modify
+1. `src/index.css` - Typography, cursor, backgrounds, animations
+2. `src/components/Header.tsx` - Minimal Antigravity-style
+3. `src/components/PromptCard.tsx` - Numbers, favorites, refraction
+4. `src/components/CategoryFilter.tsx` - Favorites tab
+5. `src/components/PromptGrid.tsx` - Scroll animations
+6. `src/components/CustomCursor.tsx` - Edge burning effect
+7. `src/pages/Index.tsx` - Architect chain view toggle
+8. `src/App.tsx` - Auth provider, routes
+9. `src/assets/styles.css` - Remove duplicate background
+
+### Database Requirements (Supabase)
+For persistent favorites and saved chains:
+```sql
+-- User favorites
+CREATE TABLE user_favorites (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  prompt_id INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id, prompt_id)
+);
+
+-- Saved prompt chains
+CREATE TABLE prompt_chains (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  prompt_ids INTEGER[] NOT NULL,
+  reasoning TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Enable RLS
+ALTER TABLE user_favorites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE prompt_chains ENABLE ROW LEVEL SECURITY;
+```
+
+---
+
+## Implementation Priority
+
+**MVP (Do First):**
+1. Favorites system (localStorage first, then DB)
+2. Typography updates
+3. Light mode improvements
+4. Scroll animations
+5. Remove duplicate backgrounds
+
+**Enhancement (Phase 2):**
+6. Enhanced cursor effects
+7. Card refraction lighting
+8. Keyboard shortcuts
+
+**Advanced (Phase 3):**
+9. OAuth authentication
+10. Architect prompt chain panels
+11. Chain inquiry system
+12. Flowchart visualization
+
+---
+
+## Estimated Effort
+- MVP Features: 3-4 implementation cycles
+- Enhancement Features: 2-3 cycles
+- Advanced Features: 4-5 cycles
+
+This plan transforms WhispererDeck into a premium prompt engineering platform with professional-grade UX, proper user accounts, and powerful prompt chaining tools for architects.
