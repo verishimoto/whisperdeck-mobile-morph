@@ -148,6 +148,16 @@
   }
 }
 
+/* ===== BEBAS NEUE STYLE NUMBERS ===== */
+.number-display {
+  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 200;
+  font-stretch: ultra-condensed;
+  letter-spacing: -0.04em;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  line-height: 1;
+}
+
 /* ===== CUSTOM CURSOR - Iridescent Near Cards ===== */
 #custom-cursor {
   position: fixed;
@@ -204,6 +214,94 @@
 #custom-cursor.click {
   width: 18px;
   height: 18px;
+}
+
+/* Burning cursor effect near card edges */
+#custom-cursor.burning {
+  width: 56px;
+  height: 56px;
+  background: radial-gradient(
+    circle at 50% 50%,
+    hsl(45 100% 70% / calc(var(--edge-intensity, 0) * 0.6)) 0%,
+    hsl(30 100% 60% / calc(var(--edge-intensity, 0) * 0.4)) 30%,
+    hsl(280 95% 82% / calc(var(--edge-intensity, 0) * 0.3)) 50%,
+    transparent 70%
+  );
+  box-shadow: 
+    0 0 calc(40px * var(--edge-intensity, 0)) hsl(45 100% 70% / 0.5),
+    0 0 calc(80px * var(--edge-intensity, 0)) hsl(280 95% 82% / 0.3);
+  animation: burning-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes burning-pulse {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  100% { transform: translate(-50%, -50%) scale(1.1); }
+}
+
+/* Touch feedback for mobile */
+.liquid-glass-card:active {
+  transform: scale(0.98) !important;
+  transition: transform 0.1s ease !important;
+}
+
+@media (hover: none) {
+  .liquid-glass-card {
+    transition: transform 0.15s ease;
+  }
+}
+
+/* Favorite button pulse animation */
+.favorite-pulse {
+  animation: favorite-pulse 0.3s ease-out;
+}
+
+@keyframes favorite-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Header brand styling */
+.header-brand {
+  background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.8) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: all 0.3s ease;
+}
+
+.header-brand:hover {
+  background: linear-gradient(
+    135deg, 
+    hsl(var(--opal-purple)) 0%, 
+    hsl(var(--opal-cyan)) 50%, 
+    hsl(var(--opal-pink)) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Active card refraction effect */
+.liquid-glass-card-active {
+  --mouse-x: 50%;
+  --mouse-y: 50%;
+  --glare-x: 50%;
+  --glare-y: 50%;
+}
+
+.liquid-glass-card-active::before {
+  background: 
+    radial-gradient(
+      circle at var(--mouse-x) var(--mouse-y),
+      rgba(255, 255, 255, 0.12) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at var(--glare-x) var(--glare-y),
+      rgba(255, 255, 255, 0.08) 0%,
+      transparent 40%
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E") !important;
 }
 
 @media (hover: none) and (pointer: coarse) {

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
@@ -10,6 +10,8 @@ import { ModelToggle } from "@/components/ModelToggle";
 import { ChainBuilder } from "@/components/ChainBuilder";
 import { ArchitectGate } from "@/components/ArchitectGate";
 import { useArchitect } from "@/contexts/ArchitectContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
@@ -17,18 +19,40 @@ import { LayoutGrid, Layout, Network } from "lucide-react";
 
 const Index = () => {
   const { isArchitect } = useArchitect();
+  const { getFavorites } = useFavorites();
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "",
     sort: "desc",
   });
   const [viewMode, setViewMode] = useState<'grid' | 'carousel' | 'tree'>('grid');
+  const [showFavorites, setShowFavorites] = useState(false);
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts({
+    onSearch: () => {
+      const searchInput = document.querySelector('input[type="text"]') as HTMLInputElement;
+      searchInput?.focus();
+    },
+    onCategoryChange: (category) => {
+      setShowFavorites(false);
+      setFilters(prev => ({ ...prev, category: category || "" }));
+    },
+  });
 
   const filteredPrompts = useMemo(() => {
     let filtered = hackPrompts;
 
-    // Apply category filter first
-    if (filters.category) {
+    // Apply favorites filter
+    if (showFavorites) {
+      const favoriteIds = getFavorites();
+      filtered = filtered.filter((prompt) => favoriteIds.includes(prompt.id));
+    }
+
+    // Apply category filter
+    if (filters.category && !showFavorites) {
       filtered = filtered.filter((prompt) => prompt.category === filters.category);
     }
 
@@ -49,7 +73,7 @@ const Index = () => {
     });
 
     return filtered;
-  }, [filters]);
+  }, [filters, showFavorites, getFavorites]);
 
   const handleSearchChange = (search: string) => {
     setFilters(prev => ({ ...prev, search }));
@@ -61,6 +85,13 @@ const Index = () => {
 
   const handleSortChange = (sort: 'asc' | 'desc') => {
     setFilters(prev => ({ ...prev, sort }));
+  };
+
+  const handleFavoritesToggle = () => {
+    setShowFavorites(prev => !prev);
+    if (!showFavorites) {
+      setFilters(prev => ({ ...prev, category: "" }));
+    }
   };
 
   return (
@@ -80,6 +111,8 @@ const Index = () => {
         onSortChange={handleSortChange}
         searchQuery={filters.search}
         onSearchChange={handleSearchChange}
+        showFavorites={showFavorites}
+        onFavoritesToggle={handleFavoritesToggle}
       />
 
       {/* View Mode Toggle - Hidden for Architects */}
