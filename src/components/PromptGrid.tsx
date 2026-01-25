@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { PromptCard } from "./PromptCard";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
@@ -10,6 +11,48 @@ interface PromptGridProps {
 }
 
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
+  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const index = parseInt(entry.target.getAttribute('data-index') || '0');
+          if (entry.isIntersecting) {
+            setVisibleCards((prev) => new Set([...prev, index]));
+          }
+        });
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '50px 0px',
+      }
+    );
+
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    // Re-observe when prompts change
+    cardRefs.current.forEach((element, index) => {
+      if (observerRef.current) {
+        observerRef.current.observe(element);
+      }
+    });
+  }, [prompts]);
+
+  const registerCard = (element: HTMLDivElement | null, index: number) => {
+    if (element) {
+      cardRefs.current.set(index, element);
+      element.setAttribute('data-index', index.toString());
+      observerRef.current?.observe(element);
+    }
+  };
+
   return (
     <div className="pb-16">
       {/* Results Summary */}
@@ -22,15 +65,24 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
 
       {/* Masonry Grid */}
       <div className="masonry-grid">
-        {prompts.map((prompt) => {
+        {prompts.map((prompt, filteredIndex) => {
           // Use the prompt's original ID for rank, not filtered index
           // This ensures static numbering (e.g., Creativity starts at #96 if that's its original position)
           const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
+          const isVisible = visibleCards.has(filteredIndex);
+          
           return (
             <div
               key={prompt.id}
-              className="masonry-item animate-fade-in"
-              style={{ animationDelay: `${Math.min(originalIndex * 15, 300)}ms`, animationFillMode: 'backwards' }}
+              ref={(el) => registerCard(el, filteredIndex)}
+              className={`masonry-item transition-all duration-500 ${
+                isVisible 
+                  ? 'opacity-100 translate-y-0' 
+                  : 'opacity-0 translate-y-8'
+              }`}
+              style={{ 
+                transitionDelay: `${Math.min(filteredIndex * 30, 300)}ms`,
+              }}
             >
               <PromptCard 
                 prompt={prompt} 

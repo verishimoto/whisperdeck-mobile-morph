@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, ChevronDown, Square, CheckSquare, Lock, Star, Target } from "lucide-react";
+import { Copy, Check, ChevronDown, Square, CheckSquare, Lock, Star, Target, Heart } from "lucide-react";
 import { HackPrompt } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useSelection } from "@/contexts/SelectionContext";
 import { useGamification } from "@/contexts/GamificationContext";
 import { useArchitect } from "@/contexts/ArchitectContext";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 interface PromptCardProps {
   prompt: HackPrompt;
@@ -27,21 +28,34 @@ const categoryColorMap: Record<string, { css: string; tag: string }> = {
 export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const cardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { togglePrompt, isSelected, canSelectMore } = useSelection();
   const { useCopy, usePrompt, promptUsageCount, currentLevel } = useGamification();
   const { isArchitect } = useArchitect();
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   const selected = isSelected(prompt.id);
   const usageCount = promptUsageCount.get(prompt.id) || 0;
   const isMastered = usageCount >= 3;
   const isRecommended = index < 10 && !isArchitect;
   const isLocked = index >= 10 && currentLevel === 0 && !isArchitect;
+  const favorited = isFavorite(prompt.id);
 
   const categoryStyle = categoryColorMap[prompt.category] || { css: "primary", tag: "" };
   
   // Compute rank from index (1-based) - this uses the ORIGINAL dataset index
-  const rank = `${index + 1}.`;
+  const rank = index + 1;
+
+  // Track mouse position for refraction effect
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!cardRef.current || !expanded) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePos({ x, y });
+  }, [expanded]);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -71,14 +85,39 @@ export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps)
     togglePrompt(prompt);
   };
 
+  const handleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toggleFavorite(prompt.id);
+    toast({ 
+      title: favorited ? "Removed from favorites" : "Added to favorites", 
+      duration: 1500 
+    });
+  };
+
   const handleCategoryClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onCategoryFilter?.(prompt.category);
   };
 
+  // Calculate opposite glare position for refraction effect
+  const glareX = 100 - mousePos.x;
+  const glareY = 100 - mousePos.y;
+
   return (
-    <div className={`relative w-full transform-gpu transition-all duration-300 will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}>
-      <div className={`liquid-glass-card ${selected ? 'ring-2 ring-white/30' : ''}`}>
+    <div 
+      ref={cardRef}
+      className={`relative w-full transform-gpu transition-all duration-300 will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}
+      onMouseMove={handleMouseMove}
+    >
+      <div 
+        className={`liquid-glass-card ${expanded ? 'liquid-glass-card-active' : ''} ${selected ? 'ring-2 ring-white/30' : ''}`}
+        style={expanded ? {
+          '--mouse-x': `${mousePos.x}%`,
+          '--mouse-y': `${mousePos.y}%`,
+          '--glare-x': `${glareX}%`,
+          '--glare-y': `${glareY}%`,
+        } as React.CSSProperties : undefined}
+      >
         {isLocked && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex flex-col items-center justify-center z-30 rounded-2xl">
             <Lock className="h-10 w-10 text-foreground/70 mb-2" />
@@ -95,7 +134,18 @@ export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps)
             >
               {prompt.category}
             </Badge>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              {/* Favorite Button */}
+              <button 
+                onClick={handleFavorite} 
+                className={`p-2 rounded-lg transition-all duration-200 ${
+                  favorited 
+                    ? 'text-pink-400 bg-pink-500/20 border border-pink-500/30 favorite-pulse' 
+                    : 'liquid-glass-button text-foreground/60 hover:text-pink-400'
+                }`}
+              >
+                <Heart className={`h-4 w-4 ${favorited ? 'fill-current' : ''}`} />
+              </button>
               <button onClick={handleCopy} disabled={isLocked} className={`p-2 rounded-lg transition-all duration-200 liquid-glass-button text-foreground/80 ${isLocked ? 'cursor-not-allowed' : ''}`}>
                 {copied ? <Check className="h-4 w-4 text-level-advanced" /> : <Copy className="h-4 w-4" />}
               </button>
@@ -108,7 +158,7 @@ export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps)
           </div>
           
           <h3 className="font-display text-lg font-medium text-foreground mb-2 line-clamp-2">
-            <span className="font-mono text-xl font-light text-foreground/50 mr-2">{rank}</span>
+            <span className="number-display text-foreground/40 mr-2">{rank}</span>
             {prompt.title}
           </h3>
           <p className="font-body text-sm text-foreground/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>

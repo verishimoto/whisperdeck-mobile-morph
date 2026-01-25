@@ -1,4 +1,5 @@
-import { ArrowUpDown, Search } from "lucide-react";
+import { ArrowUpDown, Search, Heart } from "lucide-react";
+import { useFavorites } from "@/contexts/FavoritesContext";
 
 interface CategoryFilterProps {
   selectedCategory: string | null;
@@ -7,6 +8,8 @@ interface CategoryFilterProps {
   onSortChange: (sort: 'asc' | 'desc') => void;
   searchQuery: string;
   onSearchChange: (search: string) => void;
+  showFavorites?: boolean;
+  onFavoritesToggle?: () => void;
 }
 
 const categoryColorMap: Record<string, string> = {
@@ -17,18 +20,31 @@ const categoryColorMap: Record<string, string> = {
   Psychology: 'level-psychology',
 };
 
-export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, onSortChange, searchQuery, onSearchChange }: CategoryFilterProps) {
+export function CategoryFilter({ 
+  selectedCategory, 
+  onCategoryChange, 
+  sortOrder, 
+  onSortChange, 
+  searchQuery, 
+  onSearchChange,
+  showFavorites = false,
+  onFavoritesToggle 
+}: CategoryFilterProps) {
   const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology'];
+  const { favoritesCount } = useFavorites();
 
   return (
     <div className="sticky top-[56px] z-40 mb-8 px-4 py-4 liquid-glass-header">
       <div className="flex items-center justify-center gap-2 flex-wrap max-w-7xl mx-auto">
         {/* All Button */}
         <button
-          onClick={() => onCategoryChange(null)}
+          onClick={() => {
+            onCategoryChange(null);
+            if (showFavorites && onFavoritesToggle) onFavoritesToggle();
+          }}
           className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide
             ${
-              selectedCategory === null
+              selectedCategory === null && !showFavorites
                 ? 'text-foreground bg-foreground/10 border-foreground/30 font-medium'
                 : 'text-foreground/70 hover:text-foreground/90 font-light'
             }`}
@@ -37,14 +53,39 @@ export function CategoryFilter({ selectedCategory, onCategoryChange, sortOrder, 
           All
         </button>
 
+        {/* Favorites Button */}
+        {onFavoritesToggle && (
+          <button
+            onClick={onFavoritesToggle}
+            className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide flex items-center gap-2
+              ${
+                showFavorites
+                  ? 'text-pink-400 bg-pink-500/20 border-pink-500/40 font-medium shadow-[0_0_20px_hsl(320_95%_85%/0.3)]'
+                  : 'text-foreground/70 hover:text-pink-400 hover:border-pink-500/30 font-light'
+              }`}
+            data-cursor="hover"
+          >
+            <Heart className={`h-4 w-4 ${showFavorites ? 'fill-current' : ''}`} />
+            Favorites
+            {favoritesCount > 0 && (
+              <span className="text-xs bg-foreground/20 rounded-full px-1.5 py-0.5 min-w-[20px] text-center">
+                {favoritesCount}
+              </span>
+            )}
+          </button>
+        )}
+
         {/* Category Buttons - Color coded */}
         {categories.map((category) => {
           const colorName = categoryColorMap[category];
-          const isSelected = selectedCategory === category;
+          const isSelected = selectedCategory === category && !showFavorites;
           return (
             <button
               key={category}
-              onClick={() => onCategoryChange(category)}
+              onClick={() => {
+                onCategoryChange(category);
+                if (showFavorites && onFavoritesToggle) onFavoritesToggle();
+              }}
               className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide
                 ${
                   isSelected
