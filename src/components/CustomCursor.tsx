@@ -1,11 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
-
-// Utility to calculate distance from point to rectangle edge
-function distanceToRect(x: number, y: number, rect: DOMRect): number {
-  const dx = Math.max(rect.left - x, 0, x - rect.right);
-  const dy = Math.max(rect.top - y, 0, y - rect.bottom);
-  return Math.sqrt(dx * dx + dy * dy);
-}
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 // Calculate closest point on rectangle edge
 function closestEdgePoint(x: number, y: number, rect: DOMRect): { edgeX: number; edgeY: number; distance: number } {
@@ -35,37 +28,41 @@ export function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
-  const [nearCard, setNearCard] = useState(false);
-  const [edgeIntensity, setEdgeIntensity] = useState(0);
-  const [burningAngle, setBurningAngle] = useState(0);
+  const previousCardRef = useRef<HTMLElement | null>(null);
 
-  // Check proximity to liquid glass cards and calculate "burning" effect
-  const checkCardProximity = useCallback((x: number, y: number) => {
+  // Apply edge intensity CSS variable to the nearest card
+  const updateCardEdgeIntensity = useCallback((x: number, y: number) => {
     const cards = document.querySelectorAll('.liquid-glass-card');
+    let closestCard: HTMLElement | null = null;
     let minDist = Infinity;
-    let closestEdge = { edgeX: 0, edgeY: 0 };
+    let bestIntensity = 0;
     
     cards.forEach(card => {
       const rect = card.getBoundingClientRect();
-      const { edgeX, edgeY, distance } = closestEdgePoint(x, y, rect);
+      const { distance } = closestEdgePoint(x, y, rect);
       if (distance < minDist) {
         minDist = distance;
-        closestEdge = { edgeX, edgeY };
+        closestCard = card as HTMLElement;
       }
     });
     
     // Calculate intensity based on distance (0-1, where 1 is closest)
-    const maxDistance = 80;
-    const intensity = minDist < maxDistance ? 1 - (minDist / maxDistance) : 0;
-    setEdgeIntensity(intensity);
+    const maxDistance = 100;
+    bestIntensity = minDist < maxDistance ? 1 - (minDist / maxDistance) : 0;
     
-    // Calculate angle from cursor to edge for directional burning effect
-    if (intensity > 0) {
-      const angle = Math.atan2(closestEdge.edgeY - y, closestEdge.edgeX - x) * (180 / Math.PI);
-      setBurningAngle(angle);
+    // Reset previous card if different
+    if (previousCardRef.current && previousCardRef.current !== closestCard) {
+      previousCardRef.current.style.setProperty('--edge-intensity', '0');
     }
     
-    setNearCard(minDist < 60 && minDist > 0);
+    // Apply intensity to closest card
+    if (closestCard && bestIntensity > 0) {
+      closestCard.style.setProperty('--edge-intensity', bestIntensity.toString());
+      previousCardRef.current = closestCard;
+    } else if (previousCardRef.current) {
+      previousCardRef.current.style.setProperty('--edge-intensity', '0');
+      previousCardRef.current = null;
+    }
   }, []);
 
   useEffect(() => {
@@ -81,7 +78,7 @@ export function CustomCursor() {
       if (!rafId) {
         rafId = requestAnimationFrame(() => {
           setMousePosition({ x: lastX, y: lastY });
-          checkCardProximity(lastX, lastY);
+          updateCardEdgeIntensity(lastX, lastY);
           rafId = 0;
         });
       }
@@ -117,14 +114,16 @@ export function CustomCursor() {
       document.removeEventListener('mouseleave', handleMouseLeave, true);
       document.removeEventListener('mousedown', handleMouseDown);
       document.removeEventListener('mouseup', handleMouseUp);
+      // Clean up any remaining card styles
+      if (previousCardRef.current) {
+        previousCardRef.current.style.setProperty('--edge-intensity', '0');
+      }
     };
-  }, [checkCardProximity]);
+  }, [updateCardEdgeIntensity]);
 
   const cursorClasses = [
     isHovering ? 'hover' : '',
     isClicking ? 'click' : '',
-    nearCard && !isHovering ? 'near-card' : '',
-    edgeIntensity > 0.5 ? 'burning' : '',
   ].filter(Boolean).join(' ');
 
   return (
@@ -136,9 +135,7 @@ export function CustomCursor() {
         top: `${mousePosition.y}px`,
         transform: 'translate(-50%, -50%) translateZ(0)',
         willChange: 'transform, left, top',
-        '--edge-intensity': edgeIntensity,
-        '--burning-angle': `${burningAngle}deg`,
-      } as React.CSSProperties}
+      }}
     />
   );
 }

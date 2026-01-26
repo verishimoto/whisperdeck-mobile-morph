@@ -176,15 +176,17 @@ const Index = () => {
         )}
       </div>
 
-      {/* User-only features - Hidden for Architects */}
+      {/* User-only gamification features - Hidden for Architects */}
       {!isArchitect && (
         <>
           <PromptComposer />
           <ProgressDashboard />
           <ModelToggle />
-          <ChainBuilder />
         </>
       )}
+
+      {/* Chain Builder - Available to ALL users including Architects */}
+      <ChainBuilder />
     </div>
   );
 };
