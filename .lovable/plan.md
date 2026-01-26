@@ -1,376 +1,181 @@
 
-# WhispererDeck Premium Enhancement Plan
+# Fixes for WhispererDeck UI
 
-## Executive Summary
-This plan addresses a comprehensive overhaul spanning favorites, typography, cursor effects, backgrounds, authentication, keyboard shortcuts, and a new Prompt Chaining Composer system for architects.
+## Overview
+This plan addresses three issues you identified:
 
----
-
-## Phase 1: Favorites System (User Feature)
-
-### 1.1 Create FavoritesContext
-**New File: `src/contexts/FavoritesContext.tsx`**
-
-- Store `favoriteIds: Set<number>` persisted to localStorage
-- Functions: `toggleFavorite(promptId)`, `isFavorite(promptId)`, `getFavorites()`
-- Auto-save on change
-
-### 1.2 Add Star Button to PromptCard
-**Modify: `src/components/PromptCard.tsx`**
-
-- Add Heart/Star icon next to copy button
-- Filled when favorited, outline when not
-- Click toggles favorite state with animation
-
-### 1.3 Create Favorites Filter Tab
-**Modify: `src/components/CategoryFilter.tsx`**
-
-- Add "Favorites" button with heart icon
-- When active, filter prompts to only show favorited ones
+1. **Mouse-following light effect** - Currently applies everywhere; needs to only project iridescent glow onto card borders
+2. **Background opacity** - Dark mode is too dark, light mode is too white; needs reduced opacity for all backdrops/backgrounds
+3. **Prompt Chaining for Architect** - The ChainBuilder component exists but is hidden from architects
 
 ---
 
-## Phase 2: Typography Overhaul
+## Issue 1: Remove Mouse-Following Light, Apply Border-Only Glow
 
-### 2.1 Bebas Neue-style Numbers
-**Modify: `src/index.css`**
+### Current Behavior
+The `CustomCursor.tsx` component creates a large iridescent glow that follows the mouse everywhere. The `.liquid-glass-card::after` has an iridescent border effect, but the cursor effect is separate and fills the cursor area, not just the borders.
+
+### Solution
+Modify the cursor effects to **only** apply the iridescent glow to card borders when the cursor is near them, not as a radial glow around the cursor itself.
+
+**File: `src/components/CustomCursor.tsx`**
+- Keep the edge detection logic (`closestEdgePoint`, `distanceToRect`)
+- Instead of making the cursor glow, communicate the edge proximity to the nearest card
+- Add a custom event or CSS variable on cards when cursor approaches their edges
+- The cursor itself becomes a simple, minimal pointer (no large iridescent blob)
+
+**File: `src/index.css`**
+- Modify `#custom-cursor` styles to remove the large radial gradients
+- Make cursor smaller and simpler (just a clean pointer)
+- Enhance `.liquid-glass-card::after` to respond to `--edge-intensity` CSS variable
+- The card's border glow intensifies based on cursor proximity to that specific card's edge
+
+### Specific CSS Changes
 
 ```css
-.number-display {
-  font-family: 'Helvetica Neue', sans-serif;
-  font-weight: 200;  /* Ultra-light */
-  font-stretch: ultra-condensed;
-  letter-spacing: -0.04em;
-  font-size: clamp(2rem, 5vw, 3.5rem);
+/* Minimal cursor - no glowing blob */
+#custom-cursor {
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  /* Remove all gradient backgrounds */
+}
+
+/* Remove .near-card and .burning states that create cursor glow */
+
+/* Card receives --edge-intensity from JS and glows its border */
+.liquid-glass-card {
+  --edge-intensity: 0;
+}
+
+.liquid-glass-card::after {
+  opacity: var(--edge-intensity, 0);
+  /* Border-only glow with mask-composite already in place */
 }
 ```
 
-### 2.2 Update PromptCard Number Styling
-**Modify: `src/components/PromptCard.tsx`**
-
-Replace current number span with:
-```tsx
-<span className="number-display text-foreground/40">{rank}</span>
-```
-
-### 2.3 H1 Header Enhancement (Antigravity-inspired)
-**Modify: `src/components/Header.tsx`**
-
-- Large, clean, minimal typography
-- Weight: 500-600, tracking tight
-- Subtle gradient text effect on hover
+**File: `src/components/CustomCursor.tsx`**
+- When near a card edge, find the actual card element and set `--edge-intensity` CSS variable on it
+- This makes the **card's border** glow, not the cursor itself
 
 ---
 
-## Phase 3: Enhanced Cursor & Card Refraction Effects
+## Issue 2: Reduce Background/Backdrop Opacity
 
-### 3.1 "Burning" Cursor Near Card Edges
-**Modify: `src/components/CustomCursor.tsx`**
+### Current Behavior
+- Dark mode: `linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0a0a12 100%)` - very dark
+- Light mode: `linear-gradient(135deg, #f8f9fc 0%, #f0f2f8 50%, #f5f7fc 100%)` - very white
+- Glassmorphism cards, header, and ChainBuilder have heavy opacity values
 
-- Calculate distance to nearest card edge (not just center)
-- Apply intensity gradient: closer = brighter iridescent glow
-- Add pulsing animation when very close (<20px)
+### Solution
+Reduce opacity across all backgrounds and backdrops so the iridescent motion gradient shows through better.
 
-### 3.2 Glass Refraction Lighting
-**Modify: `src/index.css`**
+**File: `src/index.css`**
 
-Add new class `.liquid-glass-card-active` for expanded cards:
-```css
-.liquid-glass-card-active {
-  --mouse-x: 50%;
-  --mouse-y: 50%;
-}
-
-.liquid-glass-card-active::before {
-  background: radial-gradient(
-    circle at var(--mouse-x) var(--mouse-y),
-    rgba(255, 255, 255, 0.15) 0%,
-    transparent 60%
-  );
-}
-```
-
-### 3.3 Opposite-Side Glare Effect
-**Modify: `src/components/PromptCard.tsx`**
-
-- Track mouse position within expanded card
-- Calculate opposite position for glare highlight
-- Apply CSS custom properties for dynamic gradient
-
----
-
-## Phase 4: Background & Light Mode Improvements
-
-### 4.1 Optimize Motion Background
-**Modify: `src/index.css`**
-
-Replace image-based background with pure CSS gradient:
+**Dark Mode Background (lines 564-581)**
 ```css
 #root::before {
+  /* Reduce base gradient opacity - make it more transparent */
   background: 
-    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.4), transparent 45%),
-    /* ... more gradients */
-    linear-gradient(135deg, #0a0a0f, #12121a);
-  animation: bg-morph 45s ease-in-out infinite alternate;
+    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.25), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(180 100% 70% / 0.2), transparent 45%),
+    radial-gradient(ellipse at 40% 70%, hsl(320 95% 85% / 0.25), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, hsl(150 85% 75% / 0.2), transparent 48%),
+    radial-gradient(ellipse at 50% 50%, hsl(210 100% 78% / 0.18), transparent 55%),
+    /* Lighter base - more transparent */
+    linear-gradient(135deg, rgba(10, 10, 15, 0.6) 0%, rgba(18, 18, 26, 0.5) 100%);
 }
 ```
 
-### 4.2 Enhanced Light Mode
-**Modify: `src/index.css`**
-
-- Increase iridescent saturation in light mode
-- Add more visible glassmorphism borders
-- Deeper shadows for card depth
-- Light mode variables adjusted for better contrast
-
-### 4.3 Remove `body::before` from styles.css
-**Modify: `src/assets/styles.css`**
-
-Remove the duplicate background image animation that conflicts with index.css
-
----
-
-## Phase 5: Header & UI Cleanup
-
-### 5.1 Remove "Notifications alt+T" aria-label
-**Search & Remove**: Find and remove this element (not found in current search - may be in a component not yet viewed)
-
-### 5.2 Antigravity-Inspired Header
-**Modify: `src/components/Header.tsx`**
-
-```tsx
-<header className="sticky top-0 z-50 liquid-glass-header">
-  <div className="px-8 py-4 flex items-center justify-between">
-    <h1 className="text-3xl font-medium tracking-tight text-foreground">
-      WhispererDeck
-    </h1>
-    {/* Clean, minimal - just theme toggle */}
-    <ThemeToggle />
-  </div>
-</header>
-```
-
----
-
-## Phase 6: Scroll & Touch Animations
-
-### 6.1 Scroll-Triggered Card Animations
-**Modify: `src/components/PromptGrid.tsx`**
-
-- Use Intersection Observer API
-- Cards fade in + slide up when entering viewport
-- Staggered animation delay based on column position
-
-### 6.2 Touch Feedback for Mobile
-**Modify: `src/index.css`**
-
+**Light Mode Background (lines 584-592)**
 ```css
-.liquid-glass-card:active {
-  transform: scale(0.98);
-  transition: transform 0.1s ease;
-}
-
-@media (hover: none) {
-  .liquid-glass-card {
-    transition: transform 0.15s ease;
-  }
-}
-```
-
----
-
-## Phase 7: OAuth Authentication System
-
-### 7.1 Create Auth Context
-**New File: `src/contexts/AuthContext.tsx`**
-
-- Integrate with Supabase Auth
-- Handle sign-in, sign-up, sign-out
-- Session persistence
-
-### 7.2 Auth Pages
-**New File: `src/pages/Auth.tsx`**
-
-- Sign in with email/password
-- Google OAuth button (using Supabase)
-- Clean glassmorphism design matching app theme
-
-### 7.3 Protected Routes
-**Modify: `src/App.tsx`**
-
-- Wrap routes with auth check
-- Redirect unauthenticated users to auth page
-- Persist user session
-
----
-
-## Phase 8: Keyboard Shortcuts
-
-### 8.1 Create KeyboardShortcuts Hook
-**New File: `src/hooks/useKeyboardShortcuts.ts`**
-
-Shortcuts:
-- `Cmd/Ctrl + K` - Focus search
-- `Cmd/Ctrl + /` - Show shortcuts help
-- `1-5` - Switch categories
-- `Escape` - Close expanded card/modal
-- `T` - Toggle theme
-
-### 8.2 Shortcuts Help Modal
-**New File: `src/components/KeyboardShortcutsModal.tsx`**
-
-- Glassmorphism modal listing all shortcuts
-- Triggered by `Cmd/Ctrl + /`
-
----
-
-## Phase 9: Architect Mode - Prompt Chaining Composer
-
-### 9.1 Pre-Made Prompt Chain Panels
-**New File: `src/components/PromptChainPanels.tsx`**
-
-Structure:
-```typescript
-interface PromptChain {
-  id: string;
-  name: string;          // "VIBE CODING PROMPT CHAIN"
-  description: string;   // Purpose/use case
-  promptIds: number[];   // [172, 199, 229, 238, 249]
-  reasoning: string;     // Why these prompts together
-  category: 'vibe-coding' | 'prompt-engineering' | 'analysis' | 'creative';
+.light #root::before {
+  /* Add more color, less white opacity */
+  background:
+    radial-gradient(ellipse at 20% 30%, hsl(280 60% 75% / 0.5), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(180 50% 70% / 0.45), transparent 45%),
+    radial-gradient(ellipse at 40% 70%, hsl(320 55% 78% / 0.45), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, hsl(150 45% 72% / 0.4), transparent 48%),
+    radial-gradient(ellipse at 50% 50%, hsl(210 55% 75% / 0.4), transparent 55%),
+    /* More transparent white base */
+    linear-gradient(135deg, rgba(248, 249, 252, 0.7) 0%, rgba(240, 242, 248, 0.6) 100%);
 }
 ```
 
-Display:
-- Large glassmorphism panels in a grid
-- Show prompt IDs in Helvetica Neue condensed
-- Hover to reveal prompt titles
-- Copy button for formatted chain output
-- Optional flowchart visualization
+**Card Backgrounds**
+- `.liquid-glass-card` - reduce `rgba(255, 255, 255, 0.08)` values
+- `.liquid-glass-header` - reduce opacity from 0.7 to 0.5
 
-### 9.2 Inquiry-Based Chain Generator
-**New File: `src/components/ChainInquiry.tsx`**
-
-Features:
-- Glassmorphism text input centered at top
-- Placeholder: "Describe the prompt chain you need..."
-- Recent searches displayed below
-- Submit generates suggested prompt combination
-- Uses RAG-like matching against prompt metadata
-
-### 9.3 Architect Prompt Chain View Toggle
-**Modify: `src/pages/Index.tsx`**
-
-For architects:
-- Add toggle: "Cards" | "Chains"
-- Chains view shows pre-made panels
-- Inquiry box at top
-- Unlimited selection for custom chains
-
-### 9.4 Chain Visualization Flowchart
-**New File: `src/components/ChainFlowchart.tsx`**
-
-- Use React Flow library (already installed)
-- Display prompt chain as connected nodes
-- Category-colored nodes
-- Arrows showing flow direction
-
----
-
-## Phase 10: Prompt Category Reorganization
-
-### 10.1 Balanced Category Distribution
-**Analysis Task (No Code Change Yet)**
-
-Current prompts need redistribution to ensure 50 prompts per category:
-- Advanced: 50
-- Strategy: 50
-- Analysis: 50
-- Creativity: 50
-- Psychology: 50
-
-### 10.2 Static Ranking Preservation
-**Already Implemented**: Prompt numbers remain fixed (1-250) regardless of filter
-
----
-
-## Technical Notes
-
-### Files to Create
-1. `src/contexts/FavoritesContext.tsx`
-2. `src/contexts/AuthContext.tsx`
-3. `src/pages/Auth.tsx`
-4. `src/hooks/useKeyboardShortcuts.ts`
-5. `src/components/KeyboardShortcutsModal.tsx`
-6. `src/components/PromptChainPanels.tsx`
-7. `src/components/ChainInquiry.tsx`
-8. `src/components/ChainFlowchart.tsx`
-
-### Files to Modify
-1. `src/index.css` - Typography, cursor, backgrounds, animations
-2. `src/components/Header.tsx` - Minimal Antigravity-style
-3. `src/components/PromptCard.tsx` - Numbers, favorites, refraction
-4. `src/components/CategoryFilter.tsx` - Favorites tab
-5. `src/components/PromptGrid.tsx` - Scroll animations
-6. `src/components/CustomCursor.tsx` - Edge burning effect
-7. `src/pages/Index.tsx` - Architect chain view toggle
-8. `src/App.tsx` - Auth provider, routes
-9. `src/assets/styles.css` - Remove duplicate background
-
-### Database Requirements (Supabase)
-For persistent favorites and saved chains:
-```sql
--- User favorites
-CREATE TABLE user_favorites (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  prompt_id INTEGER NOT NULL,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(user_id, prompt_id)
-);
-
--- Saved prompt chains
-CREATE TABLE prompt_chains (
-  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-  name TEXT NOT NULL,
-  prompt_ids INTEGER[] NOT NULL,
-  reasoning TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW()
-);
-
--- Enable RLS
-ALTER TABLE user_favorites ENABLE ROW LEVEL SECURITY;
-ALTER TABLE prompt_chains ENABLE ROW LEVEL SECURITY;
+**Vignette Effect (lines 621-627)**
+```css
+body {
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.3); /* was 0.5 */
+}
 ```
 
 ---
 
-## Implementation Priority
+## Issue 3: Add Prompt Chaining for Architect Mode
 
-**MVP (Do First):**
-1. Favorites system (localStorage first, then DB)
-2. Typography updates
-3. Light mode improvements
-4. Scroll animations
-5. Remove duplicate backgrounds
+### Current Behavior
+Looking at `src/pages/Index.tsx` lines 179-187:
+```tsx
+{!isArchitect && (
+  <>
+    <PromptComposer />
+    <ProgressDashboard />
+    <ModelToggle />
+    <ChainBuilder />  // ← Hidden from architects!
+  </>
+)}
+```
 
-**Enhancement (Phase 2):**
-6. Enhanced cursor effects
-7. Card refraction lighting
-8. Keyboard shortcuts
+The `ChainBuilder` component exists and works, but it's explicitly **hidden** when `isArchitect` is true.
 
-**Advanced (Phase 3):**
-9. OAuth authentication
-10. Architect prompt chain panels
-11. Chain inquiry system
-12. Flowchart visualization
+### Solution
+Show the `ChainBuilder` for architects, but with enhanced features:
+
+1. **Keep ChainBuilder visible for architects** - Remove the `!isArchitect` condition for `ChainBuilder`
+2. **Add a toggle for viewing mode** - Architects should see: "Cards | Chains" toggle in header area
+3. **Enhance ChainBuilder for architects** - Unlimited chain length, no restrictions
+
+**File: `src/pages/Index.tsx`**
+```tsx
+{/* User-only gamification features */}
+{!isArchitect && (
+  <>
+    <PromptComposer />
+    <ProgressDashboard />
+    <ModelToggle />
+  </>
+)}
+
+{/* Chain Builder - Available to ALL users including architects */}
+<ChainBuilder />
+```
+
+**File: `src/components/ChainBuilder.tsx`**
+Add architect-specific enhancements:
+- Remove the limit of 10 nodes for architects
+- Show "Architect Mode" indicator
+- Add upward/downward chain toggle for viewing chains in different orders
 
 ---
 
-## Estimated Effort
-- MVP Features: 3-4 implementation cycles
-- Enhancement Features: 2-3 cycles
-- Advanced Features: 4-5 cycles
+## Summary of Files to Modify
 
-This plan transforms WhispererDeck into a premium prompt engineering platform with professional-grade UX, proper user accounts, and powerful prompt chaining tools for architects.
+| File | Changes |
+|------|---------|
+| `src/index.css` | Simplify cursor styles, reduce all background/backdrop opacity values, enhance card border glow to respond to edge intensity |
+| `src/components/CustomCursor.tsx` | Project edge intensity onto card elements instead of cursor glow, apply `--edge-intensity` CSS variable to nearest card |
+| `src/pages/Index.tsx` | Move `ChainBuilder` outside of `!isArchitect` block so architects can use it |
+| `src/components/ChainBuilder.tsx` | Add architect-specific enhancements (unlimited nodes, enhanced UI) |
+
+---
+
+## Implementation Order
+
+1. **Cursor + Border Glow** - Modify CustomCursor to set CSS variables on cards, update CSS to respond
+2. **Background Opacity** - Update all opacity values in index.css
+3. **Architect ChainBuilder** - Move component and enhance for architects
