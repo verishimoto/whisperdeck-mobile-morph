@@ -158,20 +158,19 @@
   line-height: 1;
 }
 
-/* ===== CUSTOM CURSOR - Iridescent Near Cards ===== */
+/* ===== CUSTOM CURSOR - Minimal Clean Pointer ===== */
 #custom-cursor {
   position: fixed;
-  width: 20px;
-  height: 20px;
+  width: 14px;
+  height: 14px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 10000;
-  mix-blend-mode: screen;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, rgba(200, 150, 255, 0.25) 40%, transparent 70%);
-  backdrop-filter: blur(3px);
-  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(2px);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
   will-change: transform;
-  box-shadow: 0 0 18px rgba(255, 255, 255, 0.25), 0 0 30px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -181,61 +180,23 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 5px;
-  height: 5px;
-  background: rgba(255, 255, 255, 0.7);
+  width: 3px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.9);
   border-radius: 50%;
 }
 
 #custom-cursor.hover {
-  width: 36px;
-  height: 36px;
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.45) 0%, rgba(236, 72, 153, 0.25) 40%, transparent 70%);
+  width: 28px;
+  height: 28px;
+  background: rgba(168, 85, 247, 0.25);
   border-color: rgba(168, 85, 247, 0.5);
-  box-shadow: 0 0 25px rgba(168, 85, 247, 0.4), 0 0 45px rgba(236, 72, 153, 0.25);
-}
-
-#custom-cursor.near-card {
-  width: 48px;
-  height: 48px;
-  background: radial-gradient(
-    circle,
-    hsl(280 95% 82% / 0.4) 0%,
-    hsl(180 100% 70% / 0.3) 35%,
-    hsl(320 95% 85% / 0.2) 60%,
-    transparent 80%
-  );
-  border: 1px solid hsl(280 95% 82% / 0.5);
-  box-shadow: 
-    0 0 30px hsl(280 95% 82% / 0.4),
-    0 0 60px hsl(180 100% 70% / 0.2);
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.3);
 }
 
 #custom-cursor.click {
-  width: 18px;
-  height: 18px;
-}
-
-/* Burning cursor effect near card edges */
-#custom-cursor.burning {
-  width: 56px;
-  height: 56px;
-  background: radial-gradient(
-    circle at 50% 50%,
-    hsl(45 100% 70% / calc(var(--edge-intensity, 0) * 0.6)) 0%,
-    hsl(30 100% 60% / calc(var(--edge-intensity, 0) * 0.4)) 30%,
-    hsl(280 95% 82% / calc(var(--edge-intensity, 0) * 0.3)) 50%,
-    transparent 70%
-  );
-  box-shadow: 
-    0 0 calc(40px * var(--edge-intensity, 0)) hsl(45 100% 70% / 0.5),
-    0 0 calc(80px * var(--edge-intensity, 0)) hsl(280 95% 82% / 0.3);
-  animation: burning-pulse 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes burning-pulse {
-  0% { transform: translate(-50%, -50%) scale(1); }
-  100% { transform: translate(-50%, -50%) scale(1.1); }
+  width: 12px;
+  height: 12px;
 }
 
 /* Touch feedback for mobile */
@@ -391,7 +352,11 @@
   z-index: 0;
 }
 
-/* Iridescent border flare */
+/* Iridescent border flare - Responds to --edge-intensity from cursor */
+.liquid-glass-card {
+  --edge-intensity: 0;
+}
+
 .liquid-glass-card::after {
   content: '';
   position: absolute;
@@ -400,15 +365,15 @@
   background: conic-gradient(
     from var(--iridescent-angle, 0deg),
     hsl(280 95% 82% / 0) 0deg,
-    hsl(180 100% 70% / 0.4) 60deg,
-    hsl(320 95% 85% / 0.5) 120deg,
-    hsl(150 85% 75% / 0.4) 180deg,
-    hsl(210 100% 78% / 0.5) 240deg,
-    hsl(280 95% 82% / 0.4) 300deg,
+    hsl(180 100% 70% / 0.5) 60deg,
+    hsl(320 95% 85% / 0.6) 120deg,
+    hsl(150 85% 75% / 0.5) 180deg,
+    hsl(210 100% 78% / 0.6) 240deg,
+    hsl(280 95% 82% / 0.5) 300deg,
     hsl(280 95% 82% / 0) 360deg
   );
-  opacity: 0;
-  transition: opacity 0.5s ease;
+  opacity: var(--edge-intensity, 0);
+  transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: -1;
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -477,12 +442,12 @@
     inset 0 1px 0 rgba(255, 255, 255, 1);
 }
 
-/* ===== LIQUID GLASS HEADER ===== */
+/* ===== LIQUID GLASS HEADER - Reduced Opacity ===== */
 .liquid-glass-header {
   background: linear-gradient(
     180deg,
-    rgba(10, 10, 15, 0.7) 0%,
-    rgba(10, 10, 15, 0.5) 100%
+    rgba(10, 10, 15, 0.5) 0%,
+    rgba(10, 10, 15, 0.35) 100%
   );
   backdrop-filter: blur(40px) saturate(150%);
   -webkit-backdrop-filter: blur(40px) saturate(150%);
@@ -492,8 +457,8 @@
 .light .liquid-glass-header {
   background: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.85) 0%,
-    rgba(255, 255, 255, 0.7) 100%
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.5) 100%
   );
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -561,34 +526,34 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ===== DARK MODE BACKGROUND - Motion Blur Gradient ===== */
+/* ===== DARK MODE BACKGROUND - Motion Blur Gradient - Reduced Opacity ===== */
 #root::before {
   content: '';
   position: fixed;
   inset: 0;
   z-index: -2;
   background: 
-    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.35), transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(180 100% 70% / 0.3), transparent 45%),
-    radial-gradient(ellipse at 40% 70%, hsl(320 95% 85% / 0.35), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, hsl(150 85% 75% / 0.3), transparent 48%),
-    radial-gradient(ellipse at 50% 50%, hsl(210 100% 78% / 0.25), transparent 55%),
-    linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0a0a12 100%);
+    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.3), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(180 100% 70% / 0.25), transparent 45%),
+    radial-gradient(ellipse at 40% 70%, hsl(320 95% 85% / 0.3), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, hsl(150 85% 75% / 0.25), transparent 48%),
+    radial-gradient(ellipse at 50% 50%, hsl(210 100% 78% / 0.2), transparent 55%),
+    linear-gradient(135deg, rgba(10, 10, 15, 0.5) 0%, rgba(18, 18, 26, 0.4) 50%, rgba(10, 10, 18, 0.5) 100%);
   filter: blur(80px) saturate(1.3);
   pointer-events: none;
   will-change: transform;
   animation: bg-drift 30s ease-in-out infinite alternate;
 }
 
-/* Light mode background */
+/* Light mode background - More transparent */
 .light #root::before {
   background:
-    radial-gradient(ellipse at 20% 30%, hsl(280 60% 85% / 0.5), transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(180 50% 80% / 0.45), transparent 45%),
-    radial-gradient(ellipse at 40% 70%, hsl(320 55% 88% / 0.45), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, hsl(150 45% 82% / 0.4), transparent 48%),
-    radial-gradient(ellipse at 50% 50%, hsl(210 55% 85% / 0.35), transparent 55%),
-    linear-gradient(135deg, #f8f9fc 0%, #f0f2f8 50%, #f5f7fc 100%);
+    radial-gradient(ellipse at 20% 30%, hsl(280 60% 75% / 0.5), transparent 50%),
+    radial-gradient(ellipse at 80% 20%, hsl(180 50% 70% / 0.45), transparent 45%),
+    radial-gradient(ellipse at 40% 70%, hsl(320 55% 78% / 0.45), transparent 50%),
+    radial-gradient(ellipse at 70% 80%, hsl(150 45% 72% / 0.4), transparent 48%),
+    radial-gradient(ellipse at 50% 50%, hsl(210 55% 75% / 0.35), transparent 55%),
+    linear-gradient(135deg, rgba(248, 249, 252, 0.6) 0%, rgba(240, 242, 248, 0.5) 50%, rgba(245, 247, 252, 0.6) 100%);
   filter: blur(60px) saturate(1.1);
 }
 
@@ -617,13 +582,13 @@ body > #root {
   z-index: 0;
 }
 
-/* Vignette Effect */
+/* Vignette Effect - Reduced for transparency */
 body {
-  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.5);
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.25);
 }
 
 .light body {
-  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.1);
+  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.05);
 }
 
 /* Page Container */

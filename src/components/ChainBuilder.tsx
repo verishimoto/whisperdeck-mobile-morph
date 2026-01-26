@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelection } from "@/contexts/SelectionContext";
 import { useGamification } from "@/contexts/GamificationContext";
+import { useArchitect } from "@/contexts/ArchitectContext";
 import { HackPrompt } from "@/types";
-import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown } from "lucide-react";
+import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
@@ -15,7 +16,11 @@ interface ChainNode {
 export function ChainBuilder() {
   const { selectedPrompts, clearSelection } = useSelection();
   const { buildChain } = useGamification();
+  const { isArchitect } = useArchitect();
   const { toast } = useToast();
+  
+  // Architects have unlimited nodes, users have limit of 10
+  const maxNodes = isArchitect ? Infinity : 10;
   
   const [chainNodes, setChainNodes] = useState<ChainNode[]>([]);
   const [draggedNode, setDraggedNode] = useState<ChainNode | null>(null);
@@ -180,6 +185,12 @@ export function ChainBuilder() {
             <h3 className="text-lg font-semibold text-white/90">
               Chain Builder
             </h3>
+            {isArchitect && (
+              <Badge className="bg-[#8B5CF6]/30 border-[#8B5CF6]/50 text-[#C4B5FD] flex items-center gap-1">
+                <Wand2 className="h-3 w-3" />
+                Architect
+              </Badge>
+            )}
             {chainNodes.length > 0 && (
               <Badge className="bg-white/10 border-white/20 text-white/80">
                 {chainNodes.length} {chainNodes.length === 1 ? 'node' : 'nodes'}
@@ -314,11 +325,11 @@ export function ChainBuilder() {
           )}
         </div>
 
-        {/* Selected Prompts Staging Area */}
-        {!isCollapsed && selectedPrompts.length > 0 && chainNodes.length < 10 && (
+        {/* Selected Prompts Staging Area - Unlimited for Architects */}
+        {!isCollapsed && selectedPrompts.length > 0 && chainNodes.length < maxNodes && (
           <div className="mt-3 pt-3 border-t border-white/10">
             <p className="text-xs text-white/50 mb-2">
-              Click to add to chain:
+              Click to add to chain{isArchitect ? ' (unlimited)' : ` (${10 - chainNodes.length} remaining)`}:
             </p>
             <div className="flex gap-2 overflow-x-auto pb-2">
               {selectedPrompts
