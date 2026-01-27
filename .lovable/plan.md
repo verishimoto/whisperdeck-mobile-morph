@@ -1,181 +1,238 @@
 
-# Fixes for WhispererDeck UI
 
-## Overview
-This plan addresses three issues you identified:
+# Performance Optimization Plan
 
-1. **Mouse-following light effect** - Currently applies everywhere; needs to only project iridescent glow onto card borders
-2. **Background opacity** - Dark mode is too dark, light mode is too white; needs reduced opacity for all backdrops/backgrounds
-3. **Prompt Chaining for Architect** - The ChainBuilder component exists but is hidden from architects
+## Identified Performance Bottlenecks
+
+After analyzing the codebase, I've found several performance issues causing lag:
+
+### 1. CustomCursor - Querying ALL Cards Every Frame
+```typescript
+// Current: Queries DOM on every mouse move
+const cards = document.querySelectorAll('.liquid-glass-card');
+cards.forEach(card => { ... });
+```
+With 250 cards, this runs expensive calculations 60+ times/second.
+
+### 2. Heavy CSS Effects
+- `backdrop-filter: blur(40px) saturate(180%)` on every card
+- Complex `conic-gradient` with CSS Houdini `@property` animation
+- `iridescent-rotate` animation triggers paint on every frame
+- Background gradient with `blur(80px)` filter
+
+### 3. PromptGrid - Staggered Transition Delays
+```typescript
+style={{ transitionDelay: `${Math.min(filteredIndex * 30, 300)}ms` }}
+```
+Causes layout thrashing with 250 cards.
+
+### 4. PromptCard - Mouse Move Handler
+```typescript
+const handleMouseMove = useCallback((e: React.MouseEvent) => {
+  // Runs on EVERY mouse move event, even when not needed
+});
+```
 
 ---
 
-## Issue 1: Remove Mouse-Following Light, Apply Border-Only Glow
+## Optimization Strategy
 
-### Current Behavior
-The `CustomCursor.tsx` component creates a large iridescent glow that follows the mouse everywhere. The `.liquid-glass-card::after` has an iridescent border effect, but the cursor effect is separate and fills the cursor area, not just the borders.
+### Phase 1: CustomCursor Optimization (Biggest Impact)
 
-### Solution
-Modify the cursor effects to **only** apply the iridescent glow to card borders when the cursor is near them, not as a radial glow around the cursor itself.
+**Problem:** Iterating through all 250 cards on every mouse move  
+**Solution:** Use spatial indexing and limit to visible cards only
 
-**File: `src/components/CustomCursor.tsx`**
-- Keep the edge detection logic (`closestEdgePoint`, `distanceToRect`)
-- Instead of making the cursor glow, communicate the edge proximity to the nearest card
-- Add a custom event or CSS variable on cards when cursor approaches their edges
-- The cursor itself becomes a simple, minimal pointer (no large iridescent blob)
+```typescript
+// Optimized: Only check cards near cursor using bounding check
+const updateCardEdgeIntensity = useCallback((x: number, y: number) => {
+  // Use cached viewport bounds
+  const viewportCards = cardsInViewportRef.current;
+  
+  // Quick bounding box check before detailed calculation
+  let closestCard: HTMLElement | null = null;
+  let minDist = Infinity;
+  
+  for (const card of viewportCards) {
+    const rect = card.getBoundingClientRect();
+    
+    // Skip cards clearly out of range (150px buffer)
+    if (x < rect.left - 150 || x > rect.right + 150 ||
+        y < rect.top - 150 || y > rect.bottom + 150) {
+      continue;
+    }
+    
+    const { distance } = closestEdgePoint(x, y, rect);
+    if (distance < minDist) {
+      minDist = distance;
+      closestCard = card;
+    }
+  }
+  // ... rest of logic
+}, []);
+```
 
-**File: `src/index.css`**
-- Modify `#custom-cursor` styles to remove the large radial gradients
-- Make cursor smaller and simpler (just a clean pointer)
-- Enhance `.liquid-glass-card::after` to respond to `--edge-intensity` CSS variable
-- The card's border glow intensifies based on cursor proximity to that specific card's edge
+**Additional optimizations:**
+- Cache visible cards using IntersectionObserver (update on scroll, not every frame)
+- Throttle updates to 30fps instead of 60fps when cursor is far from cards
+- Use `element.style.cssText` for batch style updates
 
-### Specific CSS Changes
+---
 
+### Phase 2: CSS Performance Optimizations
+
+**A. Reduce backdrop-filter intensity:**
 ```css
-/* Minimal cursor - no glowing blob */
-#custom-cursor {
-  width: 12px;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  /* Remove all gradient backgrounds */
-}
-
-/* Remove .near-card and .burning states that create cursor glow */
-
-/* Card receives --edge-intensity from JS and glows its border */
+/* Before: blur(40px) - very expensive */
 .liquid-glass-card {
-  --edge-intensity: 0;
+  backdrop-filter: blur(20px) saturate(150%);
 }
+
+/* Mobile: Even lighter */
+@media (max-width: 768px) {
+  .liquid-glass-card {
+    backdrop-filter: blur(12px) saturate(120%);
+  }
+}
+```
+
+**B. Remove CSS Houdini animation (poor browser support, expensive):**
+```css
+/* Remove @property --iridescent-angle */
+/* Replace with transform-based animation (GPU-accelerated) */
 
 .liquid-glass-card::after {
-  opacity: var(--edge-intensity, 0);
-  /* Border-only glow with mask-composite already in place */
+  /* Use static gradient, animate via JS only on active card */
+  background: conic-gradient(
+    from 0deg,
+    hsl(280 95% 82% / 0.5) 0deg,
+    hsl(180 100% 70% / 0.5) 72deg,
+    hsl(320 95% 85% / 0.5) 144deg,
+    hsl(150 85% 75% / 0.5) 216deg,
+    hsl(210 100% 78% / 0.5) 288deg,
+    hsl(280 95% 82% / 0.5) 360deg
+  );
+  /* Remove animation: iridescent-rotate */
 }
 ```
 
-**File: `src/components/CustomCursor.tsx`**
-- When near a card edge, find the actual card element and set `--edge-intensity` CSS variable on it
-- This makes the **card's border** glow, not the cursor itself
+**C. Use CSS containment:**
+```css
+.liquid-glass-card {
+  contain: layout style paint;
+  content-visibility: auto;
+}
 
----
+.masonry-item {
+  contain: layout style;
+}
+```
 
-## Issue 2: Reduce Background/Backdrop Opacity
-
-### Current Behavior
-- Dark mode: `linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0a0a12 100%)` - very dark
-- Light mode: `linear-gradient(135deg, #f8f9fc 0%, #f0f2f8 50%, #f5f7fc 100%)` - very white
-- Glassmorphism cards, header, and ChainBuilder have heavy opacity values
-
-### Solution
-Reduce opacity across all backgrounds and backdrops so the iridescent motion gradient shows through better.
-
-**File: `src/index.css`**
-
-**Dark Mode Background (lines 564-581)**
+**D. Reduce background blur:**
 ```css
 #root::before {
-  /* Reduce base gradient opacity - make it more transparent */
-  background: 
-    radial-gradient(ellipse at 20% 30%, hsl(280 95% 82% / 0.25), transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(180 100% 70% / 0.2), transparent 45%),
-    radial-gradient(ellipse at 40% 70%, hsl(320 95% 85% / 0.25), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, hsl(150 85% 75% / 0.2), transparent 48%),
-    radial-gradient(ellipse at 50% 50%, hsl(210 100% 78% / 0.18), transparent 55%),
-    /* Lighter base - more transparent */
-    linear-gradient(135deg, rgba(10, 10, 15, 0.6) 0%, rgba(18, 18, 26, 0.5) 100%);
-}
-```
-
-**Light Mode Background (lines 584-592)**
-```css
-.light #root::before {
-  /* Add more color, less white opacity */
-  background:
-    radial-gradient(ellipse at 20% 30%, hsl(280 60% 75% / 0.5), transparent 50%),
-    radial-gradient(ellipse at 80% 20%, hsl(180 50% 70% / 0.45), transparent 45%),
-    radial-gradient(ellipse at 40% 70%, hsl(320 55% 78% / 0.45), transparent 50%),
-    radial-gradient(ellipse at 70% 80%, hsl(150 45% 72% / 0.4), transparent 48%),
-    radial-gradient(ellipse at 50% 50%, hsl(210 55% 75% / 0.4), transparent 55%),
-    /* More transparent white base */
-    linear-gradient(135deg, rgba(248, 249, 252, 0.7) 0%, rgba(240, 242, 248, 0.6) 100%);
-}
-```
-
-**Card Backgrounds**
-- `.liquid-glass-card` - reduce `rgba(255, 255, 255, 0.08)` values
-- `.liquid-glass-header` - reduce opacity from 0.7 to 0.5
-
-**Vignette Effect (lines 621-627)**
-```css
-body {
-  box-shadow: inset 0 0 200px rgba(0, 0, 0, 0.3); /* was 0.5 */
+  filter: blur(50px) saturate(1.2); /* was blur(80px) saturate(1.3) */
 }
 ```
 
 ---
 
-## Issue 3: Add Prompt Chaining for Architect Mode
+### Phase 3: PromptCard Optimization
 
-### Current Behavior
-Looking at `src/pages/Index.tsx` lines 179-187:
-```tsx
-{!isArchitect && (
-  <>
-    <PromptComposer />
-    <ProgressDashboard />
-    <ModelToggle />
-    <ChainBuilder />  // ← Hidden from architects!
-  </>
-)}
+**A. Memoize card component:**
+```typescript
+import { memo } from 'react';
+
+export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
+  // ... existing code
+}, (prev, next) => {
+  // Custom comparison - only re-render when these change
+  return prev.prompt.id === next.prompt.id && 
+         prev.index === next.index;
+});
 ```
 
-The `ChainBuilder` component exists and works, but it's explicitly **hidden** when `isArchitect` is true.
-
-### Solution
-Show the `ChainBuilder` for architects, but with enhanced features:
-
-1. **Keep ChainBuilder visible for architects** - Remove the `!isArchitect` condition for `ChainBuilder`
-2. **Add a toggle for viewing mode** - Architects should see: "Cards | Chains" toggle in header area
-3. **Enhance ChainBuilder for architects** - Unlimited chain length, no restrictions
-
-**File: `src/pages/Index.tsx`**
-```tsx
-{/* User-only gamification features */}
-{!isArchitect && (
-  <>
-    <PromptComposer />
-    <ProgressDashboard />
-    <ModelToggle />
-  </>
-)}
-
-{/* Chain Builder - Available to ALL users including architects */}
-<ChainBuilder />
+**B. Remove mouse move listener when not expanded:**
+```typescript
+// Only attach listener when card is expanded
+useEffect(() => {
+  if (!expanded || !cardRef.current) return;
+  
+  const handleMove = (e: MouseEvent) => {
+    const rect = cardRef.current!.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePos({ x, y });
+  };
+  
+  cardRef.current.addEventListener('mousemove', handleMove, { passive: true });
+  return () => cardRef.current?.removeEventListener('mousemove', handleMove);
+}, [expanded]);
 ```
-
-**File: `src/components/ChainBuilder.tsx`**
-Add architect-specific enhancements:
-- Remove the limit of 10 nodes for architects
-- Show "Architect Mode" indicator
-- Add upward/downward chain toggle for viewing chains in different orders
 
 ---
 
-## Summary of Files to Modify
+### Phase 4: PromptGrid Optimization
+
+**A. Remove staggered transition delays:**
+```typescript
+// Remove this - causes reflow calculation for each card
+style={{ transitionDelay: `${Math.min(filteredIndex * 30, 300)}ms` }}
+
+// Replace with CSS-only animation using nth-child
+```
+
+**B. Virtual scrolling consideration (future):**
+For 250 cards, consider react-window or virtualization if issues persist.
+
+---
+
+## Implementation Summary
 
 | File | Changes |
 |------|---------|
-| `src/index.css` | Simplify cursor styles, reduce all background/backdrop opacity values, enhance card border glow to respond to edge intensity |
-| `src/components/CustomCursor.tsx` | Project edge intensity onto card elements instead of cursor glow, apply `--edge-intensity` CSS variable to nearest card |
-| `src/pages/Index.tsx` | Move `ChainBuilder` outside of `!isArchitect` block so architects can use it |
-| `src/components/ChainBuilder.tsx` | Add architect-specific enhancements (unlimited nodes, enhanced UI) |
+| `src/components/CustomCursor.tsx` | Spatial indexing, viewport caching, throttled updates |
+| `src/index.css` | Reduce blur values, remove Houdini animation, add containment |
+| `src/components/PromptCard.tsx` | Memoize component, conditional mouse listener |
+| `src/components/PromptGrid.tsx` | Remove inline transition delays |
 
 ---
 
-## Implementation Order
+## Expected Performance Gains
 
-1. **Cursor + Border Glow** - Modify CustomCursor to set CSS variables on cards, update CSS to respond
-2. **Background Opacity** - Update all opacity values in index.css
-3. **Architect ChainBuilder** - Move component and enhance for architects
+| Optimization | Impact |
+|--------------|--------|
+| Spatial indexing in CustomCursor | ~70% reduction in JS execution time |
+| Reduced backdrop-filter blur | ~40% reduction in paint time |
+| Removing Houdini animation | ~30% reduction in composite time |
+| CSS containment | ~25% reduction in layout time |
+| Memoized PromptCard | ~50% reduction in React reconciliation |
+
+---
+
+## Water Ripple Effect Integration
+
+The water ripple effect you requested will be implemented alongside these optimizations:
+
+**Key performance considerations:**
+- Ripple calculations only on the SINGLE closest card (not all cards)
+- CSS variables (`--edge-x`, `--edge-y`, `--edge-intensity`) for GPU-accelerated updates
+- Static gradient layers that respond to variables (no JS animation loop)
+- `will-change: opacity` on the border pseudo-element only
+
+```css
+.liquid-glass-card::after {
+  /* Ripple gradient - only activated when --edge-intensity > 0 */
+  background: 
+    radial-gradient(
+      circle at var(--edge-x, 50%) var(--edge-y, 50%),
+      hsl(280 95% 82% / calc(0.6 * var(--edge-intensity, 0))) 0%,
+      hsl(180 100% 70% / calc(0.4 * var(--edge-intensity, 0))) 20%,
+      transparent 40%
+    );
+  will-change: opacity;
+  contain: strict;
+}
+```
+
+This approach keeps the iridescent glow following the cursor on borders while remaining performant.
+
