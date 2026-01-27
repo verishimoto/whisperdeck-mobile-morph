@@ -1,7 +1,13 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 
-// Calculate closest point on rectangle edge
-function closestEdgePoint(x: number, y: number, rect: DOMRect): { edgeX: number; edgeY: number; distance: number } {
+// Calculate closest point on rectangle edge with position info
+function closestEdgePoint(x: number, y: number, rect: DOMRect): { 
+  edgeX: number; 
+  edgeY: number; 
+  distance: number;
+  relX: number;
+  relY: number;
+} {
   const clampedX = Math.max(rect.left, Math.min(x, rect.right));
   const clampedY = Math.max(rect.top, Math.min(y, rect.bottom));
   
@@ -14,13 +20,30 @@ function closestEdgePoint(x: number, y: number, rect: DOMRect): { edgeX: number;
       { edge: 'bottom', dist: rect.bottom - y, point: { x, y: rect.bottom } },
     ];
     const closest = distances.reduce((a, b) => a.dist < b.dist ? a : b);
-    return { edgeX: closest.point.x, edgeY: closest.point.y, distance: closest.dist };
+    
+    // Calculate relative position (0-100%)
+    const relX = ((closest.point.x - rect.left) / rect.width) * 100;
+    const relY = ((closest.point.y - rect.top) / rect.height) * 100;
+    
+    return { 
+      edgeX: closest.point.x, 
+      edgeY: closest.point.y, 
+      distance: closest.dist,
+      relX,
+      relY
+    };
   }
+  
+  // Calculate relative position for external points
+  const relX = ((clampedX - rect.left) / rect.width) * 100;
+  const relY = ((clampedY - rect.top) / rect.height) * 100;
   
   return { 
     edgeX: clampedX, 
     edgeY: clampedY, 
-    distance: Math.sqrt((x - clampedX) ** 2 + (y - clampedY) ** 2) 
+    distance: Math.sqrt((x - clampedX) ** 2 + (y - clampedY) ** 2),
+    relX,
+    relY
   };
 }
 
@@ -29,38 +52,121 @@ export function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
   const previousCardRef = useRef<HTMLElement | null>(null);
+  const visibleCardsRef = useRef<Set<HTMLElement>>(new Set());
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
-  // Apply edge intensity CSS variable to the nearest card
-  const updateCardEdgeIntensity = useCallback((x: number, y: number) => {
+  // Setup IntersectionObserver to track visible cards (runs once)
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const card = entry.target as HTMLElement;
+          if (entry.isIntersecting) {
+            visibleCardsRef.current.add(card);
+          } else {
+            visibleCardsRef.current.delete(card);
+            // Clean up CSS variables when card leaves viewport
+            card.style.setProperty('--edge-intensity', '0');
+            card.classList.remove('ripple-active');
+          }
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: '100px',
+      }
+    );
+
+    // Observe all cards
     const cards = document.querySelectorAll('.liquid-glass-card');
+    cards.forEach(card => {
+      observerRef.current?.observe(card);
+    });
+
+    return () => {
+      observerRef.current?.disconnect();
+    };
+  }, []);
+
+  // Re-observe when new cards are added (MutationObserver)
+  useEffect(() => {
+    const mutationObserver = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof HTMLElement) {
+            if (node.classList.contains('liquid-glass-card')) {
+              observerRef.current?.observe(node);
+            }
+            node.querySelectorAll('.liquid-glass-card').forEach((card) => {
+              observerRef.current?.observe(card);
+            });
+          }
+        });
+      });
+    });
+
+    mutationObserver.observe(document.body, { 
+      childList: true, 
+      subtree: true 
+    });
+
+    return () => mutationObserver.disconnect();
+  }, []);
+
+  // Optimized: Only check visible cards with spatial filtering
+  const updateCardEdgeIntensity = useCallback((x: number, y: number) => {
+    const visibleCards = visibleCardsRef.current;
     let closestCard: HTMLElement | null = null;
     let minDist = Infinity;
-    let bestIntensity = 0;
+    let bestRelX = 50;
+    let bestRelY = 50;
     
-    cards.forEach(card => {
+    // Fast iteration over only visible cards
+    for (const card of visibleCards) {
       const rect = card.getBoundingClientRect();
-      const { distance } = closestEdgePoint(x, y, rect);
+      
+      // Quick bounding box check - skip cards clearly out of range (120px buffer)
+      if (x < rect.left - 120 || x > rect.right + 120 ||
+          y < rect.top - 120 || y > rect.bottom + 120) {
+        continue;
+      }
+      
+      const { distance, relX, relY } = closestEdgePoint(x, y, rect);
       if (distance < minDist) {
         minDist = distance;
-        closestCard = card as HTMLElement;
+        closestCard = card;
+        bestRelX = relX;
+        bestRelY = relY;
       }
-    });
+    }
     
     // Calculate intensity based on distance (0-1, where 1 is closest)
     const maxDistance = 100;
-    bestIntensity = minDist < maxDistance ? 1 - (minDist / maxDistance) : 0;
+    const intensity = minDist < maxDistance ? 1 - (minDist / maxDistance) : 0;
     
     // Reset previous card if different
     if (previousCardRef.current && previousCardRef.current !== closestCard) {
       previousCardRef.current.style.setProperty('--edge-intensity', '0');
+      previousCardRef.current.classList.remove('ripple-active');
     }
     
-    // Apply intensity to closest card
-    if (closestCard && bestIntensity > 0) {
-      closestCard.style.setProperty('--edge-intensity', bestIntensity.toString());
+    // Apply intensity and position to closest card
+    if (closestCard && intensity > 0) {
+      closestCard.style.setProperty('--edge-x', `${bestRelX}%`);
+      closestCard.style.setProperty('--edge-y', `${bestRelY}%`);
+      closestCard.style.setProperty('--edge-intensity', intensity.toString());
+      
+      // Toggle ripple animation class
+      if (intensity > 0.1) {
+        closestCard.classList.add('ripple-active');
+      } else {
+        closestCard.classList.remove('ripple-active');
+      }
+      
       previousCardRef.current = closestCard;
     } else if (previousCardRef.current) {
       previousCardRef.current.style.setProperty('--edge-intensity', '0');
+      previousCardRef.current.classList.remove('ripple-active');
       previousCardRef.current = null;
     }
   }, []);
@@ -117,6 +223,7 @@ export function CustomCursor() {
       // Clean up any remaining card styles
       if (previousCardRef.current) {
         previousCardRef.current.style.setProperty('--edge-intensity', '0');
+        previousCardRef.current.classList.remove('ripple-active');
       }
     };
   }, [updateCardEdgeIntensity]);

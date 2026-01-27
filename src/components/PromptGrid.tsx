@@ -75,14 +75,11 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
             <div
               key={prompt.id}
               ref={(el) => registerCard(el, filteredIndex)}
-              className={`masonry-item transition-all duration-500 ${
+              className={`masonry-item ${
                 isVisible 
                   ? 'opacity-100 translate-y-0' 
                   : 'opacity-0 translate-y-8'
               }`}
-              style={{ 
-                transitionDelay: `${Math.min(filteredIndex * 30, 300)}ms`,
-              }}
             >
               <PromptCard 
                 prompt={prompt} 

@@ -319,7 +319,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ===== LIQUID GLASS CARD - 2026 Apple Aesthetic ===== */
+/* ===== LIQUID GLASS CARD - 2026 Apple Aesthetic (Performance Optimized) ===== */
 .liquid-glass-card {
   position: relative;
   background: linear-gradient(
@@ -328,16 +328,27 @@
     rgba(255, 255, 255, 0.03) 50%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.05);
+  /* Reduced blur for better performance */
+  backdrop-filter: blur(20px) saturate(150%) brightness(1.05);
+  -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(1.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1rem;
   box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.15),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
   overflow: hidden;
+  /* CSS Containment for performance */
+  contain: layout style paint;
+  content-visibility: auto;
+  /* GPU acceleration */
+  transform: translateZ(0);
+  will-change: transform;
+  /* CSS Variables for cursor-reactive ripple effect */
+  --edge-intensity: 0;
+  --edge-x: 50%;
+  --edge-y: 50%;
 }
 
 /* Noise texture for glass realism */
@@ -352,43 +363,72 @@
   z-index: 0;
 }
 
-/* Iridescent border flare - Responds to --edge-intensity from cursor */
-.liquid-glass-card {
-  --edge-intensity: 0;
-}
-
+/* Water Ripple Border Effect - Cursor-reactive concentric waves */
 .liquid-glass-card::after {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: conic-gradient(
-    from var(--iridescent-angle, 0deg),
-    hsl(280 95% 82% / 0) 0deg,
-    hsl(180 100% 70% / 0.5) 60deg,
-    hsl(320 95% 85% / 0.6) 120deg,
-    hsl(150 85% 75% / 0.5) 180deg,
-    hsl(210 100% 78% / 0.6) 240deg,
-    hsl(280 95% 82% / 0.5) 300deg,
-    hsl(280 95% 82% / 0) 360deg
-  );
-  opacity: var(--edge-intensity, 0);
-  transition: opacity 0.3s ease;
+  /* Multi-layer concentric ripple gradients from cursor position */
+  background: 
+    /* Inner glow - bright spot at cursor */
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      hsl(280 95% 82% / calc(0.8 * var(--edge-intensity))) 0%,
+      hsl(180 100% 70% / calc(0.6 * var(--edge-intensity))) 15%,
+      transparent 30%
+    ),
+    /* First ripple wave */
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      transparent 25%,
+      hsl(320 95% 85% / calc(0.5 * var(--edge-intensity))) 30%,
+      transparent 35%
+    ),
+    /* Second ripple wave */
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      transparent 45%,
+      hsl(150 85% 75% / calc(0.4 * var(--edge-intensity))) 50%,
+      transparent 55%
+    ),
+    /* Third ripple wave (outermost) */
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      transparent 65%,
+      hsl(210 100% 78% / calc(0.3 * var(--edge-intensity))) 70%,
+      transparent 80%
+    );
+  background-size: 100% 100%;
+  opacity: 1;
+  transition: background-size 0.4s ease-out;
   pointer-events: none;
   z-index: -1;
+  /* Mask to show only on borders */
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;
-  padding: 2px;
+  padding: 3px;
+  will-change: opacity;
+  contain: strict;
 }
 
-.liquid-glass-card:hover::after {
-  opacity: 1;
-  animation: iridescent-rotate 4s linear infinite;
+/* Ripple expansion animation when cursor is near */
+@keyframes ripple-expand {
+  0% {
+    background-size: 80% 80%, 80% 80%, 80% 80%, 80% 80%;
+  }
+  100% {
+    background-size: 180% 180%, 180% 180%, 180% 180%, 180% 180%;
+  }
+}
+
+.liquid-glass-card.ripple-active::after {
+  animation: ripple-expand 1.5s ease-out infinite;
 }
 
 .liquid-glass-card:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-4px) scale(1.02) translateZ(0);
   box-shadow:
     0 16px 48px rgba(0, 0, 0, 0.25),
     0 0 60px rgba(168, 85, 247, 0.15),
@@ -396,15 +436,12 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-@keyframes iridescent-rotate {
-  0% { --iridescent-angle: 0deg; }
-  100% { --iridescent-angle: 360deg; }
-}
-
-@property --iridescent-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
+/* Mobile: Even lighter blur for performance */
+@media (max-width: 768px) {
+  .liquid-glass-card {
+    backdrop-filter: blur(12px) saturate(120%);
+    -webkit-backdrop-filter: blur(12px) saturate(120%);
+  }
 }
 
 /* Light mode liquid glass */
@@ -422,17 +459,33 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.03);
 }
 
+/* Light mode ripple effect */
 .light .liquid-glass-card::after {
-  background: conic-gradient(
-    from var(--iridescent-angle, 0deg),
-    hsl(280 60% 65% / 0) 0deg,
-    hsl(180 50% 50% / 0.3) 60deg,
-    hsl(320 55% 65% / 0.4) 120deg,
-    hsl(150 45% 55% / 0.3) 180deg,
-    hsl(210 55% 58% / 0.4) 240deg,
-    hsl(280 60% 65% / 0.3) 300deg,
-    hsl(280 60% 65% / 0) 360deg
-  );
+  background: 
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      hsl(280 60% 65% / calc(0.6 * var(--edge-intensity))) 0%,
+      hsl(180 50% 50% / calc(0.4 * var(--edge-intensity))) 15%,
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      transparent 25%,
+      hsl(320 55% 65% / calc(0.35 * var(--edge-intensity))) 30%,
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      transparent 45%,
+      hsl(150 45% 55% / calc(0.3 * var(--edge-intensity))) 50%,
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at var(--edge-x) var(--edge-y),
+      transparent 65%,
+      hsl(210 55% 58% / calc(0.25 * var(--edge-intensity))) 70%,
+      transparent 80%
+    );
 }
 
 .light .liquid-glass-card:hover {
@@ -526,7 +579,7 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* ===== DARK MODE BACKGROUND - Motion Blur Gradient - Reduced Opacity ===== */
+/* ===== DARK MODE BACKGROUND - Motion Blur Gradient - Performance Optimized ===== */
 #root::before {
   content: '';
   position: fixed;
@@ -539,7 +592,8 @@
     radial-gradient(ellipse at 70% 80%, hsl(150 85% 75% / 0.25), transparent 48%),
     radial-gradient(ellipse at 50% 50%, hsl(210 100% 78% / 0.2), transparent 55%),
     linear-gradient(135deg, rgba(10, 10, 15, 0.5) 0%, rgba(18, 18, 26, 0.4) 50%, rgba(10, 10, 18, 0.5) 100%);
-  filter: blur(80px) saturate(1.3);
+  /* Reduced blur for better performance */
+  filter: blur(50px) saturate(1.2);
   pointer-events: none;
   will-change: transform;
   animation: bg-drift 30s ease-in-out infinite alternate;
@@ -738,6 +792,32 @@ input:focus-visible {
 .masonry-item {
   break-inside: avoid;
   margin-bottom: 1.5rem;
+  /* CSS Containment for performance */
+  contain: layout style;
+  /* Smooth fade-in animation via CSS nth-child */
+  opacity: 0;
+  transform: translateY(8px);
+  animation: masonry-fade-in 0.4s ease-out forwards;
+}
+
+/* Staggered animation via CSS - no JS delays needed */
+.masonry-item:nth-child(1) { animation-delay: 0ms; }
+.masonry-item:nth-child(2) { animation-delay: 30ms; }
+.masonry-item:nth-child(3) { animation-delay: 60ms; }
+.masonry-item:nth-child(4) { animation-delay: 90ms; }
+.masonry-item:nth-child(5) { animation-delay: 120ms; }
+.masonry-item:nth-child(6) { animation-delay: 150ms; }
+.masonry-item:nth-child(7) { animation-delay: 180ms; }
+.masonry-item:nth-child(8) { animation-delay: 210ms; }
+.masonry-item:nth-child(9) { animation-delay: 240ms; }
+.masonry-item:nth-child(10) { animation-delay: 270ms; }
+.masonry-item:nth-child(n+11) { animation-delay: 300ms; }
+
+@keyframes masonry-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (max-width: 1280px) {
