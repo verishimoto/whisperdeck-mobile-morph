@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect, memo } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Copy, Check, ChevronDown, Square, CheckSquare, Lock, Star, Target, Heart } from "lucide-react";
 import { HackPrompt } from "@/types";
@@ -25,7 +25,7 @@ const categoryColorMap: Record<string, { css: string; tag: string }> = {
   Essential: { css: "level-essential", tag: "tag-essential" },
 };
 
-export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
+export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -48,13 +48,24 @@ export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps)
   // Compute rank from index (1-based) - this uses the ORIGINAL dataset index
   const rank = index + 1;
 
-  // Track mouse position for refraction effect
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    if (!cardRef.current || !expanded) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
-    setMousePos({ x, y });
+  // Calculate opposite glare position for refraction effect
+  const glareX = 100 - mousePos.x;
+  const glareY = 100 - mousePos.y;
+
+  // Only attach mousemove listener when card is expanded (performance optimization)
+  useEffect(() => {
+    if (!expanded || !cardRef.current) return;
+    
+    const card = cardRef.current;
+    const handleMove = (e: MouseEvent) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      setMousePos({ x, y });
+    };
+    
+    card.addEventListener('mousemove', handleMove, { passive: true });
+    return () => card.removeEventListener('mousemove', handleMove);
   }, [expanded]);
 
   const handleCopy = async (e: React.MouseEvent) => {
@@ -99,15 +110,10 @@ export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps)
     onCategoryFilter?.(prompt.category);
   };
 
-  // Calculate opposite glare position for refraction effect
-  const glareX = 100 - mousePos.x;
-  const glareY = 100 - mousePos.y;
-
   return (
     <div 
       ref={cardRef}
-      className={`relative w-full transform-gpu transition-all duration-300 will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}
-      onMouseMove={handleMouseMove}
+      className={`relative w-full transform-gpu will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}
     >
       <div 
         className={`liquid-glass-card ${expanded ? 'liquid-glass-card-active' : ''} ${selected ? 'ring-2 ring-white/30' : ''}`}
@@ -188,4 +194,8 @@ export function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps)
       </div>
     </div>
   );
-}
+}, (prev, next) => {
+  // Custom comparison - only re-render when these change
+  return prev.prompt.id === next.prompt.id && 
+         prev.index === next.index;
+});
