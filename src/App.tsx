@@ -10,6 +10,7 @@ import { GamificationProvider } from "@/contexts/GamificationContext";
 import { ArchitectProvider } from "@/contexts/ArchitectContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { PerformanceProvider } from "@/contexts/PerformanceContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Auth from "./pages/Auth";
@@ -21,27 +22,29 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
       <TooltipProvider>
-        <AuthProvider>
-          <ArchitectProvider>
-            <GamificationProvider>
-              <SelectionProvider>
-                <FavoritesProvider>
-                  <Toaster />
-                  <Sonner />
-                  <BrowserRouter>
-                    <CustomCursor />
-                    <Routes>
-                      <Route path="/" element={<Index />} />
-                      <Route path="/login" element={<Login />} />
-                      <Route path="/auth" element={<Auth />} />
-                      <Route path="*" element={<NotFound />} />
-                    </Routes>
-                  </BrowserRouter>
-                </FavoritesProvider>
-              </SelectionProvider>
-            </GamificationProvider>
-          </ArchitectProvider>
-        </AuthProvider>
+        <PerformanceProvider>
+          <AuthProvider>
+            <ArchitectProvider>
+              <GamificationProvider>
+                <SelectionProvider>
+                  <FavoritesProvider>
+                    <Toaster />
+                    <Sonner />
+                    <BrowserRouter>
+                      <CustomCursor />
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/auth" element={<Auth />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </BrowserRouter>
+                  </FavoritesProvider>
+                </SelectionProvider>
+              </GamificationProvider>
+            </ArchitectProvider>
+          </AuthProvider>
+        </PerformanceProvider>
       </TooltipProvider>
     </ThemeProvider>
   </QueryClientProvider>
