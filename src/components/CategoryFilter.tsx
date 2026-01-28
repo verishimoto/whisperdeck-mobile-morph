@@ -42,11 +42,11 @@ export function CategoryFilter({
             onCategoryChange(null);
             if (showFavorites && onFavoritesToggle) onFavoritesToggle();
           }}
-          className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide
+          className={`tag-interactive whitespace-nowrap transition-all duration-300 text-sm px-4 py-1.5 rounded-full font-sans tracking-wide border
             ${
               selectedCategory === null && !showFavorites
-                ? 'text-foreground bg-foreground/10 border-foreground/30 font-medium'
-                : 'text-foreground/70 hover:text-foreground/90 font-light'
+                ? 'text-foreground bg-foreground/15 border-foreground/50 font-medium'
+                : 'text-foreground/70 bg-transparent border-foreground/20 hover:text-foreground hover:border-foreground/50 hover:bg-foreground/15'
             }`}
           data-cursor="hover"
         >
@@ -57,11 +57,11 @@ export function CategoryFilter({
         {onFavoritesToggle && (
           <button
             onClick={onFavoritesToggle}
-            className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide flex items-center gap-2
+            className={`tag-interactive whitespace-nowrap transition-all duration-300 text-sm px-4 py-1.5 rounded-full font-sans tracking-wide border flex items-center gap-2
               ${
                 showFavorites
-                  ? 'text-pink-400 bg-pink-500/20 border-pink-500/40 font-medium shadow-[0_0_20px_hsl(320_95%_85%/0.3)]'
-                  : 'text-foreground/70 hover:text-pink-400 hover:border-pink-500/30 font-light'
+                  ? 'text-pink-400 bg-pink-500/15 border-pink-500/50 font-medium shadow-[0_0_16px_hsl(320_95%_85%/0.4)]'
+                  : 'text-foreground/70 bg-transparent border-foreground/20 hover:text-pink-400 hover:border-pink-500/50 hover:bg-pink-500/15 hover:shadow-[0_0_16px_hsl(320_95%_85%/0.3)]'
               }`}
             data-cursor="hover"
           >
@@ -75,7 +75,7 @@ export function CategoryFilter({
           </button>
         )}
 
-        {/* Category Buttons - Color coded */}
+        {/* Category Buttons - Color coded with card tag styling on hover */}
         {categories.map((category) => {
           const colorName = categoryColorMap[category];
           const isSelected = selectedCategory === category && !showFavorites;
@@ -86,11 +86,11 @@ export function CategoryFilter({
                 onCategoryChange(category);
                 if (showFavorites && onFavoritesToggle) onFavoritesToggle();
               }}
-              className={`whitespace-nowrap transition-all duration-300 text-sm px-4 h-10 rounded-lg liquid-glass-button font-sans tracking-wide
+              className={`tag-interactive whitespace-nowrap transition-all duration-300 text-sm px-4 py-1.5 rounded-full font-sans tracking-wide border
                 ${
                   isSelected
-                    ? `text-${colorName} bg-${colorName}/20 border-${colorName}/60 font-semibold shadow-[0_0_20px_hsl(var(--${colorName})/0.3)]`
-                    : `text-foreground/80 hover:text-${colorName} hover:border-${colorName}/40 hover:bg-${colorName}/10`
+                    ? `text-${colorName} bg-${colorName}/15 border-${colorName}/50 font-medium shadow-[0_0_16px_hsl(var(--${colorName})/0.4)]`
+                    : `text-foreground/70 bg-transparent border-foreground/20 hover:text-${colorName} hover:border-${colorName}/50 hover:bg-${colorName}/15 hover:shadow-[0_0_16px_hsl(var(--${colorName})/0.3)]`
                 }`}
               data-cursor="hover"
             >
