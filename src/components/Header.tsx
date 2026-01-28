@@ -1,9 +1,15 @@
-import { Moon, Sun, Keyboard, User } from "lucide-react";
+import { Moon, Sun, Keyboard, User, Zap, Sparkles } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePerformance } from "@/contexts/PerformanceContext";
 import { useNavigate } from "react-router-dom";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface HeaderProps {
   searchQuery: string;
@@ -15,6 +21,7 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   const { theme, setTheme } = useTheme();
   const [showShortcuts, setShowShortcuts] = useState(false);
   const { user, signOut } = useAuth();
+  const { mode, setMode, isPerformanceMode } = usePerformance();
   const navigate = useNavigate();
 
   return (
@@ -34,6 +41,32 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
           
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {/* Performance Mode Toggle */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setMode(isPerformanceMode ? "high-quality" : "performance")}
+                  className={`p-2.5 rounded-xl liquid-glass-button transition-all ${
+                    isPerformanceMode 
+                      ? 'text-green-400 bg-green-500/20 border-green-500/30' 
+                      : 'text-foreground/60 hover:text-foreground'
+                  }`}
+                  data-cursor="hover"
+                >
+                  {isPerformanceMode ? (
+                    <Zap className="h-4 w-4" />
+                  ) : (
+                    <Sparkles className="h-4 w-4" />
+                  )}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="liquid-glass-card border-foreground/20">
+                <p className="text-sm">
+                  {isPerformanceMode ? "Performance Mode (faster)" : "High Quality Mode (effects on)"}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+
             {/* Keyboard Shortcuts */}
             <button
               onClick={() => setShowShortcuts(true)}

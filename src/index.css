@@ -879,3 +879,65 @@ input:focus-visible {
 .tag-analysis:hover { box-shadow: 0 0 16px hsl(var(--level-analysis) / 0.4); }
 .tag-creativity:hover { box-shadow: 0 0 16px hsl(var(--level-creativity) / 0.4); }
 .tag-psychology:hover { box-shadow: 0 0 16px hsl(var(--level-psychology) / 0.4); }
+
+/* ===== PERFORMANCE MODE ===== */
+/* When performance mode is active, reduce heavy effects */
+.performance-mode {
+  /* Disable custom cursor effects */
+  --edge-intensity: 0 !important;
+}
+
+.performance-mode #root::before {
+  /* Reduce background blur significantly */
+  filter: blur(20px) saturate(1.1) !important;
+  animation: none !important;
+}
+
+.performance-mode .liquid-glass-card {
+  /* Reduce card blur */
+  backdrop-filter: blur(8px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+  /* Disable containment animations */
+  contain: layout style !important;
+}
+
+.performance-mode .liquid-glass-card::before,
+.performance-mode .liquid-glass-card::after {
+  /* Disable water ripple and iridescent effects */
+  display: none !important;
+}
+
+.performance-mode .liquid-glass-header {
+  backdrop-filter: blur(8px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+}
+
+.performance-mode .liquid-glass-button {
+  backdrop-filter: blur(4px) !important;
+  -webkit-backdrop-filter: blur(4px) !important;
+}
+
+.performance-mode .custom-cursor {
+  /* Simpler cursor */
+  box-shadow: none !important;
+}
+
+.performance-mode .tag-interactive:hover {
+  /* Disable scale animation */
+  transform: none !important;
+}
+
+.performance-mode .tag-advanced:hover,
+.performance-mode .tag-strategy:hover,
+.performance-mode .tag-analysis:hover,
+.performance-mode .tag-creativity:hover,
+.performance-mode .tag-psychology:hover {
+  /* Disable glow effects */
+  box-shadow: none !important;
+}
+
+/* Disable all CSS animations in performance mode */
+.performance-mode * {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.1s !important;
+}
