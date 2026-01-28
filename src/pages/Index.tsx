@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
-import { PromptGrid } from "@/components/PromptGrid";
+import { VirtualizedPromptGrid } from "@/components/VirtualizedPromptGrid";
 import { PromptCarousel } from "@/components/PromptCarousel";
 import { PromptTree } from "@/components/PromptTree";
 import { PromptComposer } from "@/components/PromptComposer";
@@ -163,7 +163,7 @@ const Index = () => {
       <div className="max-w-[1400px] mx-auto px-6 mb-12">
         {/* Architect always sees grid, users can switch views */}
         {isArchitect || viewMode === 'grid' ? (
-          <PromptGrid
+          <VirtualizedPromptGrid
             prompts={filteredPrompts}
             filteredCount={filteredPrompts.length}
             totalCount={hackPrompts.length}
