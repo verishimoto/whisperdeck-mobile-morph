@@ -2250,6 +2250,232 @@ export const hackPrompts: HackPrompt[] = [
     example: "Analyze your learning process for [SKILL]. How can you optimize the learning of learning itself?",
     whyHack: "Learning faster compounds over time - optimizing your learning process multiplies the value of every future learning experience.",
     score: 44
+  },
+  // ===== NEW UI/UX DESIGN PROMPTS (251-275) =====
+  {
+    id: 251,
+    title: "Glassmorphism Depth Hierarchy",
+    description: "Create visual depth through layered transparency and blur effects",
+    category: "Advanced",
+    example: "Design a glassmorphism hierarchy for [INTERFACE] where blur intensity, opacity, and border luminance communicate z-index relationships. Show how background visibility through glass layers guides user attention flow.",
+    whyHack: "Glassmorphism without proper depth hierarchy becomes visual noise - structured blur/opacity gradients create intuitive spatial understanding without explicit visual markers.",
+    score: 43
+  },
+  {
+    id: 252,
+    title: "Iridescent State Communication",
+    description: "Use color-shifting effects to communicate interaction states",
+    category: "Advanced",
+    example: "Map iridescent color shifts to interaction states for [COMPONENT]: rest (subtle shimmer), hover (directional hue shift), active (concentrated glow), disabled (desaturated). Define the HSL transition curves.",
+    whyHack: "Iridescence provides infinite state expressiveness within a cohesive palette - users subconsciously read color temperature shifts faster than explicit state indicators.",
+    score: 42
+  },
+  {
+    id: 253,
+    title: "Micro-Interaction Choreography",
+    description: "Orchestrate timing relationships between multiple animated elements",
+    category: "Creativity",
+    example: "Choreograph a micro-interaction sequence for [ACTION] with: primary element (200ms, ease-out), secondary ripple (staggered 50ms, spring), tertiary particles (random 100-300ms). Map emotional arc to timing curve.",
+    whyHack: "Single animations feel mechanical; choreographed sequences feel alive - timing relationships between elements create perceived intentionality and delight.",
+    score: 41
+  },
+  {
+    id: 254,
+    title: "Cognitive Load Reduction Mapping",
+    description: "Systematically identify and eliminate unnecessary mental processing",
+    category: "Psychology",
+    example: "Map cognitive load sources in [INTERFACE]: visual scanning load, memory load, decision load, motor load. For each, propose reduction strategies. Quantify before/after cognitive cost.",
+    whyHack: "Every unnecessary mental operation compounds user fatigue - systematic mapping reveals hidden load sources that intuition misses.",
+    score: 40
+  },
+  {
+    id: 255,
+    title: "Gestalt Principle Application",
+    description: "Apply perceptual grouping laws to optimize visual organization",
+    category: "Analysis",
+    example: "Audit [LAYOUT] against Gestalt principles: proximity, similarity, continuity, closure, figure-ground. Score each principle 1-5. Identify violations and propose corrections.",
+    whyHack: "Gestalt principles are hardwired into human perception - designs that align with them feel 'obviously right' while violations create subtle unease users can't articulate.",
+    score: 39
+  },
+  {
+    id: 256,
+    title: "Motion Semantics Design",
+    description: "Define a motion language where timing and easing convey meaning",
+    category: "Creativity",
+    example: "Create a motion vocabulary for [APP]: 'entering' (fade-up, 300ms), 'confirming' (scale-bounce), 'warning' (shake, fast), 'deleting' (shrink-fade). Define duration, easing, and semantic associations.",
+    whyHack: "Consistent motion semantics become a sublanguage users learn unconsciously - the same animation always means the same thing, reducing interpretation overhead.",
+    score: 38
+  },
+  {
+    id: 257,
+    title: "Color Accessibility Matrix",
+    description: "Ensure color choices work across all accessibility requirements",
+    category: "Analysis",
+    example: "Build accessibility matrix for [PALETTE]: test each combination for WCAG AA/AAA contrast, colorblind simulations (protanopia, deuteranopia, tritanopia), and high-contrast mode. Flag failures.",
+    whyHack: "Accessibility isn't optional but most color systems break under edge cases - a matrix reveals all failure points before users encounter them.",
+    score: 37
+  },
+  {
+    id: 258,
+    title: "Touch Target Optimization",
+    description: "Engineer touch targets for error-free mobile interaction",
+    category: "Strategy",
+    example: "Analyze touch targets in [MOBILE_UI]: measure actual sizes vs 44x44px minimum, identify crowded zones, calculate accidental tap probability. Propose spacing/sizing solutions.",
+    whyHack: "Tap errors cause user frustration that compounds across sessions - optimized targets feel effortless even though users don't consciously notice the improvement.",
+    score: 36
+  },
+  {
+    id: 259,
+    title: "Visual Rhythm Composition",
+    description: "Create harmonious visual patterns through intentional repetition and variation",
+    category: "Creativity",
+    example: "Compose visual rhythm for [PAGE]: identify repeating elements (cards, spacing, typography), establish beat (primary unit), create measures (grouped sections), add syncopation (intentional breaks).",
+    whyHack: "Visual rhythm creates scannability without explicit navigation - users can predict where to look next because the pattern teaches them the structure.",
+    score: 35
+  },
+  {
+    id: 260,
+    title: "Empty State Personality",
+    description: "Transform empty states from dead-ends into engaging moments",
+    category: "Psychology",
+    example: "Design empty state for [FEATURE] that: acknowledges the absence warmly, guides toward action without pressure, maintains brand personality, provides value even when empty. Include microcopy.",
+    whyHack: "Empty states are first impressions in disguise - a well-crafted empty state converts new users while a generic one loses them.",
+    score: 34
+  },
+  {
+    id: 261,
+    title: "Error Recovery Flow Design",
+    description: "Create error experiences that feel helpful rather than punishing",
+    category: "Strategy",
+    example: "Design error recovery for [SCENARIO]: detect → explain (human language) → suggest fixes → preserve progress → offer escape routes. Map emotional journey from frustration to resolution.",
+    whyHack: "Error handling is trust-building or trust-destroying - users who feel helped during errors become loyal advocates while those who feel blamed churn.",
+    score: 33
+  },
+  {
+    id: 262,
+    title: "Progressive Disclosure Patterns",
+    description: "Layer information complexity to match user readiness",
+    category: "Strategy",
+    example: "Structure [COMPLEX_FEATURE] with progressive disclosure: essential controls (always visible), secondary options (on-demand), advanced settings (tucked away). Define reveal triggers.",
+    whyHack: "Showing everything overwhelms; hiding everything frustrates - progressive disclosure gives users exactly what they need at the moment they need it.",
+    score: 32
+  },
+  {
+    id: 263,
+    title: "Skeleton Loading Psychology",
+    description: "Design loading states that reduce perceived wait time",
+    category: "Psychology",
+    example: "Create skeleton for [CONTENT_TYPE]: shape matches final layout, shimmer direction guides eye, animation speed suggests progress. Compare perceived vs actual load times.",
+    whyHack: "Skeleton screens exploit the 'occupied time feels shorter' principle - users perceive skeleton-loaded content as arriving faster than spinner-waited content.",
+    score: 31
+  },
+  {
+    id: 264,
+    title: "Morphism Transition Logic",
+    description: "Define rules for transitioning between design morphisms",
+    category: "Advanced",
+    example: "Create transition rules between [MORPHISM_A] and [MORPHISM_B] (e.g., flat → glass → neumorphic): which properties animate, crossfade vs morph, timing curves, trigger conditions.",
+    whyHack: "Mixed morphisms feel chaotic without transition logic - defined rules make style-shifting feel intentional rather than inconsistent.",
+    score: 30
+  },
+  {
+    id: 265,
+    title: "AI-First Interface Patterns",
+    description: "Design interfaces where AI assistance is primary, not supplementary",
+    category: "Advanced",
+    example: "Redesign [TRADITIONAL_UI] as AI-first: replace forms with conversation, expose AI confidence levels, design for AI failures, balance automation with user control.",
+    whyHack: "AI bolted onto traditional UI creates awkward hybrids - AI-first design unlocks capabilities impossible with conventional interaction patterns.",
+    score: 29
+  },
+  {
+    id: 266,
+    title: "Voice UI Visual Feedback",
+    description: "Design visual systems that support voice interaction",
+    category: "Creativity",
+    example: "Create visual feedback for [VOICE_INTERFACE]: listening indicator, processing animation, confidence visualization, disambiguation prompts, multimodal handoffs between voice and touch.",
+    whyHack: "Voice without visual feedback feels like shouting into void - synchronized visual cues make voice interfaces feel responsive and trustworthy.",
+    score: 28
+  },
+  {
+    id: 267,
+    title: "Haptic Feedback Mapping",
+    description: "Design tactile feedback patterns for mobile interactions",
+    category: "Analysis",
+    example: "Map haptic patterns for [APP]: success (sharp tap), error (double buzz), selection (light tick), confirmation (heavy thud), progress (rhythmic pulses). Test pattern distinctiveness.",
+    whyHack: "Haptics add a dimension most apps ignore - distinctive tactile patterns create memorable interactions that reinforce visual/audio feedback.",
+    score: 27
+  },
+  {
+    id: 268,
+    title: "Dark Mode Contrast Rules",
+    description: "Establish principles for maintaining hierarchy in dark interfaces",
+    category: "Analysis",
+    example: "Define dark mode contrast rules for [DESIGN_SYSTEM]: background layers (max 3 levels), text contrast (minimum per level), accent saturation adjustment, elevation shadows. Audit existing components.",
+    whyHack: "Dark mode isn't inverted light mode - proper dark mode requires rethinking contrast relationships that break when simply flipping colors.",
+    score: 26
+  },
+  {
+    id: 269,
+    title: "Responsive Breakpoint Philosophy",
+    description: "Design breakpoints around content, not arbitrary device widths",
+    category: "Strategy",
+    example: "Analyze [LAYOUT] to find natural breakpoints: where does content break first? Define breakpoints by content needs, not device categories. Document the 'why' for each breakpoint.",
+    whyHack: "Device-based breakpoints chase moving targets - content-based breakpoints adapt naturally to any screen because they're defined by what users actually see.",
+    score: 25
+  },
+  {
+    id: 270,
+    title: "Scroll-Triggered Animation Timing",
+    description: "Orchestrate animations that respond to scroll position",
+    category: "Creativity",
+    example: "Design scroll-triggered animations for [PAGE]: entry threshold (when visible), progress mapping (how scroll controls animation), exit behavior, mobile performance considerations.",
+    whyHack: "Scroll animations create narrative momentum through content - properly timed scroll triggers make pages feel responsive to user exploration.",
+    score: 24
+  },
+  {
+    id: 271,
+    title: "Brand Personality in UI Motion",
+    description: "Express brand attributes through animation characteristics",
+    category: "Psychology",
+    example: "Translate [BRAND_PERSONALITY] into motion: playful (bounce, overshoot), professional (ease-in-out, restrained), innovative (spring, unexpected paths). Define duration ranges and curve families.",
+    whyHack: "Motion is the voice of your UI - consistent animation personality reinforces brand identity at every interaction without explicit branding.",
+    score: 23
+  },
+  {
+    id: 272,
+    title: "Accessibility-First Component Design",
+    description: "Build components where accessibility is foundational, not retrofitted",
+    category: "Analysis",
+    example: "Design [COMPONENT] accessibility-first: start with screen reader flow, add keyboard navigation, layer visual design. Document: focus states, ARIA labels, announcement timing.",
+    whyHack: "Retrofitting accessibility creates bolted-on experiences - accessibility-first design often produces better UX for everyone, not just those who need it.",
+    score: 22
+  },
+  {
+    id: 273,
+    title: "Onboarding Flow Optimization",
+    description: "Design onboarding that maximizes activation while minimizing abandonment",
+    category: "Strategy",
+    example: "Optimize [PRODUCT] onboarding: identify critical activation metric, map shortest path to 'aha moment', design skip points, measure each step's abandonment rate. A/B test order.",
+    whyHack: "Every onboarding step is a potential exit - ruthless optimization removes friction to first value while preserving necessary education.",
+    score: 21
+  },
+  {
+    id: 274,
+    title: "Feedback Loop Visualization",
+    description: "Make system state changes visible and comprehensible",
+    category: "Advanced",
+    example: "Visualize feedback loops in [SYSTEM]: input → processing → result → impact on next input. Design visual language that makes causality chains obvious to users.",
+    whyHack: "Hidden feedback loops create user confusion about cause-and-effect - visible loops build mental models that make complex systems feel learnable.",
+    score: 20
+  },
+  {
+    id: 275,
+    title: "Neubrutalism Balance Techniques",
+    description: "Apply raw neubrutalism aesthetics while maintaining usability",
+    category: "Creativity",
+    example: "Apply neubrutalism to [INTERFACE] while maintaining usability: bold colors (with accessibility), hard shadows (with depth logic), raw typography (with hierarchy). Balance edge with function.",
+    whyHack: "Neubrutalism's visual impact often sacrifices usability - careful balance creates distinctive interfaces that are still functional and accessible.",
+    score: 19
   }
 ];
 
