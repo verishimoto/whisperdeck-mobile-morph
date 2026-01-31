@@ -163,9 +163,9 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
             </div>
           </div>
           
-          <h3 className="font-display text-lg font-medium text-foreground mb-2 line-clamp-2">
-            <span className="number-display text-foreground/40 mr-2">{rank}</span>
-            {prompt.title}
+        <h3 className="font-display text-lg font-medium text-foreground mb-2 line-clamp-2 flex items-baseline gap-2">
+            <span className="number-display text-foreground/40">{rank}.</span>
+            <span className="flex-1">{prompt.title}</span>
           </h3>
           <p className="font-body text-sm text-foreground/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>
 
