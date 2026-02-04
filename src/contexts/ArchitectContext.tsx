@@ -1,7 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useAuth } from './AuthContext';
 
 interface ArchitectState {
   isArchitect: boolean;
+  isArchitectByEmail: boolean;
+  isArchitectByPassword: boolean;
   showGate: boolean;
   setShowGate: (show: boolean) => void;
   checkPassword: (input: string) => boolean;
@@ -11,12 +14,17 @@ interface ArchitectState {
 const ArchitectContext = createContext<ArchitectState | undefined>(undefined);
 
 const ARCHITECT_PASSWORD = "rootsbeforebranches";
+const ARCHITECT_EMAIL = "vg.contato@gmail.com";
 const STORAGE_KEY = "whisperdeck_architect";
 const SESSION_DATE_KEY = "whisperdeck_architect_date";
-const LAST_POPUP_KEY = "whisperdeck_last_popup";
 
 export function ArchitectProvider({ children }: { children: ReactNode }) {
-  const [isArchitect, setIsArchitect] = useState(() => {
+  const { user } = useAuth();
+  
+  // Auto-detect architect by email
+  const isArchitectByEmail = user?.email === ARCHITECT_EMAIL;
+  
+  const [isArchitectByPassword, setIsArchitectByPassword] = useState(() => {
     const storedValue = localStorage.getItem(STORAGE_KEY);
     const storedDate = localStorage.getItem(SESSION_DATE_KEY);
     const today = new Date().toDateString();
@@ -30,51 +38,38 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
     return storedValue === 'true';
   });
   
-  const [showGate, setShowGate] = useState(() => {
-    // Show popup once daily for all users
-    const lastPopup = localStorage.getItem(LAST_POPUP_KEY);
-    const today = new Date().toDateString();
-    
-    if (lastPopup === today) {
-      return false; // Already shown today
-    }
-    return true; // Show popup
-  });
+  // Combined architect status - email OR password
+  const isArchitect = isArchitectByEmail || isArchitectByPassword;
+  
+  // Only show gate when manually triggered, never on load
+  const [showGate, setShowGate] = useState(false);
 
   useEffect(() => {
-    if (isArchitect) {
+    if (isArchitectByPassword) {
       localStorage.setItem(STORAGE_KEY, 'true');
       localStorage.setItem(SESSION_DATE_KEY, new Date().toDateString());
-    } else {
-      localStorage.removeItem(STORAGE_KEY);
-      localStorage.removeItem(SESSION_DATE_KEY);
     }
-  }, [isArchitect]);
-
-  useEffect(() => {
-    if (!showGate) {
-      const today = new Date().toDateString();
-      localStorage.setItem(LAST_POPUP_KEY, today);
-    }
-  }, [showGate]);
+  }, [isArchitectByPassword]);
 
   const checkPassword = (input: string): boolean => {
     const isValid = input.toLowerCase().trim() === ARCHITECT_PASSWORD;
     if (isValid) {
-      setIsArchitect(true);
+      setIsArchitectByPassword(true);
     }
     return isValid;
   };
 
   const logout = () => {
-    setIsArchitect(false);
+    setIsArchitectByPassword(false);
     localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem(SESSION_DATE_KEY);
   };
 
   return (
     <ArchitectContext.Provider value={{ 
-      isArchitect, 
+      isArchitect,
+      isArchitectByEmail,
+      isArchitectByPassword, 
       showGate, 
       setShowGate, 
       checkPassword,

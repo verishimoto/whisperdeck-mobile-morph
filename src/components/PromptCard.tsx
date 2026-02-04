@@ -149,17 +149,26 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
                     ? 'text-pink-400 bg-pink-500/20 border border-pink-500/30 favorite-pulse' 
                     : 'liquid-glass-button text-foreground/60 hover:text-pink-400'
                 }`}
+                title="Add to favorites"
               >
                 <Heart className={`h-4 w-4 ${favorited ? 'fill-current' : ''}`} />
               </button>
-              <button onClick={handleCopy} disabled={isLocked} className={`p-2 rounded-lg transition-all duration-200 liquid-glass-button text-foreground/80 ${isLocked ? 'cursor-not-allowed' : ''}`}>
+              <button 
+                onClick={handleCopy} 
+                disabled={isLocked} 
+                className={`p-2 rounded-lg transition-all duration-200 liquid-glass-button text-foreground/80 ${isLocked ? 'cursor-not-allowed' : ''}`}
+                title="Copy prompt"
+              >
                 {copied ? <Check className="h-4 w-4 text-level-advanced" /> : <Copy className="h-4 w-4" />}
               </button>
-              {!isArchitect && (
-                <button onClick={handleSelect} className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryStyle.css}/20 text-${categoryStyle.css} border border-${categoryStyle.css}/50` : 'liquid-glass-button text-foreground/50 hover:text-foreground/80'}`}>
-                  {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
-                </button>
-              )}
+              {/* Selection button - Show for ALL users including architects (needed for chain building) */}
+              <button 
+                onClick={handleSelect} 
+                className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryStyle.css}/20 text-${categoryStyle.css} border border-${categoryStyle.css}/50` : 'liquid-glass-button text-foreground/50 hover:text-foreground/80'}`}
+                title={selected ? "Remove from selection" : "Add to chain"}
+              >
+                {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
+              </button>
             </div>
           </div>
           
