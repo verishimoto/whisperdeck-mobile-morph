@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
+import { PromptGrid } from "@/components/PromptGrid";
 import { VirtualizedPromptGrid } from "@/components/VirtualizedPromptGrid";
 import { PromptCarousel } from "@/components/PromptCarousel";
 import { PromptTree } from "@/components/PromptTree";
@@ -16,6 +17,7 @@ import { hackPrompts, categories } from "@/data/prompts";
 import { FilterState } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
 import { LayoutGrid, Layout, Network } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Index = () => {
   const { isArchitect } = useArchitect();
@@ -118,51 +120,70 @@ const Index = () => {
       {/* View Mode Toggle - Hidden for Architects */}
       {!isArchitect && (
         <div className="max-w-7xl mx-auto px-6 mb-6 flex justify-end gap-2">
-          <button
-            onClick={() => setViewMode('grid')}
-            className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
-              viewMode === 'grid'
-                ? 'text-white bg-white/15 border-white/30'
-                : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-            style={{ borderRadius: '8px' }}
-            title="Grid View"
-            data-cursor="hover"
-          >
-            <LayoutGrid className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode('carousel')}
-            className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
-              viewMode === 'carousel'
-                ? 'text-white bg-white/15 border-white/30'
-                : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-            style={{ borderRadius: '8px' }}
-            title="Carousel View"
-            data-cursor="hover"
-          >
-            <Layout className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => setViewMode('tree')}
-            className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
-              viewMode === 'tree'
-                ? 'text-white bg-white/15 border-white/30'
-                : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
-            }`}
-            style={{ borderRadius: '8px' }}
-            title="Tree View"
-            data-cursor="hover"
-          >
-            <Network className="h-4 w-4" />
-          </button>
+          <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setViewMode('grid')}
+                className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+                  viewMode === 'grid'
+                    ? 'text-white bg-white/15 border-white/30'
+                    : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+                style={{ borderRadius: '8px' }}
+                data-cursor="hover"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Grid View (G)</TooltipContent>
+          </Tooltip>
+          <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setViewMode('carousel')}
+                className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+                  viewMode === 'carousel'
+                    ? 'text-white bg-white/15 border-white/30'
+                    : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+                style={{ borderRadius: '8px' }}
+                data-cursor="hover"
+              >
+                <Layout className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Carousel View (C)</TooltipContent>
+          </Tooltip>
+          <Tooltip delayDuration={500}>
+            <TooltipTrigger asChild>
+              <button
+                onClick={() => setViewMode('tree')}
+                className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
+                  viewMode === 'tree'
+                    ? 'text-white bg-white/15 border-white/30'
+                    : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+                }`}
+                style={{ borderRadius: '8px' }}
+                data-cursor="hover"
+              >
+                <Network className="h-4 w-4" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>Tree View (T)</TooltipContent>
+          </Tooltip>
         </div>
       )}
       
-      <div className="max-w-[1400px] mx-auto px-6 mb-12">
-        {/* Architect always sees grid, users can switch views */}
-        {isArchitect || viewMode === 'grid' ? (
+      <div className={`max-w-[1400px] mx-auto px-6 mb-12 ${isArchitect ? 'architect-mode' : ''}`}>
+        {/* Architect uses CSS masonry (PromptGrid) for variable heights, users use virtualized grid */}
+        {isArchitect ? (
+          <PromptGrid
+            prompts={filteredPrompts}
+            filteredCount={filteredPrompts.length}
+            totalCount={hackPrompts.length}
+            onCategoryFilter={(category) => handleCategoryChange(category)}
+          />
+        ) : viewMode === 'grid' ? (
           <VirtualizedPromptGrid
             prompts={filteredPrompts}
             filteredCount={filteredPrompts.length}

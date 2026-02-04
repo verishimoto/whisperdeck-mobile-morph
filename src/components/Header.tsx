@@ -1,9 +1,10 @@
-import { Moon, Sun, Keyboard, User, Zap, Sparkles, Gauge } from "lucide-react";
+import { Moon, Sun, Keyboard, User, Zap, Sparkles, Wand2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePerformance } from "@/contexts/PerformanceContext";
+import { useArchitect } from "@/contexts/ArchitectContext";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -23,6 +24,7 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   const [showShortcuts, setShowShortcuts] = useState(false);
   const { user, signOut } = useAuth();
   const { mode, setMode, isPerformanceMode, autoDetect, performanceLevel, fps } = usePerformance();
+  const { isArchitect, setShowGate } = useArchitect();
   const navigate = useNavigate();
 
   return (
@@ -42,7 +44,30 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
           
           {/* Actions */}
           <div className="flex items-center gap-2">
-            {/* Performance Mode Toggle with FPS indicator */}
+            {/* Architect Mode Indicator or Trigger */}
+            {isArchitect ? (
+              <Badge className="bg-purple-500/20 border-purple-500/40 text-purple-300 flex items-center gap-1.5 px-3 py-1">
+                <Wand2 className="h-3.5 w-3.5" />
+                Architect
+              </Badge>
+            ) : (
+              <Tooltip delayDuration={500}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setShowGate(true)}
+                    className="p-2.5 rounded-xl liquid-glass-button text-foreground/40 hover:text-purple-400 transition-colors"
+                    data-cursor="hover"
+                  >
+                    <Wand2 className="h-4 w-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="liquid-glass-card border-foreground/20">
+                  <p className="text-sm">Architect Access</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
+
+            {/* Performance Mode Toggle - Only show FPS badge to architects */}
             <Tooltip delayDuration={500}>
               <TooltipTrigger asChild>
                 <button
@@ -59,7 +84,8 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
                   ) : (
                     <Sparkles className="h-4 w-4" />
                   )}
-                  {autoDetect && (
+                  {/* Only show FPS badge to architects */}
+                  {isArchitect && autoDetect && (
                     <Badge 
                       variant="outline" 
                       className={`text-[10px] px-1 py-0 h-4 ${
@@ -80,7 +106,7 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
                     {isPerformanceMode ? "Performance Mode" : "High Quality Mode"}
                   </p>
                   <p className="text-foreground/60 text-xs">
-                    {autoDetect ? `Auto-detecting: ${fps} FPS (${performanceLevel})` : 'Click to toggle'}
+                    {isArchitect && autoDetect ? `Auto-detecting: ${fps} FPS (${performanceLevel})` : 'Click to toggle effects'}
                   </p>
                 </div>
               </TooltipContent>

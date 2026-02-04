@@ -3,10 +3,13 @@ import { useSelection } from "@/contexts/SelectionContext";
 import { useGamification } from "@/contexts/GamificationContext";
 import { useArchitect } from "@/contexts/ArchitectContext";
 import { HackPrompt } from "@/types";
-import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown, Wand2 } from "lucide-react";
+import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown, Wand2, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
+import { ChainTemplatesPanel } from "./ChainTemplatesPanel";
+import { SaveTemplateDialog } from "./SaveTemplateDialog";
 
 interface ChainNode {
   prompt: HackPrompt;
@@ -30,6 +33,8 @@ export function ChainBuilder() {
     const saved = localStorage.getItem('chainBuilderCollapsed');
     return saved ? JSON.parse(saved) : false;
   });
+  const [showTemplates, setShowTemplates] = useState(false);
+  const [showSaveDialog, setShowSaveDialog] = useState(false);
 
   useEffect(() => {
     localStorage.setItem('chainBuilderCollapsed', JSON.stringify(isCollapsed));
@@ -122,13 +127,16 @@ export function ChainBuilder() {
 
   const handleSaveChain = () => {
     if (chainNodes.length === 0) return;
+    setShowSaveDialog(true);
+  };
 
-    // Placeholder for saving to community/localStorage
-    toast({
-      title: "Chain Saved",
-      description: "Your Socratic chain has been saved.",
-      duration: 2000,
-    });
+  // Load prompts from template
+  const handleLoadTemplate = (prompts: HackPrompt[]) => {
+    const newNodes = prompts.map((prompt, index) => ({
+      prompt,
+      position: index,
+    }));
+    setChainNodes(newNodes);
   };
 
   const handleClearChain = () => {
@@ -205,34 +213,67 @@ export function ChainBuilder() {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              onClick={handleExecuteChain}
-              disabled={chainNodes.length === 0}
-              size="sm"
-              className="bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 text-[#8B5CF6] hover:bg-[#8B5CF6]/30"
-            >
-              <Play className="h-4 w-4 mr-1" />
-              Execute
-            </Button>
-            <Button
-              onClick={handleSaveChain}
-              disabled={chainNodes.length === 0}
-              size="sm"
-              variant="outline"
-              className="bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
-            >
-              <Save className="h-4 w-4 mr-1" />
-              Save
-            </Button>
-            <Button
-              onClick={handleClearChain}
-              disabled={chainNodes.length === 0}
-              size="sm"
-              variant="outline"
-              className="bg-white/5 border-white/20 text-white/60 hover:bg-white/10 hover:text-white/80"
-            >
-              <RotateCcw className="h-4 w-4" />
-            </Button>
+            {/* Templates Button */}
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={() => setShowTemplates(true)}
+                  size="sm"
+                  variant="outline"
+                  className="bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
+                >
+                  <FolderOpen className="h-4 w-4 mr-1" />
+                  Templates
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Browse chain templates</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleExecuteChain}
+                  disabled={chainNodes.length === 0}
+                  size="sm"
+                  className="bg-[#8B5CF6]/20 border border-[#8B5CF6]/40 text-[#8B5CF6] hover:bg-[#8B5CF6]/30"
+                >
+                  <Play className="h-4 w-4 mr-1" />
+                  Execute
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Execute the chain</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleSaveChain}
+                  disabled={chainNodes.length === 0}
+                  size="sm"
+                  variant="outline"
+                  className="bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
+                >
+                  <Save className="h-4 w-4 mr-1" />
+                  Save
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Save as template</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip delayDuration={500}>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={handleClearChain}
+                  disabled={chainNodes.length === 0}
+                  size="sm"
+                  variant="outline"
+                  className="bg-white/5 border-white/20 text-white/60 hover:bg-white/10 hover:text-white/80"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Clear chain</TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
@@ -353,6 +394,20 @@ export function ChainBuilder() {
           </>
         )}
       </div>
+      
+      {/* Templates Panel */}
+      <ChainTemplatesPanel
+        isOpen={showTemplates}
+        onClose={() => setShowTemplates(false)}
+        onLoadTemplate={handleLoadTemplate}
+      />
+      
+      {/* Save Template Dialog */}
+      <SaveTemplateDialog
+        isOpen={showSaveDialog}
+        onClose={() => setShowSaveDialog(false)}
+        promptIds={chainNodes.map(n => n.prompt.id)}
+      />
     </div>
   );
 }

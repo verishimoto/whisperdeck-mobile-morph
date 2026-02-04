@@ -11,6 +11,7 @@ import { ArchitectProvider } from "@/contexts/ArchitectContext";
 import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { PerformanceProvider } from "@/contexts/PerformanceContext";
+import { ChainTemplatesProvider } from "@/contexts/ChainTemplatesContext";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Auth from "./pages/Auth";
@@ -25,23 +26,25 @@ const App = () => (
         <PerformanceProvider>
           <AuthProvider>
             <ArchitectProvider>
-              <GamificationProvider>
-                <SelectionProvider>
-                  <FavoritesProvider>
-                    <Toaster />
-                    <Sonner />
-                    <BrowserRouter>
-                      <CustomCursor />
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/login" element={<Login />} />
-                        <Route path="/auth" element={<Auth />} />
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </BrowserRouter>
-                  </FavoritesProvider>
-                </SelectionProvider>
-              </GamificationProvider>
+              <ChainTemplatesProvider>
+                <GamificationProvider>
+                  <SelectionProvider>
+                    <FavoritesProvider>
+                      <Toaster />
+                      <Sonner />
+                      <BrowserRouter>
+                        <CustomCursor />
+                        <Routes>
+                          <Route path="/" element={<Index />} />
+                          <Route path="/login" element={<Login />} />
+                          <Route path="/auth" element={<Auth />} />
+                          <Route path="*" element={<NotFound />} />
+                        </Routes>
+                      </BrowserRouter>
+                    </FavoritesProvider>
+                  </SelectionProvider>
+                </GamificationProvider>
+              </ChainTemplatesProvider>
             </ArchitectProvider>
           </AuthProvider>
         </PerformanceProvider>

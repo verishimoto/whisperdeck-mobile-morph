@@ -12,6 +12,7 @@ export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberMe, setRememberMe] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   
@@ -143,6 +144,19 @@ export default function Auth() {
                 <p className="mt-1 text-xs text-destructive">{errors.password}</p>
               )}
             </div>
+
+            {/* Remember Me Checkbox */}
+            {isLogin && (
+              <label className="flex items-center gap-2 text-sm text-foreground/60 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-foreground/30 bg-background/50 text-primary focus:ring-primary/50"
+                />
+                Remember me for 30 days
+              </label>
+            )}
 
             <button
               type="submit"
