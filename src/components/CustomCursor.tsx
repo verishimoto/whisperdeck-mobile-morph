@@ -88,29 +88,18 @@ export function CustomCursor() {
     };
   }, []);
 
-  // Re-observe when new cards are added (MutationObserver)
+  // Re-observe when DOM changes - lightweight delegated approach
   useEffect(() => {
-    const mutationObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node instanceof HTMLElement) {
-            if (node.classList.contains('liquid-glass-card')) {
-              observerRef.current?.observe(node);
-            }
-            node.querySelectorAll('.liquid-glass-card').forEach((card) => {
-              observerRef.current?.observe(card);
-            });
-          }
-        });
+    const interval = setInterval(() => {
+      const cards = document.querySelectorAll('.liquid-glass-card');
+      cards.forEach(card => {
+        if (!visibleCardsRef.current.has(card as HTMLElement)) {
+          observerRef.current?.observe(card);
+        }
       });
-    });
+    }, 2000);
 
-    mutationObserver.observe(document.body, { 
-      childList: true, 
-      subtree: true 
-    });
-
-    return () => mutationObserver.disconnect();
+    return () => clearInterval(interval);
   }, []);
 
   // Optimized: Only check visible cards with spatial filtering

@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { PromptCard } from "./PromptCard";
+import { PromptDetailDialog } from "./PromptDetailDialog";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
 
@@ -12,9 +13,12 @@ interface PromptGridProps {
 
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
+  const [renderedCount, setRenderedCount] = useState(20); // Lazy load: start with 20
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const cardRefs = useRef<Map<number, HTMLDivElement>>(new Map());
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [detailPrompt, setDetailPrompt] = useState<HackPrompt | null>(null);
 
+  // Intersection observer for fade-in animation
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
@@ -25,33 +29,45 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
           }
         });
       },
-      {
-        threshold: 0.1,
-        rootMargin: '50px 0px',
-      }
+      { threshold: 0.1, rootMargin: '50px 0px' }
     );
-
-    return () => {
-      observerRef.current?.disconnect();
-    };
+    return () => { observerRef.current?.disconnect(); };
   }, []);
 
+  // Lazy load sentinel - loads more cards as user scrolls
   useEffect(() => {
-    // Re-observe when prompts change
-    cardRefs.current.forEach((element, index) => {
-      if (observerRef.current) {
-        observerRef.current.observe(element);
-      }
-    });
+    if (renderedCount >= prompts.length) return;
+    
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const loadMoreObserver = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setRenderedCount(prev => Math.min(prev + 20, prompts.length));
+        }
+      },
+      { rootMargin: '400px 0px' }
+    );
+    
+    loadMoreObserver.observe(sentinel);
+    return () => loadMoreObserver.disconnect();
+  }, [renderedCount, prompts.length]);
+
+  // Reset rendered count when prompts change (filter/search)
+  useEffect(() => {
+    setRenderedCount(20);
+    setVisibleCards(new Set());
   }, [prompts]);
 
-  const registerCard = (element: HTMLDivElement | null, index: number) => {
+  const registerCard = useCallback((element: HTMLDivElement | null, index: number) => {
     if (element) {
-      cardRefs.current.set(index, element);
       element.setAttribute('data-index', index.toString());
       observerRef.current?.observe(element);
     }
-  };
+  }, []);
+
+  const displayedPrompts = prompts.slice(0, renderedCount);
 
   return (
     <div className="pb-16">
@@ -63,11 +79,9 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
         </p>
       </div>
 
-      {/* Masonry Grid */}
-      <div className="masonry-grid">
-        {prompts.map((prompt, filteredIndex) => {
-          // Use the prompt's original ID for rank, not filtered index
-          // This ensures static numbering (e.g., Creativity starts at #96 if that's its original position)
+      {/* CSS Grid - Fixed height cards */}
+      <div className="prompt-grid">
+        {displayedPrompts.map((prompt, filteredIndex) => {
           const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
           const isVisible = visibleCards.has(filteredIndex);
           
@@ -76,20 +90,24 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
               key={prompt.id}
               ref={(el) => registerCard(el, filteredIndex)}
               className={`masonry-item ${
-                isVisible 
-                  ? 'opacity-100 translate-y-0' 
-                  : 'opacity-0 translate-y-8'
+                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
               }`}
             >
               <PromptCard 
                 prompt={prompt} 
                 index={originalIndex}
                 onCategoryFilter={onCategoryFilter}
+                onExpand={() => setDetailPrompt(prompt)}
               />
             </div>
           );
         })}
       </div>
+
+      {/* Lazy load sentinel */}
+      {renderedCount < prompts.length && (
+        <div ref={sentinelRef} className="h-8 w-full" />
+      )}
 
       {/* Empty State */}
       {prompts.length === 0 && (
@@ -101,6 +119,12 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
           </p>
         </div>
       )}
+
+      {/* Detail Dialog */}
+      <PromptDetailDialog 
+        prompt={detailPrompt} 
+        onClose={() => setDetailPrompt(null)} 
+      />
     </div>
   );
 }
