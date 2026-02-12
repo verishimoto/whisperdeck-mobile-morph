@@ -12,6 +12,7 @@ interface PromptCardProps {
   prompt: HackPrompt;
   index: number;
   onCategoryFilter?: (category: string) => void;
+  onExpand?: () => void;
 }
 
 const categoryColorMap: Record<string, { css: string; tag: string }> = {
@@ -25,10 +26,8 @@ const categoryColorMap: Record<string, { css: string; tag: string }> = {
   Essential: { css: "level-essential", tag: "tag-essential" },
 };
 
-export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
-  const [expanded, setExpanded] = useState(false);
+export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter, onExpand }: PromptCardProps) {
   const [copied, setCopied] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
   const cardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { togglePrompt, isSelected, canSelectMore } = useSelection();
@@ -45,28 +44,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
 
   const categoryStyle = categoryColorMap[prompt.category] || { css: "primary", tag: "" };
   
-  // Compute rank from index (1-based) - this uses the ORIGINAL dataset index
   const rank = index + 1;
-
-  // Calculate opposite glare position for refraction effect
-  const glareX = 100 - mousePos.x;
-  const glareY = 100 - mousePos.y;
-
-  // Only attach mousemove listener when card is expanded (performance optimization)
-  useEffect(() => {
-    if (!expanded || !cardRef.current) return;
-    
-    const card = cardRef.current;
-    const handleMove = (e: MouseEvent) => {
-      const rect = card.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / rect.width) * 100;
-      const y = ((e.clientY - rect.top) / rect.height) * 100;
-      setMousePos({ x, y });
-    };
-    
-    card.addEventListener('mousemove', handleMove, { passive: true });
-    return () => card.removeEventListener('mousemove', handleMove);
-  }, [expanded]);
 
   const handleCopy = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -113,16 +91,10 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
   return (
     <div 
       ref={cardRef}
-      className={`relative w-full transform-gpu will-change-transform ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}
+      className={`relative w-full ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}
     >
       <div 
-        className={`liquid-glass-card ${expanded ? 'liquid-glass-card-active' : ''} ${selected ? 'ring-2 ring-white/30' : ''}`}
-        style={expanded ? {
-          '--mouse-x': `${mousePos.x}%`,
-          '--mouse-y': `${mousePos.y}%`,
-          '--glare-x': `${glareX}%`,
-          '--glare-y': `${glareY}%`,
-        } as React.CSSProperties : undefined}
+        className={`liquid-glass-card card-fixed-height ${selected ? 'ring-2 ring-white/30' : ''}`}
       >
         {isLocked && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex flex-col items-center justify-center z-30 rounded-2xl">
@@ -133,7 +105,6 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
 
         <div className="p-5 flex flex-col h-full relative z-10">
           <div className="flex items-start justify-between mb-4">
-            {/* Clickable Category Tag */}
             <Badge 
               onClick={handleCategoryClick}
               className={`tag-interactive ${categoryStyle.tag} bg-${categoryStyle.css}/15 border-${categoryStyle.css}/25 text-${categoryStyle.css} text-xs px-2.5 py-1 rounded-full font-sans hover:bg-${categoryStyle.css}/25 hover:border-${categoryStyle.css}/50 cursor-pointer`}
@@ -141,7 +112,6 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               {prompt.category}
             </Badge>
             <div className="flex items-center gap-1.5">
-              {/* Favorite Button */}
               <button 
                 onClick={handleFavorite} 
                 className={`p-2 rounded-lg transition-all duration-200 ${
@@ -161,7 +131,6 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               >
                 {copied ? <Check className="h-4 w-4 text-level-advanced" /> : <Copy className="h-4 w-4" />}
               </button>
-              {/* Selection button - Show for ALL users including architects (needed for chain building) */}
               <button 
                 onClick={handleSelect} 
                 className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryStyle.css}/20 text-${categoryStyle.css} border border-${categoryStyle.css}/50` : 'liquid-glass-button text-foreground/50 hover:text-foreground/80'}`}
@@ -172,7 +141,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
             </div>
           </div>
           
-        <h3 className="font-display text-lg font-medium text-foreground mb-2 line-clamp-2 flex items-baseline gap-2">
+          <h3 className="font-display text-lg font-medium text-foreground mb-2 line-clamp-2 flex items-baseline gap-2">
             <span className="number-display text-foreground/40">{rank}.</span>
             <span className="flex-1">{prompt.title}</span>
           </h3>
@@ -183,28 +152,18 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               {!isArchitect && isMastered && <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1"><Star className="h-3 w-3" />Mastered</Badge>}
               {!isArchitect && isRecommended && !isMastered && <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1"><Target className="h-3 w-3" />Recommended</Badge>}
             </div>
-            <button onClick={() => setExpanded(!expanded)} className="flex items-center justify-center w-8 h-8 rounded-full liquid-glass-button text-foreground/70 hover:text-foreground">
-              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
+            <button 
+              onClick={() => onExpand?.()}
+              className="flex items-center justify-center w-8 h-8 rounded-full liquid-glass-button text-foreground/70 hover:text-foreground"
+            >
+              <ChevronDown className="h-4 w-4" />
             </button>
           </div>
-
-          {expanded && (
-            <div className="mt-4 pt-4 border-t border-border/50 space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
-              <div className="p-4 rounded-xl bg-background/30 border border-border/50">
-                <p className="font-mono text-sm text-foreground/90 leading-loose">{prompt.example}</p>
-              </div>
-              <div className={`p-4 rounded-xl border bg-${categoryStyle.css}/10 border-${categoryStyle.css}/20`}>
-                <h4 className={`font-display text-base font-semibold mb-2 text-${categoryStyle.css}`}>Why This Is a Hack</h4>
-                <p className="font-body text-sm text-foreground/70 leading-relaxed">{prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}</p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
   );
 }, (prev, next) => {
-  // Custom comparison - only re-render when these change
   return prev.prompt.id === next.prompt.id && 
          prev.index === next.index;
 });

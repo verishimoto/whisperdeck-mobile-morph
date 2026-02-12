@@ -31,7 +31,7 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
     <>
       <header className="sticky top-0 z-50 liquid-glass-header border-b-0">
         {/* Top Bar - Max width aligned with content */}
-        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           {/* Brand - Antigravity inspired */}
           <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-foreground header-brand">
             WhispererDeck

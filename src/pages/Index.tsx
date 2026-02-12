@@ -97,7 +97,7 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-background text-foreground ${!isArchitect ? 'pb-[320px]' : 'pb-16'}`}>
+    <div className={`min-h-screen bg-background text-foreground ${!isArchitect ? 'pb-[360px]' : 'pb-24'}`}>
       <ArchitectGate />
       
       <Header
@@ -119,7 +119,7 @@ const Index = () => {
 
       {/* View Mode Toggle - Hidden for Architects */}
       {!isArchitect && (
-        <div className="max-w-7xl mx-auto px-6 mb-6 flex justify-end gap-2">
+        <div className="max-w-[1400px] mx-auto px-6 mb-6 flex justify-end gap-2">
           <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
               <button
