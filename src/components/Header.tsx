@@ -30,17 +30,17 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   return (
     <>
       <header className="sticky top-0 z-50 liquid-glass-header border-b-0">
-        {/* Top Bar - Max width aligned with content */}
-        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
-          {/* Brand - Antigravity inspired */}
-          <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-foreground header-brand">
-            WhispererDeck
-          </h1>
-          
-          {/* Tagline - minimal */}
-          <p className="hidden lg:block text-xs text-muted-foreground font-light tracking-widest uppercase">
-            250 Advanced LLM Prompts
-          </p>
+        {/* Top Bar - Standard max-width */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-3 flex items-center justify-between">
+          {/* Brand */}
+          <div className="flex flex-col">
+            <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-foreground header-brand">
+              WhispererDeck
+            </h1>
+            <p className="hidden sm:block text-[10px] text-muted-foreground font-light tracking-widest uppercase mt-0.5">
+              250 Advanced LLM Prompts
+            </p>
+          </div>
           
           {/* Actions */}
           <div className="flex items-center gap-2">

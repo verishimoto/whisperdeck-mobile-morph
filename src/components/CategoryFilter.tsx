@@ -40,7 +40,7 @@ export function CategoryFilter({
 
   return (
     <div className="sticky top-[72px] z-40 mb-8 px-4 py-4 liquid-glass-header border-b-0">
-      <div className="flex items-center max-w-[1400px] mx-auto">
+      <div className="flex items-center max-w-7xl mx-auto px-0 sm:px-2 lg:px-4">
         {/* Left: Category buttons */}
         <div className="flex items-center gap-2 flex-wrap flex-1">
           {/* All Button */}

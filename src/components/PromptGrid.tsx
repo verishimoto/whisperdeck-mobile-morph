@@ -88,9 +88,7 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
             <div
               key={prompt.id}
               ref={(el) => registerCard(el, filteredIndex)}
-              className={`masonry-item ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
+              className="masonry-item"
             >
               <PromptCard 
                 prompt={prompt} 
