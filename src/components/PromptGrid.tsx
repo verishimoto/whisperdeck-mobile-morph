@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { PromptCard } from "./PromptCard";
-import { PromptDetailDialog } from "./PromptDetailDialog";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
 
@@ -16,7 +15,7 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
   const [renderedCount, setRenderedCount] = useState(20); // Lazy load: start with 20
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  const [detailPrompt, setDetailPrompt] = useState<HackPrompt | null>(null);
+  
 
   // Intersection observer for fade-in animation
   useEffect(() => {
@@ -97,7 +96,6 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
                 prompt={prompt} 
                 index={originalIndex}
                 onCategoryFilter={onCategoryFilter}
-                onExpand={() => setDetailPrompt(prompt)}
               />
             </div>
           );
@@ -120,11 +118,6 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
         </div>
       )}
 
-      {/* Detail Dialog */}
-      <PromptDetailDialog 
-        prompt={detailPrompt} 
-        onClose={() => setDetailPrompt(null)} 
-      />
     </div>
   );
 }
