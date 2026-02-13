@@ -184,7 +184,7 @@ const Index = () => {
             onCategoryFilter={(category) => handleCategoryChange(category)}
           />
         ) : viewMode === 'grid' ? (
-          <VirtualizedPromptGrid
+          <PromptGrid
             prompts={filteredPrompts}
             filteredCount={filteredPrompts.length}
             totalCount={hackPrompts.length}
