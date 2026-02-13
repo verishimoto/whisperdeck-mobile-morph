@@ -986,53 +986,58 @@ input:focus-visible {
 }
 
 /* ===== MANUAL PERFORMANCE MODE (user toggle) ===== */
-.performance-mode {
+/* When performance-mode is active WITH high level, keep iridescent effects */
+.performance-mode.performance-mode-high {
+  /* Full effects allowed - no overrides */
+}
+
+/* When performance-mode is active without high level, reduce effects */
+.performance-mode:not(.performance-mode-high) {
   --edge-intensity: 0 !important;
 }
 
-.performance-mode #root::before {
+.performance-mode:not(.performance-mode-high) #root::before {
   filter: blur(20px) saturate(1.1) !important;
   animation: none !important;
 }
 
-.performance-mode .liquid-glass-card {
+.performance-mode:not(.performance-mode-high) .liquid-glass-card {
   backdrop-filter: blur(8px) saturate(120%) !important;
   -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
-  contain: layout style !important;
 }
 
-.performance-mode .liquid-glass-card::before,
-.performance-mode .liquid-glass-card::after {
+.performance-mode:not(.performance-mode-high) .liquid-glass-card::before,
+.performance-mode:not(.performance-mode-high) .liquid-glass-card::after {
   display: none !important;
 }
 
-.performance-mode .liquid-glass-header {
+.performance-mode:not(.performance-mode-high) .liquid-glass-header {
   backdrop-filter: blur(8px) saturate(120%) !important;
   -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
 }
 
-.performance-mode .liquid-glass-button {
+.performance-mode:not(.performance-mode-high) .liquid-glass-button {
   backdrop-filter: blur(4px) !important;
   -webkit-backdrop-filter: blur(4px) !important;
 }
 
-.performance-mode .custom-cursor {
+.performance-mode:not(.performance-mode-high) .custom-cursor {
   box-shadow: none !important;
 }
 
-.performance-mode .tag-interactive:hover {
+.performance-mode:not(.performance-mode-high) .tag-interactive:hover {
   transform: none !important;
 }
 
-.performance-mode .tag-advanced:hover,
-.performance-mode .tag-strategy:hover,
-.performance-mode .tag-analysis:hover,
-.performance-mode .tag-creativity:hover,
-.performance-mode .tag-psychology:hover {
+.performance-mode:not(.performance-mode-high) .tag-advanced:hover,
+.performance-mode:not(.performance-mode-high) .tag-strategy:hover,
+.performance-mode:not(.performance-mode-high) .tag-analysis:hover,
+.performance-mode:not(.performance-mode-high) .tag-creativity:hover,
+.performance-mode:not(.performance-mode-high) .tag-psychology:hover {
   box-shadow: none !important;
 }
 
-.performance-mode * {
+.performance-mode:not(.performance-mode-high) * {
   animation-duration: 0.01ms !important;
   transition-duration: 0.1s !important;
 }
