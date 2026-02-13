@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, CSSProperties, ReactElement } from "react";
 import { List } from "react-window";
 import { PromptCard } from "./PromptCard";
-import { PromptDetailDialog } from "./PromptDetailDialog";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
 
@@ -38,7 +37,7 @@ interface RowData {
   prompts: HackPrompt[];
   columnCount: number;
   onCategoryFilter?: (category: string) => void;
-  onExpand: (prompt: HackPrompt) => void;
+  
 }
 
 // Row component for react-window v2 - must return ReactElement
@@ -48,7 +47,6 @@ function RowComponent({
   prompts,
   columnCount,
   onCategoryFilter,
-  onExpand,
 }: {
   index: number;
   style: CSSProperties;
@@ -81,7 +79,6 @@ function RowComponent({
               prompt={prompt}
               index={originalIndex}
               onCategoryFilter={onCategoryFilter}
-              onExpand={() => onExpand(prompt)}
             />
           </div>
         );
@@ -99,7 +96,7 @@ export function VirtualizedPromptGrid({
   const columnCount = useColumnCount();
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerHeight, setContainerHeight] = useState(800);
-  const [detailPrompt, setDetailPrompt] = useState<HackPrompt | null>(null);
+  
 
   // Calculate row count
   const rowCount = Math.ceil(prompts.length / columnCount);
@@ -162,7 +159,6 @@ export function VirtualizedPromptGrid({
           prompts,
           columnCount,
           onCategoryFilter,
-          onExpand: (prompt: HackPrompt) => setDetailPrompt(prompt),
         }}
         overscanCount={2}
         className="virtualized-grid-list"
@@ -173,11 +169,6 @@ export function VirtualizedPromptGrid({
         }}
       />
 
-      {/* Detail Dialog */}
-      <PromptDetailDialog
-        prompt={detailPrompt}
-        onClose={() => setDetailPrompt(null)}
-      />
     </div>
   );
 }

@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback, useEffect, memo } from "react";
+import { useState, useRef, memo } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Copy, Check, ChevronDown, Square, CheckSquare, Lock, Star, Target, Heart } from "lucide-react";
+import { Copy, Check, ChevronDown, ChevronUp, Square, CheckSquare, Lock, Star, Target, Heart } from "lucide-react";
 import { HackPrompt } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useSelection } from "@/contexts/SelectionContext";
@@ -12,7 +12,6 @@ interface PromptCardProps {
   prompt: HackPrompt;
   index: number;
   onCategoryFilter?: (category: string) => void;
-  onExpand?: () => void;
 }
 
 const categoryColorMap: Record<string, { css: string; tag: string }> = {
@@ -26,8 +25,9 @@ const categoryColorMap: Record<string, { css: string; tag: string }> = {
   Essential: { css: "level-essential", tag: "tag-essential" },
 };
 
-export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter, onExpand }: PromptCardProps) {
+export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
   const [copied, setCopied] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { togglePrompt, isSelected, canSelectMore } = useSelection();
@@ -88,13 +88,18 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
     onCategoryFilter?.(prompt.category);
   };
 
+  const handleToggleExpand = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpanded(prev => !prev);
+  };
+
   return (
     <div 
       ref={cardRef}
       className={`relative w-full ${isLocked ? 'opacity-60' : ''} ${selected ? 'scale-[1.02]' : ''}`}
     >
       <div 
-        className={`liquid-glass-card card-fixed-height ${selected ? 'ring-2 ring-white/30' : ''}`}
+        className={`liquid-glass-card ${expanded ? '' : 'card-fixed-height'} ${selected ? 'ring-2 ring-white/30' : ''}`}
       >
         {isLocked && (
           <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex flex-col items-center justify-center z-30 rounded-2xl">
@@ -147,16 +152,40 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
           </h3>
           <p className="font-body text-sm text-foreground/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>
 
+          {/* Inline expanded content */}
+          {expanded && (
+            <div className="mt-2 space-y-3 animate-in slide-in-from-top-2 duration-200">
+              {/* Prompt Example */}
+              <div className="p-3 rounded-xl bg-background/30 border border-border/50 relative">
+                <button
+                  onClick={handleCopy}
+                  className="absolute top-2 right-2 p-1.5 rounded-lg liquid-glass-button text-foreground/60 hover:text-foreground"
+                >
+                  {copied ? <Check className="h-3.5 w-3.5 text-green-400" /> : <Copy className="h-3.5 w-3.5" />}
+                </button>
+                <p className="font-mono text-xs text-foreground/90 leading-relaxed pr-8">{prompt.example}</p>
+              </div>
+
+              {/* Why This Is a Hack */}
+              <div className={`p-3 rounded-xl border bg-${categoryStyle.css}/10 border-${categoryStyle.css}/20`}>
+                <h4 className={`font-display text-sm font-semibold mb-1.5 text-${categoryStyle.css}`}>Why This Is a Hack</h4>
+                <p className="text-xs text-foreground/70 leading-relaxed">
+                  {prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}
+                </p>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
             <div className="flex items-center gap-2">
               {!isArchitect && isMastered && <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1"><Star className="h-3 w-3" />Mastered</Badge>}
               {!isArchitect && isRecommended && !isMastered && <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1"><Target className="h-3 w-3" />Recommended</Badge>}
             </div>
             <button 
-              onClick={() => onExpand?.()}
+              onClick={handleToggleExpand}
               className="flex items-center justify-center w-8 h-8 rounded-full liquid-glass-button text-foreground/70 hover:text-foreground"
             >
-              <ChevronDown className="h-4 w-4" />
+              {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
             </button>
           </div>
         </div>
