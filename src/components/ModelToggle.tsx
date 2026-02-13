@@ -35,10 +35,7 @@ const models: Record<ModelType, ModelConfig> = {
 export function ModelToggle() {
   const [selectedModel, setSelectedModel] = useState<ModelType>("flash");
   const [estimatedTokens] = useState(1000); // Placeholder for real token estimation
-  const [isMinimized, setIsMinimized] = useState(() => {
-    const saved = localStorage.getItem('modelToggleMinimized');
-    return saved ? JSON.parse(saved) : false;
-  });
+  const [isMinimized, setIsMinimized] = useState(true);
 
   useEffect(() => {
     localStorage.setItem('modelToggleMinimized', JSON.stringify(isMinimized));
@@ -50,17 +47,17 @@ export function ModelToggle() {
 
   return (
     <div 
-      className="fixed top-24 left-6 z-20 backdrop-blur-xl bg-white/5 border border-white/10 p-4 rounded-2xl transition-all duration-300"
+      className="fixed bottom-[195px] right-4 sm:right-6 z-25 backdrop-blur-xl bg-background/70 border border-border/30 p-3 rounded-2xl transition-all duration-300 shadow-lg"
       style={{ 
         willChange: 'transform',
         transform: 'translateZ(0)',
-        width: isMinimized ? '160px' : 'auto'
+        width: isMinimized ? '120px' : '260px'
       }}
     >
       <div className="flex flex-col gap-3">
         {/* Header */}
         <div className="flex items-center justify-between gap-3">
-          <h3 className="text-sm font-semibold text-white/90">LLM Model</h3>
+          <h3 className="text-sm font-semibold text-foreground/90">LLM Model</h3>
           <button
             onClick={() => setIsMinimized(!isMinimized)}
             className="p-1 rounded-lg bg-white/10 border border-white/20 hover:bg-white/15 transition-all"

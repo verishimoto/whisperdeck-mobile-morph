@@ -97,7 +97,7 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-background text-foreground ${!isArchitect ? 'pb-[360px]' : 'pb-24'}`}>
+    <div className={`min-h-screen bg-background text-foreground ${!isArchitect ? 'pb-[420px]' : 'pb-32'}`}>
       <ArchitectGate />
       
       <Header
@@ -119,7 +119,7 @@ const Index = () => {
 
       {/* View Mode Toggle - Hidden for Architects */}
       {!isArchitect && (
-        <div className="max-w-[1400px] mx-auto px-6 mb-6 flex justify-end gap-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 flex justify-end gap-2">
           <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
               <button
@@ -174,7 +174,7 @@ const Index = () => {
         </div>
       )}
       
-      <div className={`max-w-[1400px] mx-auto px-6 mb-12 ${isArchitect ? 'architect-mode' : ''}`}>
+      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 ${isArchitect ? 'architect-mode' : ''}`}>
         {/* Architect uses CSS masonry (PromptGrid) for variable heights, users use virtualized grid */}
         {isArchitect ? (
           <PromptGrid
