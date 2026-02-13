@@ -46,9 +46,24 @@ export function useFrameRateDetector({
   const rafIdRef = useRef<number | null>(null);
   const consecutiveReadingsRef = useRef<PerformanceLevel[]>([]);
 
-  const measureFrame = useCallback(() => {
-    frameCountRef.current++;
-    rafIdRef.current = requestAnimationFrame(measureFrame);
+  const stableRef = useRef(false);
+
+  const startMeasuring = useCallback(() => {
+    if (rafIdRef.current) return;
+    frameCountRef.current = 0;
+    lastTimeRef.current = performance.now();
+    const loop = () => {
+      frameCountRef.current++;
+      rafIdRef.current = requestAnimationFrame(loop);
+    };
+    rafIdRef.current = requestAnimationFrame(loop);
+  }, []);
+
+  const stopMeasuring = useCallback(() => {
+    if (rafIdRef.current) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
   }, []);
 
   useEffect(() => {
@@ -57,24 +72,19 @@ export function useFrameRateDetector({
       return;
     }
 
-    // Start measuring frames
-    frameCountRef.current = 0;
-    lastTimeRef.current = performance.now();
-    rafIdRef.current = requestAnimationFrame(measureFrame);
+    stableRef.current = false;
+    startMeasuring();
 
-    // Calculate FPS periodically
     const intervalId = setInterval(() => {
       const now = performance.now();
       const elapsed = now - lastTimeRef.current;
       const fps = Math.round((frameCountRef.current / elapsed) * 1000);
       
-      // Reset counters
       frameCountRef.current = 0;
       lastTimeRef.current = now;
 
       const level = getPerformanceLevel(fps);
       
-      // Track consecutive readings for stability
       consecutiveReadingsRef.current.push(level);
       if (consecutiveReadingsRef.current.length > stabilityThreshold) {
         consecutiveReadingsRef.current.shift();
@@ -83,32 +93,34 @@ export function useFrameRateDetector({
       const isStable = consecutiveReadingsRef.current.length >= stabilityThreshold &&
         consecutiveReadingsRef.current.every(l => l === level);
 
-      setResult({
-        fps,
-        performanceLevel: level,
-        isStable,
-      });
+      setResult({ fps, performanceLevel: level, isStable });
+
+      // Stop RAF loop once stable to save CPU
+      if (isStable && !stableRef.current) {
+        stableRef.current = true;
+        stopMeasuring();
+      }
     }, sampleInterval);
 
     return () => {
-      if (rafIdRef.current) {
-        cancelAnimationFrame(rafIdRef.current);
-      }
+      stopMeasuring();
       clearInterval(intervalId);
     };
-  }, [enabled, sampleInterval, measureFrame, stabilityThreshold]);
+  }, [enabled, sampleInterval, startMeasuring, stopMeasuring, stabilityThreshold]);
 
   // Re-check at longer intervals to catch performance recovery
   useEffect(() => {
     if (!enabled) return;
 
     const checkId = setInterval(() => {
-      // Reset stability tracking to allow recovery detection
+      // Reset stability tracking and restart measuring
       consecutiveReadingsRef.current = [];
+      stableRef.current = false;
+      startMeasuring();
     }, checkInterval);
 
     return () => clearInterval(checkId);
-  }, [enabled, checkInterval]);
+  }, [enabled, checkInterval, startMeasuring]);
 
   return result;
 }

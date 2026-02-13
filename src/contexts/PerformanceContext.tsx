@@ -62,7 +62,8 @@ export function PerformanceProvider({ children }: { children: ReactNode }) {
     
     // Remove all performance classes first
     root.classList.remove(
-      "performance-mode", 
+      "performance-mode",
+      "performance-mode-high",
       "performance-level-high", 
       "performance-level-medium", 
       "performance-level-low", 
@@ -71,6 +72,9 @@ export function PerformanceProvider({ children }: { children: ReactNode }) {
     
     if (state.mode === "performance") {
       root.classList.add("performance-mode");
+      if (performanceLevel === "high") {
+        root.classList.add("performance-mode-high");
+      }
     }
     
     // Add level-specific class for graduated effects
