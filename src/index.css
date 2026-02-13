@@ -350,7 +350,6 @@
 /* Fixed height cards - collapsed state only */
 .card-fixed-height {
   min-height: 280px;
-  max-height: 280px;
   overflow: hidden;
 }
 
@@ -810,10 +809,11 @@ input:focus-visible {
   animation: button-glow 3s ease-in-out infinite;
 }
 
-/* ===== PROMPT GRID - CSS Grid with fixed heights ===== */
+/* ===== PROMPT GRID - CSS Grid with auto row heights ===== */
 .prompt-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: auto;
   gap: 1.5rem;
 }
 
