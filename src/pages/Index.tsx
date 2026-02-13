@@ -2,7 +2,7 @@ import { useState, useMemo, useRef } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
-import { VirtualizedPromptGrid } from "@/components/VirtualizedPromptGrid";
+
 import { PromptCarousel } from "@/components/PromptCarousel";
 import { PromptTree } from "@/components/PromptTree";
 import { PromptComposer } from "@/components/PromptComposer";
