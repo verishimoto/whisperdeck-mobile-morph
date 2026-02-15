@@ -12,7 +12,7 @@ interface PromptGridProps {
 
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
-  const [renderedCount, setRenderedCount] = useState(20); // Lazy load: start with 20
+  const [renderedCount, setRenderedCount] = useState(40); // Lazy load: start with 40
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   
@@ -43,7 +43,7 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
     const loadMoreObserver = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
-          setRenderedCount(prev => Math.min(prev + 20, prompts.length));
+          setRenderedCount(prev => Math.min(prev + 40, prompts.length));
         }
       },
       { rootMargin: '400px 0px' }
@@ -55,7 +55,7 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
 
   // Reset rendered count when prompts change (filter/search)
   useEffect(() => {
-    setRenderedCount(20);
+    setRenderedCount(40);
     setVisibleCards(new Set());
   }, [prompts]);
 
@@ -100,7 +100,17 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
         })}
       </div>
 
-      {/* Lazy load sentinel */}
+      {/* Load All button + Lazy load sentinel */}
+      {renderedCount < prompts.length && (
+        <div className="flex justify-center mt-6 mb-2">
+          <button
+            onClick={() => setRenderedCount(prompts.length)}
+            className="px-6 py-2.5 text-sm font-light text-foreground/60 hover:text-foreground backdrop-blur-xl border border-white/10 hover:border-white/30 rounded-lg transition-all"
+          >
+            Load all {prompts.length - renderedCount} remaining prompts
+          </button>
+        </div>
+      )}
       {renderedCount < prompts.length && (
         <div ref={sentinelRef} className="h-8 w-full" />
       )}
