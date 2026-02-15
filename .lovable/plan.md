@@ -1,46 +1,53 @@
 
 
-## Restore Column-Based Masonry Layout
+# Improve Lazy Loading: Larger Batches + "Load All" Button
 
-### Problem
-The current CSS Grid layout (`grid-template-columns: repeat(4, 1fr)` + `grid-auto-rows: auto`) causes the entire row to grow when one card expands. In the previous version, CSS Columns were used, which naturally flow cards into independent columns -- expanding a card only pushes down cards below it in the same column.
+## Problem
+With 275 cards and a batch size of 20, users must scroll through ~14 load cycles to see everything. This is tedious for power users doing audits or searches.
 
-### Solution
-Replace the CSS Grid with `CSS columns` (multi-column layout) for `.prompt-grid`. This restores the true masonry behavior where each column is independent.
+## Changes
 
-### Changes
+### File: `src/components/PromptGrid.tsx`
 
-**File: `src/index.css`** (lines ~811-817)
+1. **Increase batch size from 20 to 40** — cuts scroll cycles in half (7 instead of 14)
+   - Change initial `renderedCount` from `useState(20)` to `useState(40)`
+   - Change the increment in the IntersectionObserver callback from `prev + 20` to `prev + 40`
+   - Change the reset value in the filter effect from `setRenderedCount(20)` to `setRenderedCount(40)`
 
-Replace the grid definition:
-```css
-/* Before */
-.prompt-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-auto-rows: auto;
-  gap: 1.5rem;
-}
+2. **Add a "Load All" button** when there are still unloaded cards
+   - Place it just above the lazy-load sentinel div
+   - Clicking it sets `renderedCount` to `prompts.length`
+   - Style: subtle ghost button matching the existing glass aesthetic (`backdrop-blur`, border, muted text)
+   - Shows remaining count: e.g. "Load all 235 remaining prompts"
+   - Only visible when `renderedCount < prompts.length`
 
-/* After */
-.prompt-grid {
-  columns: 4;
-  column-gap: 1.5rem;
-}
+### Technical Detail
+
+```tsx
+// Updated state and observer
+const [renderedCount, setRenderedCount] = useState(40);
+
+// In load-more observer callback
+setRenderedCount(prev => Math.min(prev + 40, prompts.length));
+
+// In reset effect
+setRenderedCount(40);
+
+// New "Load All" button (placed before the sentinel)
+{renderedCount < prompts.length && (
+  <div className="flex justify-center mt-6 mb-2">
+    <button
+      onClick={() => setRenderedCount(prompts.length)}
+      className="px-6 py-2.5 text-sm font-light text-foreground/60 
+                 hover:text-foreground backdrop-blur-xl border 
+                 border-white/10 hover:border-white/30 
+                 rounded-lg transition-all"
+    >
+      Load all {prompts.length - renderedCount} remaining prompts
+    </button>
+  </div>
+)}
 ```
 
-Update `.masonry-item` to prevent cards from breaking across columns:
-```css
-.masonry-item {
-  break-inside: avoid;
-  margin-bottom: 1.5rem;
-  /* existing animation styles remain */
-}
-```
+No other files need changes.
 
-Update responsive breakpoints similarly:
-- 1280px: `columns: 3`
-- 1024px: `columns: 2`
-- 640px: `columns: 1`
-
-This is a CSS-only change -- no component files need modification. Card expansion will naturally push only same-column cards downward.
