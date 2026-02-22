@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { HackPrompt } from '@/types';
+import { useArchitect } from './ArchitectContext';
 
 interface SelectionContextType {
   selectedPrompts: HackPrompt[];
@@ -15,9 +16,10 @@ interface SelectionContextType {
 const SelectionContext = createContext<SelectionContextType | undefined>(undefined);
 
 export function SelectionProvider({ children }: { children: ReactNode }) {
+  const { isArchitect } = useArchitect();
   const [selectedPrompts, setSelectedPrompts] = useState<HackPrompt[]>([]);
   const [copyCount, setCopyCount] = useState(0);
-  const MAX_SELECTION = 5;
+  const MAX_SELECTION = isArchitect ? Infinity : 5;
   const MAX_COPIES = 3;
 
   const togglePrompt = (prompt: HackPrompt) => {
