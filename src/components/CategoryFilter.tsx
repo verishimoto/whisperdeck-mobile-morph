@@ -39,10 +39,10 @@ export function CategoryFilter({
   const { favoritesCount } = useFavorites();
 
   return (
-    <div className="sticky top-[72px] z-40 mb-8 px-4 py-4 liquid-glass-header border-b-0">
-      <div className="flex items-center max-w-7xl mx-auto px-0 sm:px-2 lg:px-4">
+    <div className="sticky top-[72px] z-40 mb-8 px-4 py-3 sm:py-4 liquid-glass-header border-b-0">
+      <div className="flex flex-col sm:flex-row sm:items-center max-w-7xl mx-auto px-0 sm:px-2 lg:px-4 gap-3 sm:gap-0">
         {/* Left: Category buttons */}
-        <div className="flex items-center gap-2 flex-wrap flex-1">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap flex-1 overflow-x-auto scrollbar-hide">
           {/* All Button */}
           <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
@@ -147,9 +147,9 @@ export function CategoryFilter({
         </div>
 
         {/* Right: Search and Sort */}
-        <div className="flex items-center gap-2 ml-6">
+        <div className="flex items-center gap-2 sm:ml-6">
           {/* Search Bar */}
-          <div className="relative w-64">
+          <div className="relative flex-1 sm:flex-none sm:w-64">
             <input
               type="text"
               placeholder="Search..."
