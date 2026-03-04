@@ -22,6 +22,7 @@ const categoryColorMap: Record<string, { css: string; tag: string }> = {
   Analysis: { css: "level-analysis", tag: "tag-analysis" },
   Creativity: { css: "level-creativity", tag: "tag-creativity" },
   Psychology: { css: "level-psychology", tag: "tag-psychology" },
+  Design: { css: "level-design", tag: "tag-design" },
   Essential: { css: "level-essential", tag: "tag-essential" },
 };
 
@@ -119,7 +120,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
             <div className="flex items-center gap-1.5">
               <button 
                 onClick={handleFavorite} 
-                className={`p-2 rounded-lg transition-all duration-200 ${
+                className={`p-1.5 rounded-lg transition-all duration-200 ${
                   favorited 
                     ? 'text-pink-400 bg-pink-500/20 border border-pink-500/30 favorite-pulse' 
                     : 'liquid-glass-button text-foreground/60 hover:text-pink-400'
@@ -131,14 +132,14 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               <button 
                 onClick={handleCopy} 
                 disabled={isLocked} 
-                className={`p-2 rounded-lg transition-all duration-200 liquid-glass-button text-foreground/80 ${isLocked ? 'cursor-not-allowed' : ''}`}
+                className={`p-1.5 rounded-lg transition-all duration-200 liquid-glass-button text-foreground/80 ${isLocked ? 'cursor-not-allowed' : ''}`}
                 title="Copy prompt"
               >
                 {copied ? <Check className="h-4 w-4 text-level-advanced" /> : <Copy className="h-4 w-4" />}
               </button>
               <button 
                 onClick={handleSelect} 
-                className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? `bg-${categoryStyle.css}/20 text-${categoryStyle.css} border border-${categoryStyle.css}/50` : 'liquid-glass-button text-foreground/50 hover:text-foreground/80'}`}
+                className={`p-1.5 rounded-lg transition-all duration-200 ${selected ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/50' : 'liquid-glass-button text-foreground/50 hover:text-foreground/80'}`}
                 title={selected ? "Remove from selection" : "Add to chain"}
               >
                 {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}
@@ -156,7 +157,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
           {expanded && (
             <div className="mt-2 space-y-3 animate-in slide-in-from-top-2 duration-200">
               {/* Prompt Example */}
-              <div className="p-3 rounded-xl bg-background/30 border border-border/50 relative">
+              <div className="p-3 rounded-xl bg-background/30 border border-foreground/[0.08] relative">
                 <button
                   onClick={handleCopy}
                   className="absolute top-2 right-2 p-1.5 rounded-lg liquid-glass-button text-foreground/60 hover:text-foreground"
@@ -167,7 +168,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               </div>
 
               {/* Why This Is a Hack */}
-              <div className={`p-3 rounded-xl border bg-${categoryStyle.css}/10 border-${categoryStyle.css}/20`}>
+              <div className={`p-3 rounded-xl bg-${categoryStyle.css}/10 border border-${categoryStyle.css}/15`}>
                 <h4 className={`font-display text-sm font-semibold mb-1.5 text-${categoryStyle.css}`}>Why This Is a Hack</h4>
                 <p className="text-xs text-foreground/70 leading-relaxed">
                   {prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}
@@ -176,7 +177,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
             </div>
           )}
 
-          <div className="flex items-center justify-between mt-auto pt-4 border-t border-border/50">
+          <div className="flex items-center justify-between mt-auto pt-4">
             <div className="flex items-center gap-2">
               {!isArchitect && isMastered && <Badge className="bg-yellow-500/20 border-yellow-500/30 text-yellow-400 text-xs px-2 py-0.5 flex items-center gap-1"><Star className="h-3 w-3" />Mastered</Badge>}
               {!isArchitect && isRecommended && !isMastered && <Badge className="bg-purple-500/20 border-purple-500/30 text-purple-400 text-xs px-2 py-0.5 flex items-center gap-1"><Target className="h-3 w-3" />Recommended</Badge>}

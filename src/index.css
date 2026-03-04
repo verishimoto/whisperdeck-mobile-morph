@@ -47,6 +47,7 @@
     --level-analysis: 210 98% 82%;
     --level-creativity: 290 95% 85%;
     --level-psychology: 340 95% 85%;
+    --level-design: 30 90% 80%;
     --level-essential: 200 95% 78%;
   }
 
@@ -93,6 +94,7 @@
     --level-analysis: 210 90% 52%;
     --level-creativity: 290 85% 58%;
     --level-psychology: 340 85% 58%;
+    --level-design: 30 80% 50%;
     --level-essential: 200 85% 50%;
   }
 }

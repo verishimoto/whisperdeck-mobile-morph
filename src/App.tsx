@@ -16,6 +16,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import Templates from "./pages/Templates";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,8 @@ const App = () => (
                           <Route path="/" element={<Index />} />
                           <Route path="/login" element={<Login />} />
                           <Route path="/auth" element={<Auth />} />
+                          <Route path="/templates" element={<Templates />} />
+                          <Route path="*" element={<NotFound />} />
                           <Route path="*" element={<NotFound />} />
                         </Routes>
                       </BrowserRouter>

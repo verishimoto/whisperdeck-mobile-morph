@@ -1,15 +1,17 @@
 import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSelection } from "@/contexts/SelectionContext";
 import { useGamification } from "@/contexts/GamificationContext";
 import { useArchitect } from "@/contexts/ArchitectContext";
 import { HackPrompt } from "@/types";
-import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown, Wand2, FolderOpen } from "lucide-react";
+import { X, Play, Save, RotateCcw, ArrowRight, Zap, ChevronUp, ChevronDown, Wand2, FolderOpen, Award, Brain, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { ChainTemplatesPanel } from "./ChainTemplatesPanel";
 import { SaveTemplateDialog } from "./SaveTemplateDialog";
+import { Progress } from "@/components/ui/progress";
 
 interface ChainNode {
   prompt: HackPrompt;
@@ -21,6 +23,7 @@ export function ChainBuilder() {
   const { buildChain } = useGamification();
   const { isArchitect } = useArchitect();
   const { toast } = useToast();
+  const navigate = useNavigate();
   
   // Architects have unlimited nodes, users have limit of 10
   const maxNodes = isArchitect ? Infinity : 10;
@@ -35,6 +38,9 @@ export function ChainBuilder() {
   });
   const [showTemplates, setShowTemplates] = useState(false);
   const [showSaveDialog, setShowSaveDialog] = useState(false);
+  const [showProgress, setShowProgress] = useState(false);
+  const [showModel, setShowModel] = useState(false);
+  const [selectedModel, setSelectedModel] = useState<'flash' | 'pro'>('flash');
 
   useEffect(() => {
     localStorage.setItem('chainBuilderCollapsed', JSON.stringify(isCollapsed));
@@ -161,21 +167,81 @@ export function ChainBuilder() {
       "Analysis": "rgba(245, 158, 11, 0.6)",
       "Creativity": "rgba(244, 63, 94, 0.6)",
       "Psychology": "rgba(168, 85, 247, 0.6)",
+      "Design": "rgba(245, 180, 100, 0.6)",
       "Essential": "rgba(6, 182, 212, 0.6)"
     };
     return colors[category as keyof typeof colors] || "rgba(255, 255, 255, 0.3)";
   };
 
+  const { dailyCopiesRemaining, totalPromptsUsed, chainsBuilt, currentLevel, getTimeUntilReset } = useGamification();
+
+  const levelNames = ['Beginner', 'Intermediate', 'Advanced', 'Expert', 'Master'];
+  const levelColors = ['hsl(var(--level-essential))', 'hsl(var(--level-strategy))', 'hsl(var(--level-advanced))', 'hsl(var(--level-master))', 'hsl(var(--level-ultra))'];
+  const copyPercentage = (dailyCopiesRemaining / 5) * 100;
+
+  const InlineProgressPanel = () => (
+    <div className="mt-3 p-4 rounded-xl bg-white/5 border border-white/10 animate-in slide-in-from-top-2 duration-200">
+      <div className="flex items-center gap-6 flex-wrap">
+        <div className="flex-1 min-w-[140px]">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs text-white/60">Daily Copies</span>
+            <span className="text-xs font-semibold text-white/90">{dailyCopiesRemaining}/5</span>
+          </div>
+          <Progress value={copyPercentage} className="h-1.5" />
+          {dailyCopiesRemaining === 0 && <p className="text-xs text-destructive mt-1">Resets: {getTimeUntilReset()}</p>}
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-white/60">Level</span>
+          <span className="text-xs font-bold" style={{ color: levelColors[currentLevel] }}>{levelNames[currentLevel]}</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <div className="text-center">
+            <p className="text-lg font-bold text-white/90">{totalPromptsUsed.size}</p>
+            <p className="text-[10px] text-white/40">Used</p>
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-bold text-white/90">{chainsBuilt}</p>
+            <p className="text-[10px] text-white/40">Chains</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const InlineModelPanel = ({ selectedModel: model, setSelectedModel: setModel }: { selectedModel: 'flash' | 'pro'; setSelectedModel: (m: 'flash' | 'pro') => void }) => (
+    <div className="mt-3 p-4 rounded-xl bg-white/5 border border-white/10 animate-in slide-in-from-top-2 duration-200">
+      <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex gap-2">
+          <button
+            onClick={() => setModel('flash')}
+            className={`px-4 py-2 rounded-lg border text-xs font-medium transition-all ${model === 'flash' ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-400' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'}`}
+          >
+            <Zap className="h-3.5 w-3.5 inline mr-1.5" />Flash
+          </button>
+          <button
+            onClick={() => setModel('pro')}
+            className={`px-4 py-2 rounded-lg border text-xs font-medium transition-all ${model === 'pro' ? 'bg-purple-500/20 border-purple-500/40 text-purple-400' : 'bg-white/5 border-white/10 text-white/60 hover:bg-white/10'}`}
+          >
+            <Brain className="h-3.5 w-3.5 inline mr-1.5" />Pro
+          </button>
+        </div>
+        <div className="text-xs text-white/60">
+          {model === 'flash' ? 'Low latency, cost-optimized • ~0.3s' : 'Complex reasoning, Socratic depth • ~1.2s'}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div 
       className="fixed inset-x-0 bottom-0 z-30 backdrop-blur-xl bg-black/60 border-t border-white/10 transition-all duration-300"
       style={{
-        height: isCollapsed ? '48px' : (chainNodes.length > 0 ? '280px' : '180px'),
+        height: isCollapsed ? '48px' : (showProgress || showModel ? '360px' : chainNodes.length > 0 ? '300px' : '200px'),
         willChange: 'transform',
         transform: 'translateZ(0)'
       }}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 h-full flex flex-col">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 py-4 h-full flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -213,11 +279,44 @@ export function ChainBuilder() {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Gamification tabs - non-architect only */}
+            {!isArchitect && (
+              <>
+                <Tooltip delayDuration={500}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => { setShowProgress(!showProgress); setShowModel(false); }}
+                      size="sm"
+                      variant="outline"
+                      className={`bg-white/5 border-white/20 hover:bg-white/10 ${showProgress ? 'text-emerald-400 border-emerald-500/40' : 'text-white/60'}`}
+                    >
+                      <Award className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Progress Dashboard</TooltipContent>
+                </Tooltip>
+                <Tooltip delayDuration={500}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      onClick={() => { setShowModel(!showModel); setShowProgress(false); }}
+                      size="sm"
+                      variant="outline"
+                      className={`bg-white/5 border-white/20 hover:bg-white/10 ${showModel ? 'text-purple-400 border-purple-500/40' : 'text-white/60'}`}
+                    >
+                      <Brain className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>LLM Model</TooltipContent>
+                </Tooltip>
+                <div className="w-px h-6 bg-white/10 mx-1" />
+              </>
+            )}
+
             {/* Templates Button */}
             <Tooltip delayDuration={500}>
               <TooltipTrigger asChild>
                 <Button
-                  onClick={() => setShowTemplates(true)}
+                  onClick={() => navigate('/templates')}
                   size="sm"
                   variant="outline"
                   className="bg-white/5 border-white/20 text-white/80 hover:bg-white/10"
@@ -277,12 +376,20 @@ export function ChainBuilder() {
           </div>
         </div>
 
+        {/* Inline Gamification Panels */}
+        {!isCollapsed && !isArchitect && showProgress && (
+          <InlineProgressPanel />
+        )}
+        {!isCollapsed && !isArchitect && showModel && (
+          <InlineModelPanel selectedModel={selectedModel} setSelectedModel={setSelectedModel} />
+        )}
+
         {/* Canvas */}
         {!isCollapsed && (
           <>
             <div
               ref={canvasRef}
-              className="flex-1 overflow-x-auto overflow-y-hidden mt-3"
+              className="flex-1 overflow-x-auto overflow-y-hidden mt-4 px-2"
             >
           {chainNodes.length === 0 ? (
             <div className="h-full flex items-center justify-center">
@@ -296,9 +403,9 @@ export function ChainBuilder() {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-3 h-full pb-4">
+            <div className="flex items-center gap-4 h-full pb-4 px-2">
               {chainNodes.map((node, index) => (
-                <div key={`${node.prompt.id}-${index}`} className="flex items-center gap-2">
+                <div key={`${node.prompt.id}-${index}`} className="flex items-center gap-3">
                   {/* Chain Node */}
                   <div
                     draggable
@@ -306,15 +413,15 @@ export function ChainBuilder() {
                     onDragOver={(e) => handleDragOver(e, index)}
                     onDrop={(e) => handleDrop(e, index)}
                     onDragEnd={handleDragEnd}
-                    className={`relative backdrop-blur-xl border rounded-xl p-4 cursor-move transition-all ${
+                    className={`relative backdrop-blur-xl border rounded-2xl p-5 cursor-move transition-all ${
                       dragOverIndex === index
                         ? 'ring-2 ring-white/40 scale-105'
                         : 'hover:scale-105'
                     }`}
                     style={{
-                      minWidth: '220px',
-                      maxWidth: '220px',
-                      height: '140px',
+                      minWidth: '240px',
+                      maxWidth: '240px',
+                      height: '150px',
                       background: `linear-gradient(135deg, ${getCategoryColor(node.prompt.category)} 0%, rgba(0, 0, 0, 0.3) 100%)`,
                       borderColor: getCategoryColor(node.prompt.category),
                       willChange: 'transform',
