@@ -6,8 +6,6 @@ import { PromptGrid } from "@/components/PromptGrid";
 import { PromptCarousel } from "@/components/PromptCarousel";
 import { PromptTree } from "@/components/PromptTree";
 import { PromptComposer } from "@/components/PromptComposer";
-import { ProgressDashboard } from "@/components/ProgressDashboard";
-import { ModelToggle } from "@/components/ModelToggle";
 import { ChainBuilder } from "@/components/ChainBuilder";
 import { ArchitectGate } from "@/components/ArchitectGate";
 import { useArchitect } from "@/contexts/ArchitectContext";
@@ -197,14 +195,8 @@ const Index = () => {
         )}
       </div>
 
-      {/* User-only gamification features - Hidden for Architects */}
-      {!isArchitect && (
-        <>
-          <PromptComposer />
-          <ProgressDashboard />
-          <ModelToggle />
-        </>
-      )}
+      {/* Prompt Composer - User only */}
+      {!isArchitect && <PromptComposer />}
 
       {/* Chain Builder - Available to ALL users including Architects */}
       <ChainBuilder />

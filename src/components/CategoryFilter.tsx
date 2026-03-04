@@ -23,6 +23,7 @@ const categoryColorMap: Record<string, { var: string; hsl: string }> = {
   Analysis: { var: 'level-analysis', hsl: '210 98% 82%' },
   Creativity: { var: 'level-creativity', hsl: '290 95% 85%' },
   Psychology: { var: 'level-psychology', hsl: '340 95% 85%' },
+  Design: { var: 'level-design', hsl: '30 90% 80%' },
 };
 
 export function CategoryFilter({ 
@@ -35,7 +36,7 @@ export function CategoryFilter({
   showFavorites = false,
   onFavoritesToggle 
 }: CategoryFilterProps) {
-  const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology'];
+  const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology', 'Design'];
   const { favoritesCount } = useFavorites();
 
   return (
