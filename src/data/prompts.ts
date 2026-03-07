@@ -77,7 +77,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 9,
     title: "Epistemic Uncertainty Mapping",
     description: "Map what you know, don't know, and can't know",
-    category: "Analysis",
+    category: "Advanced",
     example: "For [TOPIC], create three maps: Known knowns, Known unknowns, Unknown unknowns. Explore each.",
     whyHack: "Makes the AI explicitly acknowledge confidence levels and knowledge gaps, preventing overconfident answers and highlighting where more research is needed.",
     score: 91
@@ -104,7 +104,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 12,
     title: "Counterfactual Reasoning",
     description: "Explore alternative histories and their implications",
-    category: "Strategy",
+    category: "Psychology",
     example: "If [KEY_EVENT] never happened, how would [CURRENT_SITUATION] be different? Trace the implications.",
     whyHack: "Reveals which factors truly matter by removing them - what actually changes shows you what was really important versus coincidental.",
     score: 88
@@ -122,7 +122,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 14,
     title: "Perspective Multiplication",
     description: "View problems through unlimited viewpoints",
-    category: "Analysis",
+    category: "Creativity",
     example: "Analyze [SITUATION] from perspectives of: child, elder, alien, AI, medieval person, future human.",
     whyHack: "Each perspective is a lens that highlights different aspects - the alien sees what's strange about your assumptions, the child sees what's overcomplicated.",
     score: 86
@@ -194,7 +194,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 22,
     title: "Paradox Embracement",
     description: "Use contradictions as sources of insight",
-    category: "Analysis",
+    category: "Advanced",
     example: "Find 5 paradoxes within [CONCEPT] and explain how each paradox reveals deeper truth.",
     whyHack: "Paradoxes point to incomplete understanding - resolving them often leads to breakthrough insights that dissolve the apparent contradiction.",
     score: 78
@@ -221,7 +221,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 25,
     title: "Granularity Shifting",
     description: "Zoom between micro and macro perspectives dynamically",
-    category: "Analysis",
+    category: "Advanced",
     example: "Analyze [ISSUE] at molecular, individual, group, societal, and cosmic levels. Find patterns.",
     whyHack: "Different scales reveal different patterns - what looks random at one level shows clear structure at another, and vice versa.",
     score: 75
@@ -266,7 +266,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 30,
     title: "Fractal Thinking",
     description: "Apply self-similar patterns at multiple scales",
-    category: "Strategy",
+    category: "Creativity",
     example: "Find the fractal pattern in [SYSTEM] and apply it to predict behavior at 3 different scales.",
     whyHack: "Many systems are self-similar across scales - understanding the pattern once lets you predict behavior at any level from atoms to galaxies.",
     score: 70
@@ -329,7 +329,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 37,
     title: "Contextual Reframing",
     description: "Change context to reveal hidden aspects",
-    category: "Analysis",
+    category: "Creativity",
     example: "Reframe [SITUATION] in contexts of: game, war, dance, garden, machine. What new insights emerge?",
     whyHack: "Same facts, different frame yields different insights - the game lens sees strategies, the garden lens sees growth patterns.",
     score: 63
@@ -347,7 +347,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 39,
     title: "Emergence Detection",
     description: "Identify properties that arise from component interactions",
-    category: "Analysis",
+    category: "Advanced",
     example: "In [SYSTEM], identify 3 emergent properties that don't exist in individual components.",
     whyHack: "The whole is more than the sum of its parts - emergent properties only appear at the system level and can't be predicted from components alone.",
     score: 61
@@ -374,7 +374,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 42,
     title: "Probabilistic Reasoning",
     description: "Think in probabilities rather than certainties",
-    category: "Strategy",
+    category: "Psychology",
     example: "For [PREDICTION], provide probability distributions for 5 different outcomes with reasoning.",
     whyHack: "Black-and-white thinking misses uncertainty - probability thinking captures the actual landscape of possible futures and their likelihoods.",
     score: 58
@@ -419,7 +419,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 47,
     title: "Hierarchy Inversion",
     description: "Flip power structures to reveal hidden dynamics",
-    category: "Analysis",
+    category: "Creativity",
     example: "In [ORGANIZATION], invert the hierarchy. What would happen if [LOWEST_LEVEL] made decisions?",
     whyHack: "Hierarchies shape thinking in invisible ways - inverting them exposes assumptions about power, competence, and what decisions require authority.",
     score: 53
@@ -437,7 +437,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 49,
     title: "Multi-Modal Integration",
     description: "Combine different types of information processing",
-    category: "Strategy",
+    category: "Advanced",
     example: "Process [INFORMATION] using visual, auditory, kinesthetic, and logical modes. Integrate insights.",
     whyHack: "Different thinking modes notice different things - visual thinkers catch patterns logical thinkers miss, and vice versa.",
     score: 51
@@ -446,7 +446,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 50,
     title: "Resonance Frequency Finding",
     description: "Find the natural rhythm or frequency of systems",
-    category: "Analysis",
+    category: "Advanced",
     example: "What's the natural resonance frequency of [TEAM/SYSTEM]? How can you work with it?",
     whyHack: "Every system has natural rhythms - working with them multiplies your impact, while fighting them wastes energy on invisible friction.",
     score: 50
@@ -545,7 +545,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 61,
     title: "Scale Invariance Testing",
     description: "Check if patterns hold across different scales",
-    category: "Analysis",
+    category: "Advanced",
     example: "Does the pattern you see in [MICRO_LEVEL] also appear at [MACRO_LEVEL]? Verify invariance.",
     whyHack: "If a pattern appears at multiple scales, it's probably fundamental - scale-invariant patterns reveal deep structural truths about how systems work.",
     score: 39
@@ -572,7 +572,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 64,
     title: "Attractor Landscape Mapping",
     description: "Map the basins of attraction in a system",
-    category: "Strategy",
+    category: "Advanced",
     example: "For [SYSTEM], map attractors: What states does it naturally move toward? How deep are basins?",
     whyHack: "Systems naturally flow toward attractor states - understanding this landscape shows which changes will stick and which will get pulled back to old patterns.",
     score: 36
@@ -590,7 +590,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 66,
     title: "Phase Transition Recognition",
     description: "Identify when systems change fundamental states",
-    category: "Strategy",
+    category: "Creativity",
     example: "Is [SYSTEM] approaching a phase transition? What would the new phase look like?",
     whyHack: "Like water becoming ice, systems sometimes fundamentally transform - recognizing approaching transitions lets you prepare for or trigger discontinuous change.",
     score: 34
@@ -599,7 +599,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 67,
     title: "Symmetry Breaking Analysis",
     description: "Find how symmetries break to create complexity",
-    category: "Analysis",
+    category: "Advanced",
     example: "In [SYSTEM], identify symmetries. How does breaking each symmetry create new complexity?",
     whyHack: "Perfect symmetry is simple but useless - strategic symmetry breaking creates useful complexity and differentiation that enables function.",
     score: 33
@@ -644,7 +644,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 72,
     title: "Paradox Resolution",
     description: "Find higher-order solutions to apparent contradictions",
-    category: "Strategy",
+    category: "Advanced",
     example: "For paradox in [SITUATION], find the higher-order principle that resolves the contradiction.",
     whyHack: "Paradoxes reveal incomplete thinking - resolution comes from finding the higher level where the contradiction dissolves and both sides are true.",
     score: 28
@@ -653,7 +653,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 73,
     title: "Emergence Amplification",
     description: "Design conditions for desired emergent properties",
-    category: "Strategy",
+    category: "Creativity",
     example: "What conditions would amplify [DESIRED_EMERGENCE] in [SYSTEM]? Design the environment.",
     whyHack: "You can't control emergent properties directly, only create conditions that make them more likely - design the environment and let emergence do the work.",
     score: 27
@@ -662,7 +662,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 74,
     title: "Invariant Discovery",
     description: "Find what remains constant despite surface changes",
-    category: "Analysis",
+    category: "Advanced",
     example: "Across all variations of [PHENOMENON], what invariants remain constant? What do they reveal?",
     whyHack: "Invariants are the deep structure - finding what doesn't change reveals the fundamental principles that generate all the surface variation.",
     score: 26
@@ -671,7 +671,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 75,
     title: "Adaptive Capacity Building",
     description: "Enhance system ability to respond to change",
-    category: "Strategy",
+    category: "Creativity",
     example: "How can [SYSTEM] develop greater adaptive capacity? Design feedback and learning mechanisms.",
     whyHack: "The future is unpredictable - building adaptive capacity is more valuable than planning for specific scenarios because it handles any change.",
     score: 25
@@ -680,7 +680,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 76,
     title: "Cross-Scale Interaction Mapping",
     description: "Map how different scales influence each other",
-    category: "Analysis",
+    category: "Advanced",
     example: "Map interactions between micro, meso, and macro scales in [SYSTEM]. Which interactions dominate?",
     whyHack: "Scales interact - micro fluctuations can trigger macro changes, and macro constraints shape micro behavior in ways that single-scale thinking misses.",
     score: 24
@@ -707,7 +707,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 79,
     title: "Dynamic Stability Analysis",
     description: "Understand how systems maintain stability through change",
-    category: "Analysis",
+    category: "Advanced",
     example: "How does [SYSTEM] maintain dynamic stability? What perturbations could destabilize it?",
     whyHack: "Stability through change is different from static stability - understanding dynamic stability reveals what keeps systems resilient despite constant perturbations.",
     score: 21
@@ -716,7 +716,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 80,
     title: "Autopoietic Design",
     description: "Create self-maintaining and self-reproducing systems",
-    category: "Strategy",
+    category: "Creativity",
     example: "Design [SYSTEM] to be autopoietic: self-maintaining, self-reproducing, autonomous.",
     whyHack: "Autopoietic systems don't need external management - they maintain and reproduce themselves, creating sustainability without constant intervention.",
     score: 20
@@ -752,7 +752,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 84,
     title: "Dimensional Transcendence",
     description: "Think beyond normal dimensional constraints",
-    category: "Creativity",
+    category: "Advanced",
     example: "If [PROBLEM] existed in 4D space, how would solutions change? What new possibilities emerge?",
     whyHack: "Adding dimensions reveals solutions invisible in lower dimensions - 3D thinking solves problems that 2D thinking declares impossible.",
     score: 16
@@ -761,7 +761,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 85,
     title: "Quantum Superposition Thinking",
     description: "Hold multiple contradictory states simultaneously",
-    category: "Creativity",
+    category: "Advanced",
     example: "Consider [DECISION] in superposition of all possible states until observation collapses it.",
     whyHack: "Premature decision collapse limits options - keeping possibilities in superposition until the last moment preserves maximum flexibility.",
     score: 15
@@ -779,7 +779,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 87,
     title: "Temporal Compression",
     description: "Experience extended time periods in compressed form",
-    category: "Strategy",
+    category: "Advanced",
     example: "Compress a lifetime of experience with [DECISION] into a 10-minute mental simulation.",
     whyHack: "Mental time travel lets you learn from futures that haven't happened - compressed simulation provides years of experience in minutes.",
     score: 13
@@ -788,7 +788,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 88,
     title: "Holographic Thinking",
     description: "See the whole reflected in every part",
-    category: "Analysis",
+    category: "Advanced",
     example: "In [SMALL_PART] of [SYSTEM], how is the whole system reflected? What patterns repeat?",
     whyHack: "In holographic systems, each part contains the whole - understanding one piece deeply reveals the structure of the entire system.",
     score: 12
@@ -797,7 +797,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 89,
     title: "Morphic Resonance Application",
     description: "Use field effects and pattern resonance",
-    category: "Creativity",
+    category: "Advanced",
     example: "What morphic field does [GROUP] create? How does this field influence individual behavior?",
     whyHack: "Groups create invisible fields that shape behavior - recognizing field effects explains why people act differently in different group contexts.",
     score: 11
@@ -806,7 +806,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 90,
     title: "Crystalline Growth Modeling",
     description: "Model how ideas grow like crystal structures",
-    category: "Strategy",
+    category: "Advanced",
     example: "Model [IDEA] growth as crystal formation. What's the seed? Growth medium? Final structure?",
     whyHack: "Ideas grow like crystals from seeds in nutrient media - understanding growth conditions lets you deliberately cultivate ideas to their full potential.",
     score: 10
@@ -923,7 +923,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 103,
     title: "Bayesian Belief Updating",
     description: "Update probabilities based on new evidence",
-    category: "Strategy",
+    category: "Advanced",
     example: "Start with prior beliefs about [OUTCOME]. Update with [EVIDENCE]. What's your posterior?",
     whyHack: "Static beliefs ignore new information - Bayesian updating provides a mathematical framework for changing your mind based on evidence.",
     score: 92
@@ -932,7 +932,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 104,
     title: "Information Theory Analysis",
     description: "Quantify information content and transmission",
-    category: "Analysis",
+    category: "Advanced",
     example: "Calculate information entropy of [MESSAGE]. How can you optimize information density?",
     whyHack: "Information has measurable properties - entropy analysis reveals redundancy to eliminate and signal to amplify for maximum communication efficiency.",
     score: 91
@@ -941,7 +941,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 105,
     title: "Chaos Theory Application",
     description: "Understand sensitive dependence on initial conditions",
-    category: "Analysis",
+    category: "Advanced",
     example: "In [DYNAMIC_SYSTEM], identify sensitive dependencies. Map the attractor landscape.",
     whyHack: "Small differences compound exponentially in chaotic systems - understanding sensitivity reveals where precision matters and where it's futile.",
     score: 90
@@ -950,7 +950,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 106,
     title: "Fractal Dimension Calculation",
     description: "Measure complexity through fractal geometry",
-    category: "Analysis",
+    category: "Advanced",
     example: "Estimate fractal dimension of [COMPLEX_STRUCTURE]. What does this reveal about complexity?",
     whyHack: "Fractal dimension quantifies complexity that traditional geometry can't measure - it reveals self-similarity and scaling properties hidden in irregular structures.",
     score: 89
@@ -959,7 +959,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 107,
     title: "Network Centrality Analysis",
     description: "Identify key nodes in network structures",
-    category: "Strategy",
+    category: "Advanced",
     example: "Calculate centrality measures for [NETWORK]. Which nodes are most critical for flow?",
     whyHack: "Some nodes are more important than others - centrality analysis identifies the critical few that control information, resources, or influence flow.",
     score: 88
@@ -968,7 +968,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 108,
     title: "Optimization Under Constraints",
     description: "Find optimal solutions within given limitations",
-    category: "Strategy",
+    category: "Advanced",
     example: "Optimize [OBJECTIVE] subject to constraints [A], [B], [C]. Use Lagrange multipliers mentally.",
     whyHack: "Unconstrained optimization is easy but useless - real problems have constraints, and the optimal solution lies at the boundary between competing demands.",
     score: 87
@@ -977,7 +977,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 109,
     title: "Monte Carlo Simulation",
     description: "Use random sampling to solve complex problems",
-    category: "Strategy",
+    category: "Advanced",
     example: "Simulate [COMPLEX_PROCESS] with random variables. Run mental Monte Carlo to estimate outcomes.",
     whyHack: "When analytical solutions are impossible, simulation provides approximate answers - running many random scenarios reveals probability distributions of outcomes.",
     score: 86
@@ -986,7 +986,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 110,
     title: "Algorithmic Complexity Analysis",
     description: "Understand computational and cognitive complexity",
-    category: "Analysis",
+    category: "Advanced",
     example: "What's the algorithmic complexity of [PROCESS]? Can it be simplified without losing function?",
     whyHack: "Complexity determines feasibility - analyzing whether a process is linear, quadratic, or exponential reveals what scales and what hits practical limits.",
     score: 85
@@ -1031,7 +1031,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 115,
     title: "Metacognitive Monitoring",
     description: "Think about your thinking process",
-    category: "Psychology",
+    category: "Advanced",
     example: "Monitor your thinking about [PROBLEM]. What biases emerge? How does your process change?",
     whyHack: "You can't fix thinking you don't notice - metacognition creates awareness of your own cognitive processes, enabling deliberate improvement.",
     score: 80
@@ -1364,7 +1364,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 152,
     title: "Interface Redesign",
     description: "Reimagine how components connect and interact",
-    category: "Strategy",
+    category: "Creativity",
     example: "Redesign all interfaces in [SYSTEM]. How would different connection methods change behavior?",
     whyHack: "Interfaces determine what's possible - changing how components connect opens up functionality that rigid interfaces prevented.",
     score: 43
@@ -1580,7 +1580,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 176,
     title: "Audience Adaptation",
     description: "Tailor message to specific audience needs",
-    category: "Strategy",
+    category: "Psychology",
     example: "Adapt [TECHNICAL_CONCEPT] for audiences: children, executives, experts, general public.",
     whyHack: "One message doesn't fit all - adapting to audience knowledge and interests dramatically increases comprehension and persuasiveness.",
     score: 19
@@ -1715,7 +1715,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 191,
     title: "Pros and Cons Analysis",
     description: "Systematically evaluate advantages and disadvantages",
-    category: "Analysis",
+    category: "Psychology",
     example: "For each option in [DECISION], list pros and cons. Weight by importance to situation.",
     whyHack: "Gut feeling misses trade-offs - systematic pros/cons analysis reveals hidden costs and benefits.",
     score: 4
@@ -1787,7 +1787,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 199,
     title: "Cognitive Archaeology",
     description: "Excavate the historical development of ideas",
-    category: "Analysis",
+    category: "Advanced",
     example: "Trace evolution of thinking about [CONCEPT]. What assumptions were discarded? Why?",
     whyHack: "Understanding how ideas evolved reveals which assumptions are fundamental and which are historical accidents we've inherited.",
     score: 25
@@ -1796,7 +1796,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 200,
     title: "Perspective Synthesis",
     description: "Integrate multiple viewpoints into coherent understanding",
-    category: "Analysis",
+    category: "Advanced",
     example: "Synthesize perspectives from [FIELD_A], [FIELD_B], and [FIELD_C] on [PHENOMENON].",
     whyHack: "Each field sees part of the truth - synthesis combines partial perspectives into more complete understanding than any single view provides.",
     score: 94
@@ -1805,7 +1805,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 201,
     title: "Emergent Property Detection",
     description: "Identify properties that arise from system interactions",
-    category: "Analysis",
+    category: "Advanced",
     example: "In [SYSTEM], what properties emerge that don't exist in individual components?",
     whyHack: "The whole can be radically different from its parts - emergent properties reveal system-level behaviors invisible when examining components separately.",
     score: 93
@@ -1823,7 +1823,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 203,
     title: "Paradigm Shifting",
     description: "Adopt fundamentally different ways of thinking",
-    category: "Strategy",
+    category: "Advanced",
     example: "View [PROBLEM] through paradigms of: mechanistic, organic, quantum, informational thinking.",
     whyHack: "Paradigms are like glasses - switching paradigms reveals aspects of reality that were invisible through your previous lens.",
     score: 91
@@ -1832,7 +1832,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 204,
     title: "Information Integration Hierarchy",
     description: "Combine information sources with appropriate weighting",
-    category: "Strategy",
+    category: "Creativity",
     example: "Integrate evidence about [QUESTION] from: studies, experts, theory, experience. Weight appropriately.",
     whyHack: "Some sources are more reliable than others - hierarchical integration prevents weak evidence from swamping strong evidence.",
     score: 90
@@ -1841,7 +1841,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 205,
     title: "Cognitive Bias Portfolio Management",
     description: "Use beneficial biases while mitigating harmful ones",
-    category: "Psychology",
+    category: "Advanced",
     example: "For [DECISION], which biases help? Which hurt? Design process to optimize bias portfolio.",
     whyHack: "Not all biases are bad - optimism bias can motivate action while confirmation bias can trap you, so manage the portfolio strategically.",
     score: 89
@@ -1850,7 +1850,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 206,
     title: "Temporal Reasoning Optimization",
     description: "Balance different time horizons in decision-making",
-    category: "Strategy",
+    category: "Creativity",
     example: "Balance immediate, short-term, and long-term considerations in [CHOICE]. Optimize across time.",
     whyHack: "Different time scales matter differently - optimizing across horizons prevents sacrificing long-term success for short-term gains.",
     score: 88
@@ -1859,7 +1859,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 207,
     title: "Complexity Gradient Navigation",
     description: "Move systematically from simple to complex understanding",
-    category: "Strategy",
+    category: "Advanced",
     example: "Create learning path for [COMPLEX_TOPIC] from simplest to most sophisticated understanding.",
     whyHack: "Jumping to complexity creates confusion - following gradients from simple to complex builds solid foundations that support advanced understanding.",
     score: 87
@@ -1868,7 +1868,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 208,
     title: "Cross-Domain Pattern Matching",
     description: "Find similar patterns across different fields",
-    category: "Analysis",
+    category: "Advanced",
     example: "What patterns from [DOMAIN_A] match phenomena in [DOMAIN_B]? Transfer insights.",
     whyHack: "Same patterns appear in different disguises - recognizing cross-domain similarities lets you transfer solutions between seemingly unrelated problems.",
     score: 86
@@ -1877,7 +1877,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 209,
     title: "Recursive Question Generation",
     description: "Generate questions about your questions",
-    category: "Analysis",
+    category: "Advanced",
     example: "For question about [TOPIC], ask: Why this question? What assumptions? What other questions?",
     whyHack: "Questions reveal assumptions - questioning your questions surfaces the hidden premises shaping what you even think to ask.",
     score: 85
@@ -1958,7 +1958,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 218,
     title: "Mental Model Surfacing",
     description: "Make implicit assumptions about systems explicit",
-    category: "Analysis",
+    category: "Psychology",
     example: "What mental models underlie thinking about [SYSTEM]? How do different models change understanding?",
     whyHack: "Mental models shape perception invisibly - surfacing them reveals how assumptions determine what you notice and how you interpret it.",
     score: 76
@@ -1985,7 +1985,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 221,
     title: "Semantic Precision Optimization",
     description: "Choose words for maximum clarity and minimum ambiguity",
-    category: "Strategy",
+    category: "Psychology",
     example: "Optimize word choice in [MESSAGE]. Eliminate ambiguity while preserving meaning richness.",
     whyHack: "Ambiguous language creates misunderstanding - semantic precision ensures your intended meaning is what recipients actually understand.",
     score: 73
@@ -1994,7 +1994,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 222,
     title: "Context Sensitivity Calibration",
     description: "Adjust communication style to situational demands",
-    category: "Strategy",
+    category: "Psychology",
     example: "Calibrate [MESSAGE] for context: formal/informal, high/low stakes, expert/novice audience.",
     whyHack: "Same message works differently in different contexts - calibration ensures your approach matches situational requirements.",
     score: 72
@@ -2030,7 +2030,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 226,
     title: "Interleaving Strategy",
     description: "Mix different types of practice for better learning",
-    category: "Strategy",
+    category: "Psychology",
     example: "Instead of blocked practice of [SKILL], interleave with related skills for better transfer.",
     whyHack: "Blocked practice feels easier but interleaving builds stronger connections - mixing creates challenges that enhance long-term retention.",
     score: 68
@@ -2057,7 +2057,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 229,
     title: "Elaborative Interrogation",
     description: "Deepen understanding through systematic questioning",
-    category: "Analysis",
+    category: "Advanced",
     example: "For each fact about [TOPIC], ask: Why is this true? What are the implications?",
     whyHack: "Isolated facts are fragile - connecting them through why-questions builds robust networks of understanding.",
     score: 65
@@ -2102,7 +2102,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 234,
     title: "Pre-mortem Analysis",
     description: "Imagine failure and work backwards to causes",
-    category: "Strategy",
+    category: "Psychology",
     example: "Imagine [PLAN] failed spectacularly. What went wrong? How to prevent each failure mode?",
     whyHack: "Success mindset blinds you to risks - assuming failure frees people to name risks they'd normally suppress.",
     score: 60
@@ -2111,7 +2111,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 235,
     title: "Outside View Application",
     description: "Use reference class forecasting for predictions",
-    category: "Strategy",
+    category: "Psychology",
     example: "For [PROJECT], find reference class of similar projects. What's typical outcome distribution?",
     whyHack: "Inside view creates optimism - outside view grounds predictions in actual historical outcomes for similar situations.",
     score: 59
@@ -2129,7 +2129,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 237,
     title: "Time Horizon Matching",
     description: "Match decision process complexity to decision importance",
-    category: "Strategy",
+    category: "Psychology",
     example: "Match analysis depth to [DECISION] importance and reversibility. Don't over-analyze small choices.",
     whyHack: "Big decisions deserve deep analysis, small ones don't - matching process to stakes prevents analysis paralysis on trivia.",
     score: 57
@@ -2174,7 +2174,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 242,
     title: "Adjacent Possible Exploration",
     description: "Explore what's just beyond current capabilities",
-    category: "Strategy",
+    category: "Creativity",
     example: "Map adjacent possible around [CURRENT_STATE]. What's one step away but not yet explored?",
     whyHack: "Innovation happens at edges - the adjacent possible is close enough to reach but far enough to be novel.",
     score: 52
@@ -2183,7 +2183,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 243,
     title: "Weak Signal Amplification",
     description: "Pay attention to subtle indicators of change",
-    category: "Strategy",
+    category: "Creativity",
     example: "What weak signals around [DOMAIN] might indicate major future changes? Amplify and explore.",
     whyHack: "Major changes start small - weak signals are early warnings that let you adapt before trends become obvious.",
     score: 51
@@ -2219,7 +2219,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 247,
     title: "Minimum Viable Paradox",
     description: "Find smallest contradiction that generates insight",
-    category: "Analysis",
+    category: "Advanced",
     example: "What's the smallest paradox in [DOMAIN] that, if resolved, would unlock major understanding?",
     whyHack: "Big paradoxes are messy - minimal paradoxes isolate the core contradiction, making resolution clearer and more powerful.",
     score: 47
@@ -2228,7 +2228,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 248,
     title: "Capability Synthesis",
     description: "Combine existing capabilities in novel ways",
-    category: "Strategy",
+    category: "Creativity",
     example: "List all capabilities in [ORGANIZATION]. What novel combinations could create new value?",
     whyHack: "New capabilities are expensive but recombining existing ones is free - synthesis creates innovation from resources you already have.",
     score: 46
@@ -2237,7 +2237,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 249,
     title: "Edge Case Generalization",
     description: "Turn exceptions into new principles",
-    category: "Strategy",
+    category: "Creativity",
     example: "Find edge cases in [SYSTEM]. What if these exceptions became the new normal?",
     whyHack: "Today's edge cases are tomorrow's mainstream - generalizing exceptions reveals emerging patterns before they dominate.",
     score: 45
@@ -2246,7 +2246,7 @@ export const hackPrompts: HackPrompt[] = [
     id: 250,
     title: "Meta-Learning Optimization",
     description: "Learn how to learn more effectively",
-    category: "Psychology",
+    category: "Advanced",
     example: "Analyze your learning process for [SKILL]. How can you optimize the learning of learning itself?",
     whyHack: "Learning faster compounds over time - optimizing your learning process multiplies the value of every future learning experience.",
     score: 44
