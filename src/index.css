@@ -1036,7 +1036,8 @@ input:focus-visible {
 .performance-mode:not(.performance-mode-high) .tag-strategy:hover,
 .performance-mode:not(.performance-mode-high) .tag-analysis:hover,
 .performance-mode:not(.performance-mode-high) .tag-creativity:hover,
-.performance-mode:not(.performance-mode-high) .tag-psychology:hover {
+.performance-mode:not(.performance-mode-high) .tag-psychology:hover,
+.performance-mode:not(.performance-mode-high) .tag-design:hover {
   box-shadow: none !important;
 }
 
