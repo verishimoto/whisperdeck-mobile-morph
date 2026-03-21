@@ -166,6 +166,7 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
+    if (isTouchDevice) return;
     let rafId: number;
     let lastX = 0;
     let lastY = 0;
