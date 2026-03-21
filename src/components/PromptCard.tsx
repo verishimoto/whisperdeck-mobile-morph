@@ -43,7 +43,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
   const isLocked = index >= 10 && currentLevel === 0 && !isArchitect;
   const favorited = isFavorite(prompt.id);
 
-  const categoryStyle = categoryColorMap[prompt.category] || { css: "primary", tag: "" };
+  const categoryStyle = categoryColorMap[prompt.category] || { hsl: "0 0% 70%", tag: "" };
   
   const rank = index + 1;
 
