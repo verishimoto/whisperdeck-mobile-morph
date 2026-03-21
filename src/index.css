@@ -904,6 +904,7 @@ input:focus-visible {
 .tag-analysis:hover { box-shadow: 0 0 16px hsl(var(--level-analysis) / 0.4); }
 .tag-creativity:hover { box-shadow: 0 0 16px hsl(var(--level-creativity) / 0.4); }
 .tag-psychology:hover { box-shadow: 0 0 16px hsl(var(--level-psychology) / 0.4); }
+.tag-design:hover { box-shadow: 0 0 16px hsl(var(--level-design) / 0.4); }
 
 /* ===== PERFORMANCE MODE - Graduated Levels ===== */
 
