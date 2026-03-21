@@ -48,6 +48,9 @@ function closestEdgePoint(x: number, y: number, rect: DOMRect): {
 }
 
 export function CustomCursor() {
+  // Skip entirely on touch devices — no cursor needed
+  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
@@ -57,6 +60,7 @@ export function CustomCursor() {
 
   // Setup IntersectionObserver to track visible cards (runs once)
   useEffect(() => {
+    if (isTouchDevice) return;
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -90,6 +94,7 @@ export function CustomCursor() {
 
   // Re-observe when DOM changes - lightweight delegated approach
   useEffect(() => {
+    if (isTouchDevice) return;
     const interval = setInterval(() => {
       const cards = document.querySelectorAll('.liquid-glass-card');
       cards.forEach(card => {
@@ -161,6 +166,7 @@ export function CustomCursor() {
   }, []);
 
   useEffect(() => {
+    if (isTouchDevice) return;
     let rafId: number;
     let lastX = 0;
     let lastY = 0;
@@ -222,6 +228,8 @@ export function CustomCursor() {
     isClicking ? 'click' : '',
   ].filter(Boolean).join(' ');
 
+  if (isTouchDevice) return null;
+
   return (
     <div
       id="custom-cursor"
@@ -230,7 +238,6 @@ export function CustomCursor() {
         left: `${mousePosition.x}px`,
         top: `${mousePosition.y}px`,
         transform: 'translate(-50%, -50%) translateZ(0)',
-        willChange: 'transform, left, top',
       }}
     />
   );
