@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { PromptCard } from "./PromptCard";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PromptGridProps {
   prompts: HackPrompt[];
@@ -10,12 +11,29 @@ interface PromptGridProps {
   onCategoryFilter?: (category: string) => void;
 }
 
+function useColumnCount() {
+  const [cols, setCols] = useState(4);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      if (w <= 640) setCols(1);
+      else if (w <= 1024) setCols(2);
+      else if (w <= 1280) setCols(3);
+      else setCols(4);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  return cols;
+}
+
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
   const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
-  const [renderedCount, setRenderedCount] = useState(40); // Lazy load: start with 40
+  const [renderedCount, setRenderedCount] = useState(40);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  
+  const columnCount = useColumnCount();
 
   // Intersection observer for fade-in animation
   useEffect(() => {
@@ -33,10 +51,9 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
     return () => { observerRef.current?.disconnect(); };
   }, []);
 
-  // Lazy load sentinel - loads more cards as user scrolls
+  // Lazy load sentinel
   useEffect(() => {
     if (renderedCount >= prompts.length) return;
-    
     const sentinel = sentinelRef.current;
     if (!sentinel) return;
 
@@ -48,12 +65,11 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
       },
       { rootMargin: '400px 0px' }
     );
-    
     loadMoreObserver.observe(sentinel);
     return () => loadMoreObserver.disconnect();
   }, [renderedCount, prompts.length]);
 
-  // Reset rendered count when prompts change (filter/search)
+  // Reset rendered count when prompts change
   useEffect(() => {
     setRenderedCount(40);
     setVisibleCards(new Set());
@@ -68,6 +84,27 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
 
   const displayedPrompts = prompts.slice(0, renderedCount);
 
+  // Distribute items round-robin across columns to avoid empty slots
+  const columns = useMemo(() => {
+    const cols: HackPrompt[][] = Array.from({ length: columnCount }, () => []);
+    displayedPrompts.forEach((prompt, i) => {
+      cols[i % columnCount].push(prompt);
+    });
+    return cols;
+  }, [displayedPrompts, columnCount]);
+
+  // Build a flat index map for animation registration
+  const flatIndexMap = useMemo(() => {
+    const map = new Map<number, number>();
+    let flatIdx = 0;
+    for (let col = 0; col < columns.length; col++) {
+      for (let row = 0; row < columns[col].length; row++) {
+        map.set(columns[col][row].id, flatIdx++);
+      }
+    }
+    return map;
+  }, [columns]);
+
   return (
     <div className="pb-16">
       {/* Results Summary */}
@@ -78,26 +115,31 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
         </p>
       </div>
 
-      {/* CSS Grid - Fixed height cards */}
-      <div className="prompt-grid">
-        {displayedPrompts.map((prompt, filteredIndex) => {
-          const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
-          const isVisible = visibleCards.has(filteredIndex);
-          
-          return (
-            <div
-              key={prompt.id}
-              ref={(el) => registerCard(el, filteredIndex)}
-              className="masonry-item"
-            >
-              <PromptCard 
-                prompt={prompt} 
-                index={originalIndex}
-                onCategoryFilter={onCategoryFilter}
-              />
-            </div>
-          );
-        })}
+      {/* Flexbox Masonry - evenly distributed columns */}
+      <div className="prompt-grid-flex">
+        {columns.map((colItems, colIdx) => (
+          <div key={colIdx} className="prompt-grid-column">
+            {colItems.map((prompt) => {
+              const flatIdx = flatIndexMap.get(prompt.id) ?? 0;
+              const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
+
+              return (
+                <div
+                  key={prompt.id}
+                  ref={(el) => registerCard(el, flatIdx)}
+                  className="masonry-item"
+                  style={{ animationDelay: `${Math.min(flatIdx * 30, 300)}ms` }}
+                >
+                  <PromptCard
+                    prompt={prompt}
+                    index={originalIndex}
+                    onCategoryFilter={onCategoryFilter}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
       {/* Load All button + Lazy load sentinel */}
@@ -125,7 +167,6 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
           </p>
         </div>
       )}
-
     </div>
   );
 }
