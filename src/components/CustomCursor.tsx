@@ -60,6 +60,7 @@ export function CustomCursor() {
 
   // Setup IntersectionObserver to track visible cards (runs once)
   useEffect(() => {
+    if (isTouchDevice) return;
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
