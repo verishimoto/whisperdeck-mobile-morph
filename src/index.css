@@ -325,7 +325,7 @@
   letter-spacing: -0.02em;
 }
 
-/* ===== LIQUID GLASS CARD - 2026 Apple Aesthetic (Performance Optimized) ===== */
+/* ===== LIQUID GLASS CARD - 2026 Apple Aesthetic (Flow-Optimized) ===== */
 .liquid-glass-card {
   position: relative;
   background: linear-gradient(
@@ -334,20 +334,17 @@
     rgba(255, 255, 255, 0.03) 50%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  /* Reduced blur for better performance - 12px default, 20px on hover */
-  backdrop-filter: blur(12px) saturate(140%) brightness(1.05);
-  -webkit-backdrop-filter: blur(12px) saturate(140%) brightness(1.05);
+  backdrop-filter: blur(8px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(130%);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1rem;
   box-shadow:
-    0 8px 32px rgba(0, 0, 0, 0.15),
+    0 6px 24px rgba(0, 0, 0, 0.12),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s ease;
   overflow: hidden;
-  /* CSS Containment for performance - avoid 'layout' to preserve stacking context for ::after */
   contain: style;
-  /* CSS Variables for cursor-reactive ripple effect */
   --edge-intensity: 0;
   --edge-x: 50%;
   --edge-y: 50%;
@@ -359,7 +356,7 @@
   overflow: hidden;
 }
 
-/* Noise texture for glass realism */
+/* Noise texture for glass realism — desktop only */
 .liquid-glass-card::before {
   content: '';
   position: absolute;
@@ -371,85 +368,92 @@
   z-index: 0;
 }
 
-/* Water Ripple Border Effect - Cursor-reactive concentric waves */
+/* Water Ripple Border Effect — simplified to 2 layers for flow perf */
 .liquid-glass-card::after {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  /* Multi-layer concentric ripple gradients from cursor position */
   background: 
-    /* Inner glow - bright spot at cursor */
     radial-gradient(
       circle at var(--edge-x) var(--edge-y),
       hsl(280 95% 82% / calc(0.8 * var(--edge-intensity))) 0%,
-      hsl(180 100% 70% / calc(0.6 * var(--edge-intensity))) 15%,
-      transparent 30%
+      hsl(180 100% 70% / calc(0.5 * var(--edge-intensity))) 20%,
+      transparent 40%
     ),
-    /* First ripple wave */
     radial-gradient(
       circle at var(--edge-x) var(--edge-y),
-      transparent 25%,
-      hsl(320 95% 85% / calc(0.5 * var(--edge-intensity))) 30%,
-      transparent 35%
-    ),
-    /* Second ripple wave */
-    radial-gradient(
-      circle at var(--edge-x) var(--edge-y),
-      transparent 45%,
-      hsl(150 85% 75% / calc(0.4 * var(--edge-intensity))) 50%,
-      transparent 55%
-    ),
-    /* Third ripple wave (outermost) */
-    radial-gradient(
-      circle at var(--edge-x) var(--edge-y),
-      transparent 65%,
-      hsl(210 100% 78% / calc(0.3 * var(--edge-intensity))) 70%,
-      transparent 80%
+      transparent 35%,
+      hsl(320 95% 85% / calc(0.4 * var(--edge-intensity))) 45%,
+      transparent 60%
     );
   background-size: 100% 100%;
   opacity: 1;
-  transition: background-size 0.4s ease-out;
+  transition: background-size 0.3s ease-out;
   pointer-events: none;
   z-index: 1;
-  /* Mask to show only on borders */
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: exclude;
   -webkit-mask-composite: xor;
   padding: 3px;
-  will-change: opacity;
 }
 
-/* Ripple expansion animation when cursor is near */
+/* Ripple expansion — simplified */
 @keyframes ripple-expand {
-  0% {
-    background-size: 80% 80%, 80% 80%, 80% 80%, 80% 80%;
-  }
-  100% {
-    background-size: 180% 180%, 180% 180%, 180% 180%, 180% 180%;
-  }
+  0% { background-size: 80% 80%, 80% 80%; }
+  100% { background-size: 180% 180%, 180% 180%; }
 }
 
 .liquid-glass-card.ripple-active::after {
   animation: ripple-expand 1.5s ease-out infinite;
 }
 
+/* Hover: snappy lift + glow */
 .liquid-glass-card:hover {
-  transform: translateY(-4px) scale(1.02);
-  backdrop-filter: blur(20px) saturate(150%) brightness(1.05);
-  -webkit-backdrop-filter: blur(20px) saturate(150%) brightness(1.05);
+  transform: translateY(-3px) scale(1.015);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
   box-shadow:
-    0 16px 48px rgba(0, 0, 0, 0.25),
-    0 0 60px rgba(168, 85, 247, 0.15),
+    0 12px 36px rgba(0, 0, 0, 0.2),
+    0 0 40px rgba(168, 85, 247, 0.12),
     inset 0 0 0 0.5px rgba(255, 255, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
-/* Mobile: Even lighter blur for performance */
+/* ===== MOBILE: Strip heavy effects for flow state ===== */
 @media (max-width: 768px) {
   .liquid-glass-card {
-    backdrop-filter: blur(12px) saturate(120%);
-    -webkit-backdrop-filter: blur(12px) saturate(120%);
+    backdrop-filter: blur(6px) saturate(115%);
+    -webkit-backdrop-filter: blur(6px) saturate(115%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  /* Remove noise texture + ripple on mobile */
+  .liquid-glass-card::before,
+  .liquid-glass-card::after {
+    display: none !important;
+  }
+
+  /* No hover lift on touch — use :active only */
+  .liquid-glass-card:hover {
+    transform: none;
+    backdrop-filter: blur(6px) saturate(115%);
+    -webkit-backdrop-filter: blur(6px) saturate(115%);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .liquid-glass-header {
+    backdrop-filter: blur(16px) saturate(120%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(120%) !important;
+  }
+}
+
+@media (hover: none) {
+  /* Ensure touch devices never render pseudo-elements */
+  .liquid-glass-card::before,
+  .liquid-glass-card::after {
+    display: none !important;
   }
 }
 
