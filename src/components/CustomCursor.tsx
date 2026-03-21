@@ -48,6 +48,9 @@ function closestEdgePoint(x: number, y: number, rect: DOMRect): {
 }
 
 export function CustomCursor() {
+  // Skip entirely on touch devices — no cursor needed
+  const isTouchDevice = typeof window !== 'undefined' && window.matchMedia('(hover: none)').matches;
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isClicking, setIsClicking] = useState(false);
