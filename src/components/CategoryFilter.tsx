@@ -18,11 +18,11 @@ interface CategoryFilterProps {
 }
 
 const categoryColorMap: Record<string, { var: string; hsl: string }> = {
-  Advanced: { var: 'level-advanced', hsl: '320 98% 87%' },
-  Strategy: { var: 'level-strategy', hsl: '150 90% 80%' },
-  Analysis: { var: 'level-analysis', hsl: '210 98% 82%' },
-  Creativity: { var: 'level-creativity', hsl: '290 95% 85%' },
-  Psychology: { var: 'level-psychology', hsl: '340 95% 85%' },
+  'Meta-Cognition': { var: 'level-advanced', hsl: '320 98% 87%' },
+  'Strategic Reasoning': { var: 'level-strategy', hsl: '150 90% 80%' },
+  'Analytical Decomposition': { var: 'level-analysis', hsl: '210 98% 82%' },
+  'Divergent Thinking': { var: 'level-creativity', hsl: '290 95% 85%' },
+  'Behavioral Psychology': { var: 'level-psychology', hsl: '340 95% 85%' },
   Design: { var: 'level-design', hsl: '30 90% 80%' },
 };
 
@@ -36,7 +36,7 @@ export function CategoryFilter({
   showFavorites = false,
   onFavoritesToggle 
 }: CategoryFilterProps) {
-  const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology', 'Design'];
+  const categories = ['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology', 'Design'];
   const { favoritesCount } = useFavorites();
 
   return (

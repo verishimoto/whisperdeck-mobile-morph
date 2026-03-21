@@ -35,7 +35,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
         ...parsed,
         totalPromptsUsed: new Set(parsed.totalPromptsUsed || []),
         promptUsageCount: new Map(parsed.promptUsageCount || []),
-        unlockedCategories: new Set(parsed.unlockedCategories || ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology']),
+        unlockedCategories: new Set(parsed.unlockedCategories || ['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology']),
       };
     }
     return {
@@ -45,7 +45,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
       totalPromptsUsed: new Set<number>(),
       promptUsageCount: new Map<number, number>(),
       currentLevel: 0,
-      unlockedCategories: new Set(['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology']),
+      unlockedCategories: new Set(['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology']),
       challengesCompleted: [],
       chainsBuilt: 0,
     };
