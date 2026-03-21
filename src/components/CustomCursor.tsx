@@ -94,6 +94,7 @@ export function CustomCursor() {
 
   // Re-observe when DOM changes - lightweight delegated approach
   useEffect(() => {
+    if (isTouchDevice) return;
     const interval = setInterval(() => {
       const cards = document.querySelectorAll('.liquid-glass-card');
       cards.forEach(card => {
