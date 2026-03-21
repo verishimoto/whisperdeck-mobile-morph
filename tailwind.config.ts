@@ -67,6 +67,7 @@ export default {
           'analysis': '#FFD700',   /* Gold */
           'creativity': '#FF6B35', /* Orange Red */
           'psychology': '#8A2BE2', /* Blue Violet */
+          'design': 'hsl(30 90% 80%)',  /* Warm Pastel Orange */
           'essential': '#32CD32',  /* Lime Green */
         },
         

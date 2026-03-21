@@ -14,16 +14,16 @@ interface PromptCardProps {
   onCategoryFilter?: (category: string) => void;
 }
 
-const categoryColorMap: Record<string, { css: string; tag: string }> = {
-  Ultra: { css: "level-ultra", tag: "tag-ultra" },
-  Master: { css: "level-master", tag: "tag-master" },
-  Advanced: { css: "level-advanced", tag: "tag-advanced" },
-  Strategy: { css: "level-strategy", tag: "tag-strategy" },
-  Analysis: { css: "level-analysis", tag: "tag-analysis" },
-  Creativity: { css: "level-creativity", tag: "tag-creativity" },
-  Psychology: { css: "level-psychology", tag: "tag-psychology" },
-  Design: { css: "level-design", tag: "tag-design" },
-  Essential: { css: "level-essential", tag: "tag-essential" },
+const categoryColorMap: Record<string, { hsl: string; tag: string }> = {
+  Ultra: { hsl: "320 98% 87%", tag: "tag-ultra" },
+  Master: { hsl: "270 95% 85%", tag: "tag-master" },
+  Advanced: { hsl: "320 98% 87%", tag: "tag-advanced" },
+  Strategy: { hsl: "150 90% 80%", tag: "tag-strategy" },
+  Analysis: { hsl: "210 98% 82%", tag: "tag-analysis" },
+  Creativity: { hsl: "290 95% 85%", tag: "tag-creativity" },
+  Psychology: { hsl: "340 95% 85%", tag: "tag-psychology" },
+  Design: { hsl: "30 90% 80%", tag: "tag-design" },
+  Essential: { hsl: "200 95% 78%", tag: "tag-essential" },
 };
 
 export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
@@ -43,7 +43,7 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
   const isLocked = index >= 10 && currentLevel === 0 && !isArchitect;
   const favorited = isFavorite(prompt.id);
 
-  const categoryStyle = categoryColorMap[prompt.category] || { css: "primary", tag: "" };
+  const categoryStyle = categoryColorMap[prompt.category] || { hsl: "0 0% 70%", tag: "" };
   
   const rank = index + 1;
 
@@ -113,7 +113,12 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
           <div className="flex items-start justify-between mb-4">
             <Badge 
               onClick={handleCategoryClick}
-              className={`tag-interactive ${categoryStyle.tag} bg-${categoryStyle.css}/15 border-${categoryStyle.css}/25 text-${categoryStyle.css} text-xs px-2.5 py-1 rounded-full font-sans hover:bg-${categoryStyle.css}/25 hover:border-${categoryStyle.css}/50 cursor-pointer`}
+              className={`tag-interactive ${categoryStyle.tag} text-xs px-2.5 py-1 rounded-full font-sans cursor-pointer`}
+              style={{
+                color: `hsl(${categoryStyle.hsl})`,
+                backgroundColor: `hsl(${categoryStyle.hsl} / 0.15)`,
+                borderColor: `hsl(${categoryStyle.hsl} / 0.25)`,
+              }}
             >
               {prompt.category}
             </Badge>
@@ -168,8 +173,8 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               </div>
 
               {/* Why This Is a Hack */}
-              <div className={`p-3 rounded-xl bg-${categoryStyle.css}/10 border border-${categoryStyle.css}/15`}>
-                <h4 className={`font-display text-sm font-semibold mb-1.5 text-${categoryStyle.css}`}>Why This Is a Hack</h4>
+              <div className="p-3 rounded-xl" style={{ backgroundColor: `hsl(${categoryStyle.hsl} / 0.1)`, border: `1px solid hsl(${categoryStyle.hsl} / 0.15)` }}>
+                <h4 className="font-display text-sm font-semibold mb-1.5" style={{ color: `hsl(${categoryStyle.hsl})` }}>Why This Is a Hack</h4>
                 <p className="text-xs text-foreground/70 leading-relaxed">
                   {prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}
                 </p>
