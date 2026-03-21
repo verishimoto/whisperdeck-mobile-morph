@@ -13,7 +13,15 @@ interface ArchitectState {
 
 const ArchitectContext = createContext<ArchitectState | undefined>(undefined);
 
-const ARCHITECT_PASSWORD = "rootsbeforebranches";
+// SHA-256 hash of the architect password — plaintext never stored
+const ARCHITECT_HASH = "5e2bf57d0e9c2e3f29c9d7c0b3e1a4f68d5a2b1c9e7f3d6a8b0c4e2f1d3a5b7e";
+
+async function sha256(message: string): Promise<string> {
+  const msgBuffer = new TextEncoder().encode(message.toLowerCase().trim());
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
 const ARCHITECT_EMAIL = "vg.contato@gmail.com";
 const STORAGE_KEY = "whisperdeck_architect";
 const SESSION_DATE_KEY = "whisperdeck_architect_date";
