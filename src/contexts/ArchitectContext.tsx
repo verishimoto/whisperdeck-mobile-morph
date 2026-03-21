@@ -13,8 +13,8 @@ interface ArchitectState {
 
 const ArchitectContext = createContext<ArchitectState | undefined>(undefined);
 
-// SHA-256 hash of the architect password — plaintext never stored in source
-const ARCHITECT_HASH = "a]b$2x".split("").reverse().join("") + "9f7c3d";
+// SHA-256 digest of the architect passphrase — no plaintext in source
+const ARCHITECT_HASH = "83e3d8885cb4a712c39b6f735bec4896f53299125f32970686253553ed4c9176";
 
 async function sha256(message: string): Promise<string> {
   const msgBuffer = new TextEncoder().encode(message.toLowerCase().trim());
@@ -23,9 +23,6 @@ async function sha256(message: string): Promise<string> {
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-// Pre-compute the expected hash at module load
-const EXPECTED_HASH_PROMISE = sha256("rootsbeforebranches");
-
 const ARCHITECT_EMAIL = "vg.contato@gmail.com";
 const STORAGE_KEY = "whisperdeck_architect";
 const SESSION_DATE_KEY = "whisperdeck_architect_date";
@@ -33,7 +30,6 @@ const SESSION_DATE_KEY = "whisperdeck_architect_date";
 export function ArchitectProvider({ children }: { children: ReactNode }) {
   const { user } = useAuth();
   
-  // Auto-detect architect by email
   const isArchitectByEmail = user?.email === ARCHITECT_EMAIL;
   
   const [isArchitectByPassword, setIsArchitectByPassword] = useState(() => {
@@ -41,7 +37,6 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
     const storedDate = localStorage.getItem(SESSION_DATE_KEY);
     const today = new Date().toDateString();
     
-    // Expire architect session if it's a new day
     if (storedDate !== today) {
       localStorage.removeItem(STORAGE_KEY);
       localStorage.removeItem(SESSION_DATE_KEY);
@@ -50,10 +45,7 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
     return storedValue === 'true';
   });
   
-  // Combined architect status - email OR password
   const isArchitect = isArchitectByEmail || isArchitectByPassword;
-  
-  // Only show gate when manually triggered, never on load
   const [showGate, setShowGate] = useState(false);
 
   useEffect(() => {
@@ -64,11 +56,8 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
   }, [isArchitectByPassword]);
 
   const checkPassword = async (input: string): Promise<boolean> => {
-    const [inputHash, expectedHash] = await Promise.all([
-      sha256(input),
-      EXPECTED_HASH_PROMISE,
-    ]);
-    const isValid = inputHash === expectedHash;
+    const inputHash = await sha256(input);
+    const isValid = inputHash === ARCHITECT_HASH;
     if (isValid) {
       setIsArchitectByPassword(true);
     }
