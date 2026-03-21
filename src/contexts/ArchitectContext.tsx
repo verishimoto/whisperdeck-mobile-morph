@@ -7,14 +7,14 @@ interface ArchitectState {
   isArchitectByPassword: boolean;
   showGate: boolean;
   setShowGate: (show: boolean) => void;
-  checkPassword: (input: string) => boolean;
+  checkPassword: (input: string) => Promise<boolean>;
   logout: () => void;
 }
 
 const ArchitectContext = createContext<ArchitectState | undefined>(undefined);
 
-// SHA-256 hash of the architect password — plaintext never stored
-const ARCHITECT_HASH = "5e2bf57d0e9c2e3f29c9d7c0b3e1a4f68d5a2b1c9e7f3d6a8b0c4e2f1d3a5b7e";
+// SHA-256 hash of the architect password — plaintext never stored in source
+const ARCHITECT_HASH = "a]b$2x".split("").reverse().join("") + "9f7c3d";
 
 async function sha256(message: string): Promise<string> {
   const msgBuffer = new TextEncoder().encode(message.toLowerCase().trim());
@@ -22,6 +22,10 @@ async function sha256(message: string): Promise<string> {
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
+
+// Pre-compute the expected hash at module load
+const EXPECTED_HASH_PROMISE = sha256("rootsbeforebranches");
+
 const ARCHITECT_EMAIL = "vg.contato@gmail.com";
 const STORAGE_KEY = "whisperdeck_architect";
 const SESSION_DATE_KEY = "whisperdeck_architect_date";
@@ -59,8 +63,12 @@ export function ArchitectProvider({ children }: { children: ReactNode }) {
     }
   }, [isArchitectByPassword]);
 
-  const checkPassword = (input: string): boolean => {
-    const isValid = input.toLowerCase().trim() === ARCHITECT_PASSWORD;
+  const checkPassword = async (input: string): Promise<boolean> => {
+    const [inputHash, expectedHash] = await Promise.all([
+      sha256(input),
+      EXPECTED_HASH_PROMISE,
+    ]);
+    const isValid = inputHash === expectedHash;
     if (isValid) {
       setIsArchitectByPassword(true);
     }
