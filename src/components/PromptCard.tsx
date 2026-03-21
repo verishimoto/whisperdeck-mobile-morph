@@ -173,8 +173,8 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
               </div>
 
               {/* Why This Is a Hack */}
-              <div className={`p-3 rounded-xl bg-${categoryStyle.css}/10 border border-${categoryStyle.css}/15`}>
-                <h4 className={`font-display text-sm font-semibold mb-1.5 text-${categoryStyle.css}`}>Why This Is a Hack</h4>
+              <div className="p-3 rounded-xl" style={{ backgroundColor: `hsl(${categoryStyle.hsl} / 0.1)`, border: `1px solid hsl(${categoryStyle.hsl} / 0.15)` }}>
+                <h4 className="font-display text-sm font-semibold mb-1.5" style={{ color: `hsl(${categoryStyle.hsl})` }}>Why This Is a Hack</h4>
                 <p className="text-xs text-foreground/70 leading-relaxed">
                   {prompt.whyHack || 'This technique enhances AI performance through strategic instruction.'}
                 </p>
