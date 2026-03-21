@@ -228,6 +228,8 @@ export function CustomCursor() {
     isClicking ? 'click' : '',
   ].filter(Boolean).join(' ');
 
+  if (isTouchDevice) return null;
+
   return (
     <div
       id="custom-cursor"
@@ -236,7 +238,6 @@ export function CustomCursor() {
         left: `${mousePosition.x}px`,
         top: `${mousePosition.y}px`,
         transform: 'translate(-50%, -50%) translateZ(0)',
-        willChange: 'transform, left, top',
       }}
     />
   );
