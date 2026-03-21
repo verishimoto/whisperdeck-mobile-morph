@@ -26,9 +26,10 @@ export function ArchitectGate() {
 
   if (!showGate || isArchitect) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (checkPassword(password)) {
+    const valid = await checkPassword(password);
+    if (valid) {
       setError(false);
       setShowWelcome(true);
     } else {
