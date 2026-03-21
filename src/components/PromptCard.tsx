@@ -113,7 +113,12 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
           <div className="flex items-start justify-between mb-4">
             <Badge 
               onClick={handleCategoryClick}
-              className={`tag-interactive ${categoryStyle.tag} bg-${categoryStyle.css}/15 border-${categoryStyle.css}/25 text-${categoryStyle.css} text-xs px-2.5 py-1 rounded-full font-sans hover:bg-${categoryStyle.css}/25 hover:border-${categoryStyle.css}/50 cursor-pointer`}
+              className={`tag-interactive ${categoryStyle.tag} text-xs px-2.5 py-1 rounded-full font-sans cursor-pointer`}
+              style={{
+                color: `hsl(${categoryStyle.hsl})`,
+                backgroundColor: `hsl(${categoryStyle.hsl} / 0.15)`,
+                borderColor: `hsl(${categoryStyle.hsl} / 0.25)`,
+              }}
             >
               {prompt.category}
             </Badge>
