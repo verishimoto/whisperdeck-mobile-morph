@@ -14,16 +14,16 @@ interface PromptCardProps {
   onCategoryFilter?: (category: string) => void;
 }
 
-const categoryColorMap: Record<string, { css: string; tag: string }> = {
-  Ultra: { css: "level-ultra", tag: "tag-ultra" },
-  Master: { css: "level-master", tag: "tag-master" },
-  Advanced: { css: "level-advanced", tag: "tag-advanced" },
-  Strategy: { css: "level-strategy", tag: "tag-strategy" },
-  Analysis: { css: "level-analysis", tag: "tag-analysis" },
-  Creativity: { css: "level-creativity", tag: "tag-creativity" },
-  Psychology: { css: "level-psychology", tag: "tag-psychology" },
-  Design: { css: "level-design", tag: "tag-design" },
-  Essential: { css: "level-essential", tag: "tag-essential" },
+const categoryColorMap: Record<string, { hsl: string; tag: string }> = {
+  Ultra: { hsl: "320 98% 87%", tag: "tag-ultra" },
+  Master: { hsl: "270 95% 85%", tag: "tag-master" },
+  Advanced: { hsl: "320 98% 87%", tag: "tag-advanced" },
+  Strategy: { hsl: "150 90% 80%", tag: "tag-strategy" },
+  Analysis: { hsl: "210 98% 82%", tag: "tag-analysis" },
+  Creativity: { hsl: "290 95% 85%", tag: "tag-creativity" },
+  Psychology: { hsl: "340 95% 85%", tag: "tag-psychology" },
+  Design: { hsl: "30 90% 80%", tag: "tag-design" },
+  Essential: { hsl: "200 95% 78%", tag: "tag-essential" },
 };
 
 export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFilter }: PromptCardProps) {
