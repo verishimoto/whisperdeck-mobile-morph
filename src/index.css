@@ -161,6 +161,11 @@
 }
 
 /* ===== CUSTOM CURSOR - Minimal Clean Pointer ===== */
+/* Hide on touch devices */
+@media (hover: none) {
+  #custom-cursor { display: none !important; }
+}
+
 #custom-cursor {
   position: fixed;
   width: 14px;
@@ -169,11 +174,10 @@
   pointer-events: none;
   z-index: 10000;
   background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(2px);
   border: 1.5px solid rgba(255, 255, 255, 0.4);
   will-change: transform;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.2);
-  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.15s ease, height 0.15s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
 #custom-cursor::before {
@@ -201,15 +205,15 @@
   height: 12px;
 }
 
-/* Touch feedback for mobile */
+/* Touch feedback for mobile — snappy press */
 .liquid-glass-card:active {
-  transform: scale(0.98) !important;
-  transition: transform 0.1s ease !important;
+  transform: scale(0.97) !important;
+  transition: transform 0.08s ease !important;
 }
 
 @media (hover: none) {
   .liquid-glass-card {
-    transition: transform 0.15s ease;
+    transition: transform 0.12s ease;
   }
 }
 
