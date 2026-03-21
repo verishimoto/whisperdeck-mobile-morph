@@ -36,7 +36,7 @@ export function CategoryFilter({
   showFavorites = false,
   onFavoritesToggle 
 }: CategoryFilterProps) {
-  const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology', 'Design'];
+  const categories = ['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology', 'Design'];
   const { favoritesCount } = useFavorites();
 
   return (

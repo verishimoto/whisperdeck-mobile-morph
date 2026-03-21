@@ -45,7 +45,7 @@ export function GamificationProvider({ children }: { children: ReactNode }) {
       totalPromptsUsed: new Set<number>(),
       promptUsageCount: new Map<number, number>(),
       currentLevel: 0,
-      unlockedCategories: new Set(['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology']),
+      unlockedCategories: new Set(['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology']),
       challengesCompleted: [],
       chainsBuilt: 0,
     };

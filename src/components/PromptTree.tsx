@@ -41,7 +41,7 @@ export function PromptTree({ prompts }: PromptTreeProps) {
       type: 'input',
     });
 
-    const categories = ['Advanced', 'Strategy', 'Analysis', 'Creativity', 'Psychology'];
+    const categories = ['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology'];
     const categoryPositions = [
       { x: 100, y: 250 },
       { x: 300, y: 250 },

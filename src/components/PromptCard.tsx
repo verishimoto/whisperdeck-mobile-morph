@@ -17,11 +17,11 @@ interface PromptCardProps {
 const categoryColorMap: Record<string, { hsl: string; tag: string }> = {
   Ultra: { hsl: "320 98% 87%", tag: "tag-ultra" },
   Master: { hsl: "270 95% 85%", tag: "tag-master" },
-  Advanced: { hsl: "320 98% 87%", tag: "tag-advanced" },
-  Strategy: { hsl: "150 90% 80%", tag: "tag-strategy" },
-  Analysis: { hsl: "210 98% 82%", tag: "tag-analysis" },
-  Creativity: { hsl: "290 95% 85%", tag: "tag-creativity" },
-  Psychology: { hsl: "340 95% 85%", tag: "tag-psychology" },
+  'Meta-Cognition': { hsl: "320 98% 87%", tag: "tag-advanced" },
+  'Strategic Reasoning': { hsl: "150 90% 80%", tag: "tag-strategy" },
+  'Analytical Decomposition': { hsl: "210 98% 82%", tag: "tag-analysis" },
+  'Divergent Thinking': { hsl: "290 95% 85%", tag: "tag-creativity" },
+  'Behavioral Psychology': { hsl: "340 95% 85%", tag: "tag-psychology" },
   Design: { hsl: "30 90% 80%", tag: "tag-design" },
   Essential: { hsl: "200 95% 78%", tag: "tag-essential" },
 };
