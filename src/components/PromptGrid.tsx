@@ -1,8 +1,7 @@
-import { useEffect, useRef, useState, useCallback, useMemo } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { PromptCard } from "./PromptCard";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface PromptGridProps {
   prompts: HackPrompt[];
@@ -11,38 +10,19 @@ interface PromptGridProps {
   onCategoryFilter?: (category: string) => void;
 }
 
-function useColumnCount() {
-  const [cols, setCols] = useState(4);
-  useEffect(() => {
-    const update = () => {
-      const w = window.innerWidth;
-      if (w <= 640) setCols(1);
-      else if (w <= 1024) setCols(2);
-      else if (w <= 1280) setCols(3);
-      else setCols(4);
-    };
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
-  }, []);
-  return cols;
-}
-
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
-  const [visibleCards, setVisibleCards] = useState<Set<number>>(new Set());
   const [renderedCount, setRenderedCount] = useState(40);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-  const columnCount = useColumnCount();
 
   // Intersection observer for fade-in animation
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          const index = parseInt(entry.target.getAttribute('data-index') || '0');
           if (entry.isIntersecting) {
-            setVisibleCards((prev) => new Set([...prev, index]));
+            (entry.target as HTMLElement).classList.add('is-visible');
+            observerRef.current?.unobserve(entry.target);
           }
         });
       },
@@ -72,38 +52,13 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
   // Reset rendered count when prompts change
   useEffect(() => {
     setRenderedCount(40);
-    setVisibleCards(new Set());
   }, [prompts]);
 
-  const registerCard = useCallback((element: HTMLDivElement | null, index: number) => {
-    if (element) {
-      element.setAttribute('data-index', index.toString());
-      observerRef.current?.observe(element);
-    }
+  const registerCard = useCallback((element: HTMLDivElement | null) => {
+    if (element) observerRef.current?.observe(element);
   }, []);
 
   const displayedPrompts = prompts.slice(0, renderedCount);
-
-  // Distribute items round-robin across columns to avoid empty slots
-  const columns = useMemo(() => {
-    const cols: HackPrompt[][] = Array.from({ length: columnCount }, () => []);
-    displayedPrompts.forEach((prompt, i) => {
-      cols[i % columnCount].push(prompt);
-    });
-    return cols;
-  }, [displayedPrompts, columnCount]);
-
-  // Build a flat index map for animation registration
-  const flatIndexMap = useMemo(() => {
-    const map = new Map<number, number>();
-    let flatIdx = 0;
-    for (let col = 0; col < columns.length; col++) {
-      for (let row = 0; row < columns[col].length; row++) {
-        map.set(columns[col][row].id, flatIdx++);
-      }
-    }
-    return map;
-  }, [columns]);
 
   return (
     <div className="pb-16">
@@ -115,46 +70,40 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
         </p>
       </div>
 
-      {/* Flexbox Masonry - evenly distributed columns */}
-      <div className="prompt-grid-flex">
-        {columns.map((colItems, colIdx) => (
-          <div key={colIdx} className="prompt-grid-column">
-            {colItems.map((prompt) => {
-              const flatIdx = flatIndexMap.get(prompt.id) ?? 0;
-              const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
-
-              return (
-                <div
-                  key={prompt.id}
-                  ref={(el) => registerCard(el, flatIdx)}
-                  className="masonry-item"
-                  style={{ animationDelay: `${Math.min(flatIdx * 30, 300)}ms` }}
-                >
-                  <PromptCard
-                    prompt={prompt}
-                    index={originalIndex}
-                    onCategoryFilter={onCategoryFilter}
-                  />
-                </div>
-              );
-            })}
-          </div>
-        ))}
+      {/* Responsive CSS Grid — equal columns, no masonry */}
+      <div className="prompt-grid">
+        {displayedPrompts.map((prompt, i) => {
+          const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
+          return (
+            <div
+              key={prompt.id}
+              ref={registerCard}
+              className="prompt-grid-item"
+              style={{ transitionDelay: `${Math.min(i * 20, 240)}ms` }}
+            >
+              <PromptCard
+                prompt={prompt}
+                index={originalIndex}
+                onCategoryFilter={onCategoryFilter}
+              />
+            </div>
+          );
+        })}
       </div>
 
       {/* Load All button + Lazy load sentinel */}
       {renderedCount < prompts.length && (
-        <div className="flex justify-center mt-6 mb-2">
-          <button
-            onClick={() => setRenderedCount(prompts.length)}
-            className="px-6 py-2.5 text-sm font-light text-foreground/60 hover:text-foreground backdrop-blur-xl border border-white/10 hover:border-white/30 rounded-lg transition-all"
-          >
-            Load all {prompts.length - renderedCount} remaining prompts
-          </button>
-        </div>
-      )}
-      {renderedCount < prompts.length && (
-        <div ref={sentinelRef} className="h-8 w-full" />
+        <>
+          <div className="flex justify-center mt-6 mb-2">
+            <button
+              onClick={() => setRenderedCount(prompts.length)}
+              className="px-6 py-2.5 text-sm font-light text-foreground/60 hover:text-foreground backdrop-blur-xl border border-white/10 hover:border-white/30 rounded-lg transition-all"
+            >
+              Load all {prompts.length - renderedCount} remaining prompts
+            </button>
+          </div>
+          <div ref={sentinelRef} className="h-8 w-full" />
+        </>
       )}
 
       {/* Empty State */}

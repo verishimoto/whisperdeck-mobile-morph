@@ -1,33 +1,21 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo } from "react";
 import { Header } from "@/components/Header";
 import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
-
-import { PromptCarousel } from "@/components/PromptCarousel";
-import { PromptTree } from "@/components/PromptTree";
-import { PromptComposer } from "@/components/PromptComposer";
-import { ChainBuilder } from "@/components/ChainBuilder";
-import { ArchitectGate } from "@/components/ArchitectGate";
-import { useArchitect } from "@/contexts/ArchitectContext";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { hackPrompts, categories } from "@/data/prompts";
+import { hackPrompts } from "@/data/prompts";
 import { FilterState } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
-import { LayoutGrid, Layout, Network } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const Index = () => {
-  const { isArchitect } = useArchitect();
   const { getFavorites } = useFavorites();
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [filters, setFilters] = useState<FilterState>({
     search: "",
     category: "",
     sort: "desc",
   });
-  const [viewMode, setViewMode] = useState<'grid' | 'carousel' | 'tree'>('grid');
   const [showFavorites, setShowFavorites] = useState(false);
 
   // Keyboard shortcuts
@@ -45,31 +33,26 @@ const Index = () => {
   const filteredPrompts = useMemo(() => {
     let filtered = hackPrompts;
 
-    // Apply favorites filter
     if (showFavorites) {
       const favoriteIds = getFavorites();
       filtered = filtered.filter((prompt) => favoriteIds.includes(prompt.id));
     }
 
-    // Apply category filter
     if (filters.category && !showFavorites) {
       filtered = filtered.filter((prompt) => prompt.category === filters.category);
     }
 
-    // Apply fuzzy search if there's a search query
     if (filters.search.trim()) {
       const fuse = createFuzzySearch(filtered);
       const results = fuse.search(filters.search);
       filtered = results.map(result => result.item);
     }
 
-    // Sort by score (descending = high to low, ascending = low to high)
-    filtered.sort((a, b) => {
+    filtered = [...filtered].sort((a, b) => {
       if (filters.sort === 'asc') {
         return (a.score || 0) - (b.score || 0);
-      } else {
-        return (b.score || 0) - (a.score || 0);
       }
+      return (b.score || 0) - (a.score || 0);
     });
 
     return filtered;
@@ -95,15 +78,13 @@ const Index = () => {
   };
 
   return (
-    <div className={`min-h-screen bg-background text-foreground ${!isArchitect ? 'pb-[420px]' : 'pb-32'}`}>
-      <ArchitectGate />
-      
+    <div className="min-h-screen bg-background text-foreground pb-24">
       <Header
         searchQuery=""
         onSearchChange={() => {}}
         totalPrompts={hackPrompts.length}
       />
-      
+
       <CategoryFilter
         selectedCategory={filters.category}
         onCategoryChange={handleCategoryChange}
@@ -115,91 +96,14 @@ const Index = () => {
         onFavoritesToggle={handleFavoritesToggle}
       />
 
-      {/* View Mode Toggle - Hidden for Architects */}
-      {!isArchitect && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 flex justify-end gap-2">
-          <Tooltip delayDuration={500}>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => setViewMode('grid')}
-                className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
-                  viewMode === 'grid'
-                    ? 'text-white bg-white/15 border-white/30'
-                    : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
-                }`}
-                style={{ borderRadius: '8px' }}
-                data-cursor="hover"
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Grid View (G)</TooltipContent>
-          </Tooltip>
-          <Tooltip delayDuration={500}>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => setViewMode('carousel')}
-                className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
-                  viewMode === 'carousel'
-                    ? 'text-white bg-white/15 border-white/30'
-                    : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
-                }`}
-                style={{ borderRadius: '8px' }}
-                data-cursor="hover"
-              >
-                <Layout className="h-4 w-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Carousel View (C)</TooltipContent>
-          </Tooltip>
-          <Tooltip delayDuration={500}>
-            <TooltipTrigger asChild>
-              <button
-                onClick={() => setViewMode('tree')}
-                className={`p-2.5 h-[44px] w-[44px] transition-all backdrop-blur-xl border flex items-center justify-center ${
-                  viewMode === 'tree'
-                    ? 'text-white bg-white/15 border-white/30'
-                    : 'text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
-                }`}
-                style={{ borderRadius: '8px' }}
-                data-cursor="hover"
-              >
-                <Network className="h-4 w-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Tree View (T)</TooltipContent>
-          </Tooltip>
-        </div>
-      )}
-      
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 ${isArchitect ? 'architect-mode' : ''}`}>
-        {/* Architect uses CSS masonry (PromptGrid) for variable heights, users use virtualized grid */}
-        {isArchitect ? (
-          <PromptGrid
-            prompts={filteredPrompts}
-            filteredCount={filteredPrompts.length}
-            totalCount={hackPrompts.length}
-            onCategoryFilter={(category) => handleCategoryChange(category)}
-          />
-        ) : viewMode === 'grid' ? (
-          <PromptGrid
-            prompts={filteredPrompts}
-            filteredCount={filteredPrompts.length}
-            totalCount={hackPrompts.length}
-            onCategoryFilter={(category) => handleCategoryChange(category)}
-          />
-        ) : viewMode === 'carousel' ? (
-          <PromptCarousel prompts={filteredPrompts} />
-        ) : (
-          <PromptTree prompts={filteredPrompts} />
-        )}
-      </div>
-
-      {/* Prompt Composer - User only */}
-      {!isArchitect && <PromptComposer />}
-
-      {/* Chain Builder - Available to ALL users including Architects */}
-      <ChainBuilder />
+      <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+        <PromptGrid
+          prompts={filteredPrompts}
+          filteredCount={filteredPrompts.length}
+          totalCount={hackPrompts.length}
+          onCategoryFilter={(category) => handleCategoryChange(category)}
+        />
+      </main>
     </div>
   );
 };
