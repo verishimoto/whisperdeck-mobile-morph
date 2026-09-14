@@ -1,12 +1,9 @@
-import { Moon, Sun, Keyboard, User, Zap, Sparkles, Wand2 } from "lucide-react";
+import { Moon, Sun, Keyboard, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePerformance } from "@/contexts/PerformanceContext";
-import { useArchitect } from "@/contexts/ArchitectContext";
 import { useNavigate } from "react-router-dom";
-import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
   TooltipContent,
@@ -23,95 +20,25 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   const { theme, setTheme } = useTheme();
   const [showShortcuts, setShowShortcuts] = useState(false);
   const { user, signOut } = useAuth();
-  const { mode, setMode, isPerformanceMode, autoDetect, performanceLevel, fps } = usePerformance();
-  const { isArchitect, setShowGate } = useArchitect();
   const navigate = useNavigate();
 
   return (
     <>
       <header className="sticky top-0 z-50 liquid-glass-header border-b-0">
-        {/* Top Bar - Standard max-width */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-3 flex items-center justify-between">
+        {/* Top Bar */}
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-3 flex items-center justify-between">
           {/* Brand */}
           <div className="flex flex-col">
             <h1 className="text-2xl md:text-3xl font-medium tracking-tight text-foreground header-brand">
               WhispererDeck
             </h1>
             <p className="hidden sm:block text-[10px] text-muted-foreground font-light tracking-widest uppercase mt-0.5">
-              250 Advanced LLM Prompts
+              {totalPrompts} Advanced LLM Prompts
             </p>
           </div>
-          
+
           {/* Actions */}
           <div className="flex items-center gap-2">
-            {/* Architect Mode Indicator or Trigger */}
-            {isArchitect ? (
-              <Badge className="bg-purple-500/20 border-purple-500/40 text-purple-300 flex items-center gap-1.5 px-3 py-1">
-                <Wand2 className="h-3.5 w-3.5" />
-                Architect
-              </Badge>
-            ) : (
-              <Tooltip delayDuration={500}>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => setShowGate(true)}
-                    className="p-2.5 rounded-xl liquid-glass-button text-foreground/40 hover:text-purple-400 transition-colors"
-                    data-cursor="hover"
-                  >
-                    <Wand2 className="h-4 w-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="bottom" className="liquid-glass-card border-foreground/20">
-                  <p className="text-sm">Architect Access</p>
-                </TooltipContent>
-              </Tooltip>
-            )}
-
-            {/* Performance Mode Toggle - Only show FPS badge to architects */}
-            <Tooltip delayDuration={500}>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setMode(isPerformanceMode ? "high-quality" : "performance")}
-                  className={`p-2.5 rounded-xl liquid-glass-button transition-all flex items-center gap-1.5 ${
-                    isPerformanceMode 
-                      ? 'text-green-400 bg-green-500/20 border-green-500/30' 
-                      : 'text-foreground/60 hover:text-foreground'
-                  }`}
-                  data-cursor="hover"
-                >
-                  {isPerformanceMode ? (
-                    <Zap className="h-4 w-4" />
-                  ) : (
-                    <Sparkles className="h-4 w-4" />
-                  )}
-                  {/* Only show FPS badge to architects */}
-                  {isArchitect && autoDetect && (
-                    <Badge 
-                      variant="outline" 
-                      className={`text-[10px] px-1 py-0 h-4 ${
-                        performanceLevel === 'high' ? 'border-green-500/50 text-green-400' :
-                        performanceLevel === 'medium' ? 'border-yellow-500/50 text-yellow-400' :
-                        performanceLevel === 'low' ? 'border-orange-500/50 text-orange-400' :
-                        'border-red-500/50 text-red-400'
-                      }`}
-                    >
-                      {fps}
-                    </Badge>
-                  )}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="liquid-glass-card border-foreground/20">
-                <div className="text-sm space-y-1">
-                  <p className="font-medium">
-                    {isPerformanceMode ? "Performance Mode" : "High Quality Mode"}
-                  </p>
-                  <p className="text-foreground/60 text-xs">
-                    {isArchitect && autoDetect ? `Auto-detecting: ${fps} FPS (${performanceLevel})` : 'Click to toggle effects'}
-                  </p>
-                </div>
-              </TooltipContent>
-            </Tooltip>
-
             {/* Keyboard Shortcuts */}
             <Tooltip delayDuration={500}>
               <TooltipTrigger asChild>

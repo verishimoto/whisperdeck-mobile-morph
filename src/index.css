@@ -352,9 +352,10 @@
 
 /* Fixed height cards - collapsed state only */
 .card-fixed-height {
-  min-height: 280px;
+  height: 300px;
   overflow: hidden;
 }
+
 
 /* Noise texture for glass realism — desktop only */
 .liquid-glass-card::before {
@@ -818,32 +819,68 @@ input:focus-visible {
   animation: button-glow 3s ease-in-out infinite;
 }
 
-/* ===== PROMPT GRID - Flexbox Masonry (no empty slots) ===== */
-.prompt-grid-flex {
-  display: flex;
+/* ===== PROMPT GRID - responsive CSS grid (equal columns, no masonry) ===== */
+.prompt-grid {
+  display: grid;
   gap: 1.5rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: start;
 }
 
-.prompt-grid-column {
-  flex: 1;
+@media (max-width: 1439.98px) {
+  .prompt-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+@media (max-width: 1180px) {
+  .prompt-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .prompt-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 640px) {
+  .prompt-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.prompt-grid-item {
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.masonry-item {
+  align-self: start;
   opacity: 0;
   transform: translateY(8px);
-  animation: masonry-fade-in 0.4s ease-out forwards;
+  animation: grid-fade-in 0.35s ease-out forwards;
 }
 
-@keyframes masonry-fade-in {
+@keyframes grid-fade-in {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .prompt-grid-item {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+
+/* Two-line title clamp with reserved height */
+.card-title-clamp {
+  line-height: 1.3;
+  min-height: calc(2 * 1.3em);
+}
+
+.card-title-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
 
 /* ===== ARCHITECT MODE ANIMATIONS ===== */
 .wizard-hat-animated {
