@@ -827,7 +827,7 @@ input:focus-visible {
   align-items: start;
 }
 
-@media (max-width: 1440px) {
+@media (max-width: 1439.98px) {
   .prompt-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
