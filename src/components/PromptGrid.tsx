@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PromptCard } from "./PromptCard";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
@@ -12,24 +12,7 @@ interface PromptGridProps {
 
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
   const [renderedCount, setRenderedCount] = useState(40);
-  const observerRef = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
-
-  // Intersection observer for fade-in animation
-  useEffect(() => {
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            (entry.target as HTMLElement).classList.add('is-visible');
-            observerRef.current?.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: '50px 0px' }
-    );
-    return () => { observerRef.current?.disconnect(); };
-  }, []);
 
   // Lazy load sentinel
   useEffect(() => {
@@ -54,10 +37,6 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
     setRenderedCount(40);
   }, [prompts]);
 
-  const registerCard = useCallback((element: HTMLDivElement | null) => {
-    if (element) observerRef.current?.observe(element);
-  }, []);
-
   const displayedPrompts = prompts.slice(0, renderedCount);
 
   return (
@@ -77,9 +56,8 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
           return (
             <div
               key={prompt.id}
-              ref={registerCard}
               className="prompt-grid-item"
-              style={{ transitionDelay: `${Math.min(i * 20, 240)}ms` }}
+              style={{ animationDelay: `${Math.min(i * 20, 240)}ms` }}
             >
               <PromptCard
                 prompt={prompt}
