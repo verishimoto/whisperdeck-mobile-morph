@@ -3,6 +3,15 @@ import { PromptCard } from "./PromptCard";
 import { HackPrompt } from "@/types";
 import { hackPrompts } from "@/data/prompts";
 
+function getColumnCount() {
+  const width = window.innerWidth;
+  if (width <= 640) return 1;
+  if (width <= 900) return 2;
+  if (width <= 1180) return 3;
+  if (width < 1440) return 4;
+  return 5;
+}
+
 interface PromptGridProps {
   prompts: HackPrompt[];
   filteredCount: number;
@@ -12,7 +21,14 @@ interface PromptGridProps {
 
 export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilter }: PromptGridProps) {
   const [renderedCount, setRenderedCount] = useState(40);
+  const [columnCount, setColumnCount] = useState(getColumnCount);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const updateColumns = () => setColumnCount(getColumnCount());
+    window.addEventListener('resize', updateColumns);
+    return () => window.removeEventListener('resize', updateColumns);
+  }, []);
 
   // Lazy load sentinel
   useEffect(() => {
@@ -38,6 +54,10 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
   }, [prompts]);
 
   const displayedPrompts = prompts.slice(0, renderedCount);
+  const columns = Array.from({ length: columnCount }, () => [] as { prompt: HackPrompt; position: number }[]);
+  displayedPrompts.forEach((prompt, position) => {
+    columns[position % columnCount].push({ prompt, position });
+  });
 
   return (
     <div className="pb-16">
@@ -49,24 +69,28 @@ export function PromptGrid({ prompts, filteredCount, totalCount, onCategoryFilte
         </p>
       </div>
 
-      {/* Responsive CSS Grid — equal columns, no masonry */}
+      {/* One grid row of independent vertical columns; cards never share row tracks. */}
       <div className="prompt-grid">
-        {displayedPrompts.map((prompt, i) => {
-          const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
-          return (
-            <div
-              key={prompt.id}
-              className="prompt-grid-item"
-              style={{ animationDelay: `${Math.min(i * 20, 240)}ms` }}
-            >
-              <PromptCard
-                prompt={prompt}
-                index={originalIndex}
-                onCategoryFilter={onCategoryFilter}
-              />
-            </div>
-          );
-        })}
+        {columns.map((column, columnIndex) => (
+          <div className="prompt-grid-column" key={columnIndex}>
+            {column.map(({ prompt, position }) => {
+              const originalIndex = hackPrompts.findIndex(p => p.id === prompt.id);
+              return (
+                <div
+                  key={prompt.id}
+                  className="prompt-grid-item"
+                  style={{ animationDelay: `${Math.min(position * 20, 240)}ms` }}
+                >
+                  <PromptCard
+                    prompt={prompt}
+                    index={originalIndex}
+                    onCategoryFilter={onCategoryFilter}
+                  />
+                </div>
+              );
+            })}
+          </div>
+        ))}
       </div>
 
       {/* Load All button + Lazy load sentinel */}

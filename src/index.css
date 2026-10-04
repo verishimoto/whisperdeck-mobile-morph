@@ -819,12 +819,19 @@ input:focus-visible {
   animation: button-glow 3s ease-in-out infinite;
 }
 
-/* ===== PROMPT GRID - responsive CSS grid (equal columns, no masonry) ===== */
+/* ===== PROMPT GRID - independent vertical card stacks ===== */
 .prompt-grid {
   display: grid;
   gap: 1.5rem;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: start;
+}
+
+.prompt-grid-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
 }
 
 @media (max-width: 1439.98px) {
