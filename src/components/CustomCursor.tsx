@@ -186,14 +186,16 @@ export function CustomCursor() {
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+      const target = e.target;
+      if (!(target instanceof Element)) return;
       if (target.closest('button, .card, a, [data-cursor="hover"], .liquid-glass-card, .liquid-glass-button, input')) {
         setIsHovering(true);
       }
     };
 
     const handleMouseLeave = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
+      const target = e.target;
+      if (!(target instanceof Element)) return;
       if (target.closest('button, .card, a, [data-cursor="hover"], .liquid-glass-card, .liquid-glass-button, input')) {
         setIsHovering(false);
       }
