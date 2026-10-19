@@ -5,6 +5,7 @@
 - [ ] Compare all available historical data revisions and prepare an ID-keyed review map.
 - [ ] Deliver current design-system critique and measured light-mode contrast audit.
 - [ ] Verify public card controls, cursor/glow, independent expansion, and automatic build.
+- [ ] Check security findings, request publishing, and notify the user of the confirmed deployment state.
 
 ## Deferred by scope decision
 - Card spacing, open-state colors, title/number arrangement, and selective text revisions require review of the evidence first.
