@@ -1,11 +1,11 @@
 # WhispererDeck review roadmap
 
-- [ ] Guard custom-cursor event targets and run regression checks.
-- [ ] Export the untouched current 275-prompt snapshot.
-- [ ] Compare all available historical data revisions and prepare an ID-keyed review map.
-- [ ] Deliver current design-system critique and measured light-mode contrast audit.
-- [ ] Verify public card controls, cursor/glow, independent expansion, and automatic build.
-- [ ] Check security findings, request publishing, and notify the user of the confirmed deployment state.
+- [x] Guard custom-cursor event targets and run regression checks.
+- [x] Export the untouched current 275-prompt snapshot.
+- [x] Compare all available historical data revisions and prepare an ID-keyed review map.
+- [x] Deliver current design-system critique and measured light-mode contrast audit.
+- [x] Verify public card controls, cursor/glow, independent expansion, and automatic build.
+- [x] Check security findings and request publishing with deployment-state notification.
 
 ## Deferred by scope decision
 - Card spacing, open-state colors, title/number arrangement, and selective text revisions require review of the evidence first.
