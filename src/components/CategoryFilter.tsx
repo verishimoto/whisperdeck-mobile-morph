@@ -1,5 +1,6 @@
 import { ArrowUpDown, Search, Heart } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { shortLabel } from "@/lib/category-labels";
 import {
   Tooltip,
   TooltipContent,
@@ -136,11 +137,11 @@ export function CategoryFilter({
                     }}
                     data-cursor="hover"
                   >
-                    {category}
+                    {shortLabel(category)}
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" className="liquid-glass-card">
-                  <p className="text-sm">Filter by {category}</p>
+                  <p className="text-sm">{category}</p>
                 </TooltipContent>
               </Tooltip>
             );

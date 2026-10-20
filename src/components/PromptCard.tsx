@@ -4,6 +4,7 @@ import { Copy, Check, ChevronDown, ChevronUp, Target, Heart } from "lucide-react
 import { HackPrompt } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import { useFavorites } from "@/contexts/FavoritesContext";
+import { shortLabel } from "@/lib/category-labels";
 
 interface PromptCardProps {
   prompt: HackPrompt;
@@ -68,18 +69,24 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
     <div ref={cardRef} className="relative w-full">
       <div className={`liquid-glass-card ${expanded ? '' : 'card-fixed-height'}`}>
         <div className="p-5 flex flex-col h-full relative z-10">
-          <div className="flex items-start justify-between mb-4">
-            <Badge 
-              onClick={handleCategoryClick}
-              className={`tag-interactive ${categoryStyle.tag} text-xs px-2.5 py-1 rounded-full font-sans cursor-pointer`}
-              style={{
-                color: `hsl(${categoryStyle.hsl})`,
-                backgroundColor: `hsl(${categoryStyle.hsl} / 0.15)`,
-                borderColor: `hsl(${categoryStyle.hsl} / 0.25)`,
-              }}
-            >
-              {prompt.category}
-            </Badge>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="number-display text-foreground/50 leading-none" aria-label={`Prompt ${prompt.id}`}>
+                <sup className="text-[0.55em] align-[0.45em] mr-px">#</sup>{prompt.id}
+              </span>
+              <Badge 
+                onClick={handleCategoryClick}
+                title={prompt.category}
+                className={`tag-interactive ${categoryStyle.tag} text-xs px-2.5 py-1 rounded-full font-sans cursor-pointer`}
+                style={{
+                  color: `hsl(${categoryStyle.hsl})`,
+                  backgroundColor: `hsl(${categoryStyle.hsl} / 0.15)`,
+                  borderColor: `hsl(${categoryStyle.hsl} / 0.25)`,
+                }}
+              >
+                {shortLabel(prompt.category)}
+              </Badge>
+            </div>
             <div className="flex items-center gap-1.5">
               <button 
                 onClick={handleFavorite} 
@@ -102,9 +109,8 @@ export const PromptCard = memo(function PromptCard({ prompt, index, onCategoryFi
             </div>
           </div>
 
-          <h3 className="font-display text-lg font-medium text-foreground mb-2 card-title-clamp flex items-baseline gap-2">
-            <span className="number-display text-foreground/40">{rank}.</span>
-            <span className="flex-1 card-title-text">{prompt.title}</span>
+          <h3 className="font-display text-lg font-medium text-foreground mb-3 leading-snug card-title-clamp">
+            <span className="card-title-text">{prompt.title}</span>
           </h3>
           <p className="font-body text-sm text-foreground/60 leading-relaxed mb-4 line-clamp-3 flex-grow">{prompt.description}</p>
 
