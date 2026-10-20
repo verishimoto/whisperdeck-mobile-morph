@@ -10,3 +10,8 @@
 ## Deferred by scope decision
 - Card spacing, open-state colors, title/number arrangement, and selective text revisions require review of the evidence first.
 - Multi-copy, sign-in gating, search recommendations, account menu, architect greeting, and profile onboarding remain future work.
+## Labels & card info plan (approved)
+- [x] Short display labels on filter pills and card tags (full name as tooltip).
+- [x] Card header: raised "#ID" before tag; title on its own line with more spacing.
+- [ ] Draft optional fields (useWhen, tags, inputHint) as a review CSV — waiting on the user to choose which batch to start with.
+- [ ] Recommended badge driven by search/AI Finder instead of position.
