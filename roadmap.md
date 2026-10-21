@@ -1,17 +1,16 @@
-# WhispererDeck review roadmap
+# WhispererDeck roadmap
 
-- [x] Guard custom-cursor event targets and run regression checks.
-- [x] Export the untouched current 275-prompt snapshot.
-- [x] Compare all available historical data revisions and prepare an ID-keyed review map.
-- [x] Deliver current design-system critique and measured light-mode contrast audit.
-- [x] Verify public card controls, cursor/glow, independent expansion, and automatic build.
-- [x] Check security findings and request publishing with deployment-state notification.
-
-## Deferred by scope decision
-- Card spacing, open-state colors, title/number arrangement, and selective text revisions require review of the evidence first.
-- Multi-copy, sign-in gating, search recommendations, account menu, architect greeting, and profile onboarding remain future work.
-## Labels & card info plan (approved)
-- [x] Short display labels on filter pills and card tags (full name as tooltip).
-- [x] Card header: raised "#ID" before tag; title on its own line with more spacing.
-- [ ] Draft optional fields (useWhen, tags, inputHint) as a review CSV — waiting on the user to choose which batch to start with.
-- [ ] Recommended badge driven by search/AI Finder instead of position.
+## Full plan (approved 2026-10-21)
+- [ ] Layout: "#ID" before title, one even gap, toolbar width aligned, page title fixed
+- [ ] Content: deeper closed-card text + input tags (original text untouched)
+- [ ] Copy: free quick copy; sign-in for full-card copy and multi-select (max 5)
+- [ ] Recommended: curated core set + top search matches
+- [ ] AI Finder: describe a task, get ranked prompts
+- [ ] AI Adapt: per-card goal + context → ready-to-use prompt
+- [ ] Account menu (initials/photo, sign out) + Architect greeting (display only)
+- [ ] Light-mode contrast + open-card color
+- [ ] Visual regression tests (5 widths)
+- [ ] Security scan, publish, verify
+- [ ] Card-by-card CSV for database review
+- [ ] Waiting on approval: templates database access fix; leaked-password protection
+- [ ] Later: profile onboarding, shareable links, Markdown copy, similar prompts, prompts in database
