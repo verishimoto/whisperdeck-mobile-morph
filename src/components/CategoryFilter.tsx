@@ -119,7 +119,7 @@ export function CategoryFilter({
                           : 'hover:shadow-[0_0_12px_hsl(${colors.hsl}/0.3)]'
                       }`}
                     style={{
-                      color: isSelected ? `hsl(${colors.hsl})` : `hsl(${colors.hsl} / 0.5)`,
+                      color: isSelected ? `hsl(${colors.hsl})` : `hsl(${colors.hsl} / 0.8)`,
                       backgroundColor: isSelected ? `hsl(${colors.hsl} / 0.15)` : 'transparent',
                       borderColor: isSelected ? `hsl(${colors.hsl} / 0.5)` : `hsl(${colors.hsl} / 0.2)`,
                     }}
@@ -132,7 +132,7 @@ export function CategoryFilter({
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) {
-                        e.currentTarget.style.color = `hsl(${colors.hsl} / 0.5)`;
+                        e.currentTarget.style.color = `hsl(${colors.hsl} / 0.8)`;
                         e.currentTarget.style.borderColor = `hsl(${colors.hsl} / 0.2)`;
                         e.currentTarget.style.backgroundColor = 'transparent';
                       }

@@ -1,4 +1,4 @@
-import { Moon, Sun, Keyboard, User } from "lucide-react";
+import { Moon, Sun, Keyboard, User, LogOut } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useState } from "react";
 import { KeyboardShortcutsModal } from "./KeyboardShortcutsModal";
@@ -9,6 +9,11 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
+  DropdownMenuSeparator, DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface HeaderProps {
   searchQuery: string;
@@ -21,6 +26,13 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
   const [showShortcuts, setShowShortcuts] = useState(false);
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+
+  const meta = (user?.user_metadata ?? {}) as Record<string, string>;
+  const displayName = meta.full_name || meta.name || user?.email?.split('@')[0] || '';
+  const avatarUrl = meta.avatar_url || meta.picture || '';
+  const initials = displayName.split(/[\s._-]+/).filter(Boolean).slice(0, 2).map(s => s[0]?.toUpperCase()).join('') || 'U';
+  // Display-only greeting; grants no extra access.
+  const isArchitectEmail = user?.email?.toLowerCase() === 'vg.contato@gmail.com';
 
   return (
     <>
@@ -39,6 +51,9 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
 
           {/* Actions */}
           <div className="flex items-center gap-2">
+            {isArchitectEmail && (
+              <span className="hidden md:inline text-sm text-primary font-medium mr-1">Welcome, Architect!</span>
+            )}
             {/* Keyboard Shortcuts */}
             <Tooltip delayDuration={500}>
               <TooltipTrigger asChild>
@@ -56,30 +71,40 @@ export function Header({ searchQuery, onSearchChange, totalPrompts }: HeaderProp
             </Tooltip>
 
             {/* User / Auth */}
-            <Tooltip delayDuration={500}>
-              <TooltipTrigger asChild>
-                {user ? (
-                  <button
-                    onClick={() => signOut()}
-                    className="p-2.5 rounded-xl liquid-glass-button"
-                    data-cursor="hover"
-                  >
-                    <User className="h-4 w-4 text-primary" />
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="rounded-full liquid-glass-button p-0.5" aria-label="Account menu" data-cursor="hover">
+                    <Avatar className="h-9 w-9">
+                      {avatarUrl && <AvatarImage src={avatarUrl} alt="" referrerPolicy="no-referrer" />}
+                      <AvatarFallback className="bg-primary/20 text-primary text-xs font-semibold">{initials}</AvatarFallback>
+                    </Avatar>
                   </button>
-                ) : (
-                  <button
-                    onClick={() => navigate('/auth')}
-                    className="p-2.5 rounded-xl liquid-glass-button"
-                    data-cursor="hover"
-                  >
-                    <User className="h-4 w-4 text-foreground/60 hover:text-foreground transition-colors" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="font-normal">
+                    <p className="text-sm font-medium truncate">{displayName}</p>
+                    <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate('/templates')}>Templates</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="h-4 w-4 mr-2" />Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Tooltip delayDuration={500}>
+                <TooltipTrigger asChild>
+                  <button onClick={() => navigate('/auth')} className="p-2.5 rounded-xl liquid-glass-button" data-cursor="hover" aria-label="Sign in">
+                    <User className="h-4 w-4 text-foreground/70 hover:text-foreground transition-colors" />
                   </button>
-                )}
-              </TooltipTrigger>
-              <TooltipContent side="bottom" className="liquid-glass-card border-foreground/20">
-                <p className="text-sm">{user ? 'Sign Out' : 'Sign In'}</p>
-              </TooltipContent>
-            </Tooltip>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" className="liquid-glass-card border-foreground/20">
+                  <p className="text-sm">Sign In</p>
+                </TooltipContent>
+              </Tooltip>
+            )}
 
             {/* Theme Toggle */}
             <Tooltip delayDuration={500}>
