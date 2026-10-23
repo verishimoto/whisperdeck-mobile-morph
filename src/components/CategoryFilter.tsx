@@ -1,4 +1,4 @@
-import { ArrowUpDown, Search, Heart } from "lucide-react";
+import { ArrowUpDown, Search, Heart, Sparkles } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { shortLabel } from "@/lib/category-labels";
 import {
@@ -16,6 +16,7 @@ interface CategoryFilterProps {
   onSearchChange: (search: string) => void;
   showFavorites?: boolean;
   onFavoritesToggle?: () => void;
+  onOpenFinder?: () => void;
 }
 
 const categoryColorMap: Record<string, { var: string; hsl: string }> = {
@@ -35,14 +36,15 @@ export function CategoryFilter({
   searchQuery, 
   onSearchChange,
   showFavorites = false,
-  onFavoritesToggle 
+  onFavoritesToggle,
+  onOpenFinder
 }: CategoryFilterProps) {
   const categories = ['Meta-Cognition', 'Strategic Reasoning', 'Analytical Decomposition', 'Divergent Thinking', 'Behavioral Psychology', 'Design'];
   const { favoritesCount } = useFavorites();
 
   return (
     <div className="sticky top-[72px] z-40 mb-8 px-4 py-3 sm:py-4 liquid-glass-header border-b-0">
-      <div className="flex flex-col sm:flex-row sm:items-center max-w-7xl mx-auto px-0 sm:px-2 lg:px-4 gap-3 sm:gap-0">
+      <div className="flex flex-col sm:flex-row sm:items-center max-w-[1600px] mx-auto px-0 sm:px-2 lg:px-4 gap-3 sm:gap-0">
         {/* Left: Category buttons */}
         <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap flex-1 overflow-x-auto scrollbar-hide">
           {/* All Button */}
@@ -57,7 +59,7 @@ export function CategoryFilter({
                   ${
                     selectedCategory === null && !showFavorites
                       ? 'text-foreground bg-foreground/15 border-foreground/50 font-medium shadow-[0_0_12px_hsl(0_0%_100%/0.2)]'
-                      : 'text-foreground/50 bg-transparent border-foreground/15 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/10'
+                      : 'text-foreground/75 bg-transparent border-foreground/15 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/10'
                   }`}
                 data-cursor="hover"
               >
@@ -157,18 +159,28 @@ export function CategoryFilter({
               placeholder="Search..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full h-9 px-4 pr-10 rounded-full border border-foreground/20 bg-transparent text-foreground placeholder:text-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-sm font-sans"
+              className="w-full h-9 px-4 pr-10 rounded-full border border-foreground/20 bg-transparent text-foreground placeholder:text-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-sm font-sans"
               data-cursor="hover"
             />
             <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground/40 pointer-events-none" />
           </div>
+
+          {onOpenFinder && (
+            <button
+              onClick={onOpenFinder}
+              className="h-9 px-3 rounded-full border border-primary/40 text-primary flex items-center gap-1.5 text-sm hover:bg-primary/10 transition-all whitespace-nowrap"
+              data-cursor="hover"
+            >
+              <Sparkles className="h-4 w-4" />AI Finder
+            </button>
+          )}
 
           {/* Sort Button */}
           <Tooltip delayDuration={500}>
             <TooltipTrigger asChild>
               <button
                 onClick={() => onSortChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-                className="h-9 w-9 rounded-full border border-foreground/20 flex items-center justify-center text-foreground/50 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/10 transition-all"
+                className="h-9 w-9 rounded-full border border-foreground/20 flex items-center justify-center text-foreground/75 hover:text-foreground hover:border-foreground/40 hover:bg-foreground/10 transition-all"
                 data-cursor="hover"
               >
                 <ArrowUpDown className="h-4 w-4" />
