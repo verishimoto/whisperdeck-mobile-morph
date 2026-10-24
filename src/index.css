@@ -1122,3 +1122,12 @@ input:focus-visible {
 .architect-mode .liquid-glass-card::after {
   /* No opacity override - edge-intensity CSS variable controls it */
 }
+
+/* Deeper text on closed cards: fills free space, fades instead of cutting a line */
+.card-fixed-height .card-excerpt {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  mask-image: linear-gradient(to bottom, #000 70%, transparent);
+}

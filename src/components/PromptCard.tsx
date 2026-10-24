@@ -120,9 +120,9 @@ export const PromptCard = memo(function PromptCard({ prompt, recommended, aiReas
           </h3>
           <p className="font-body text-sm text-foreground/75 leading-relaxed mb-2">{prompt.description}.</p>
           {aiReason ? (
-            <p className="font-body text-xs text-primary leading-relaxed line-clamp-3"><Sparkles className="inline h-3 w-3 mr-1" />{aiReason}</p>
+            <p className="font-body text-xs text-primary leading-relaxed card-excerpt"><Sparkles className="inline h-3 w-3 mr-1" />{aiReason}</p>
           ) : !expanded && prompt.whyHack ? (
-            <p className="font-body text-xs text-foreground/60 leading-relaxed line-clamp-3">{prompt.whyHack}</p>
+            <p className="font-body text-xs text-foreground/65 leading-relaxed card-excerpt">{prompt.whyHack}</p>
           ) : null}
 
           {expanded && (
@@ -155,7 +155,7 @@ export const PromptCard = memo(function PromptCard({ prompt, recommended, aiReas
                   <Target className="h-3 w-3" />Recommended
                 </Badge>
               )}
-              {inputs.slice(0, recommended ? 1 : 3).map((t) => (
+              {inputs.slice(0, recommended ? 1 : 2).map((t) => (
                 <span key={t} className="font-mono text-[10px] px-1.5 py-0.5 rounded border border-foreground/15 text-foreground/70">{t}</span>
               ))}
             </div>
