@@ -50,7 +50,7 @@ export function PromptCarousel({ prompts }: PromptCarouselProps) {
           {prompts.map((prompt, index) => (
             <CarouselItem key={prompt.id} className="pl-4 md:basis-1/2 lg:basis-1/3 xl:basis-1/4">
               <div className="h-full p-1">
-                <PromptCard prompt={prompt} index={index} />
+                <PromptCard prompt={prompt} />
               </div>
             </CarouselItem>
           ))}
