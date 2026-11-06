@@ -1,6 +1,7 @@
 import { ArrowUpDown, Search, Heart, Sparkles } from "lucide-react";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { shortLabel } from "@/lib/category-labels";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -166,13 +167,13 @@ export function CategoryFilter({
           </div>
 
           {onOpenFinder && (
-            <button
+            <Button variant="outline" size="sm"
               onClick={onOpenFinder}
               className="h-9 px-3 rounded-full border border-primary/40 text-primary flex items-center gap-1.5 text-sm hover:bg-primary/10 transition-all whitespace-nowrap"
               data-cursor="hover"
             >
               <Sparkles className="h-4 w-4" />AI Finder
-            </button>
+            </Button>
           )}
 
           {/* Sort Button */}
