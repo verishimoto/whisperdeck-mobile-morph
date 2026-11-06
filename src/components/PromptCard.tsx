@@ -9,6 +9,7 @@ import { useSelection } from "@/contexts/SelectionContext";
 import { useNavigate } from "react-router-dom";
 import { shortLabel } from "@/lib/category-labels";
 import { formatFullCard, inputTags } from "@/lib/prompt-meta";
+import { Button } from "@/components/ui/button";
 
 interface PromptCardProps {
   prompt: HackPrompt;
@@ -99,6 +100,7 @@ export const PromptCard = memo(function PromptCard({ prompt, recommended, aiReas
               {shortLabel(prompt.category)}
             </Badge>
             <div className="flex items-center gap-1.5">
+              <Button variant="ghost" size="icon" onClick={handleAdapt} aria-label="Adapt this prompt" title="Adapt this prompt" className="h-7 w-7 text-primary"><Sparkles className="h-4 w-4" /></Button>
               <button onClick={handleSelect} aria-pressed={selected} aria-label={selected ? "Unselect card" : "Select card"}
                 className={`p-1.5 rounded-lg liquid-glass-button ${selected ? 'text-primary' : 'text-foreground/60 hover:text-foreground'}`} title="Select for multi-copy">
                 {selected ? <CheckSquare className="h-4 w-4" /> : <Square className="h-4 w-4" />}

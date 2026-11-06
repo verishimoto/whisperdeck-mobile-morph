@@ -37,7 +37,7 @@ export function AdaptPromptDialog({ prompt, onClose }: Props) {
 
   return (
     <Dialog open={!!prompt} onOpenChange={(o) => !o && close()}>
-      <DialogContent className="liquid-glass-card max-w-2xl max-h-[85vh] overflow-y-auto" style={{ height: "auto" }}>
+      <DialogContent className="max-w-2xl max-h-[85dvh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-display">Adapt #{prompt?.id} {prompt?.title}</DialogTitle>
           <DialogDescription>Describe your goal and context. AI turns this technique into a ready-to-use prompt.</DialogDescription>

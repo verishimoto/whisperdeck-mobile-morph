@@ -4,6 +4,8 @@ import { CategoryFilter } from "@/components/CategoryFilter";
 import { PromptGrid } from "@/components/PromptGrid";
 import { AIFinderDialog, AIMatch } from "@/components/AIFinderDialog";
 import { AdaptPromptDialog } from "@/components/AdaptPromptDialog";
+import { PromptChainDialog } from "@/components/PromptChainDialog";
+import { Button } from "@/components/ui/button";
 import { useFavorites } from "@/contexts/FavoritesContext";
 import { useSelection } from "@/contexts/SelectionContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,7 +16,7 @@ import { hackPrompts } from "@/data/prompts";
 import { FilterState, HackPrompt } from "@/types";
 import { createFuzzySearch } from "@/lib/fuzzy-search";
 import { CURATED_RECOMMENDED, SEARCH_RECOMMENDED_COUNT, MAX_MULTI_COPY, formatManyCards } from "@/lib/prompt-meta";
-import { Sparkles, X, Copy } from "lucide-react";
+import { Sparkles, X, Copy, Link } from "lucide-react";
 
 const Index = () => {
   const { getFavorites } = useFavorites();
@@ -28,6 +30,15 @@ const Index = () => {
   const [finderOpen, setFinderOpen] = useState(false);
   const [aiMatches, setAiMatches] = useState<AIMatch[] | null>(null);
   const [adaptPrompt, setAdaptPrompt] = useState<HackPrompt | null>(null);
+  const [chainPrompts, setChainPrompts] = useState<HackPrompt[] | null>(() => {
+    const stored = sessionStorage.getItem("loadedTemplatePrompts");
+    if (!stored) return null;
+    sessionStorage.removeItem("loadedTemplatePrompts");
+    try {
+      const parsed = JSON.parse(stored) as HackPrompt[];
+      return parsed.map(p => hackPrompts.find(card => card.id === p.id)).filter((p): p is HackPrompt => !!p);
+    } catch { return null; }
+  });
 
   useKeyboardShortcuts({
     onSearch: () => (document.querySelector('input[type="text"]') as HTMLInputElement)?.focus(),
@@ -39,7 +50,7 @@ const Index = () => {
 
   const { filteredPrompts, searchTop } = useMemo(() => {
     if (aiMatches) {
-      const list = aiMatches.map(m => hackPrompts.find(p => p.id === m.id)!).filter(Boolean);
+      const list = aiMatches.map(m => hackPrompts.find(p => p.id === m.id)).filter((p): p is HackPrompt => !!p);
       return { filteredPrompts: list, searchTop: list.map(p => p.id) };
     }
     let filtered = hackPrompts;
@@ -117,18 +128,20 @@ const Index = () => {
         />
       </main>
 
-      {selectedPrompts.length > 0 && (
-        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 liquid-glass-header rounded-full px-4 py-2 flex items-center gap-3 border border-foreground/15">
+      {selectedPrompts.length > 0 && !chainPrompts && (
+        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-background border border-border rounded-lg px-3 py-2 flex items-center justify-center flex-wrap gap-2 w-max max-w-[calc(100%-2rem)]">
           <span className="text-sm">{selectedPrompts.length}/{MAX_MULTI_COPY} selected</span>
-          <button onClick={copySelected} className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-full bg-primary text-primary-foreground">
+          <Button size="sm" onClick={copySelected}>
             <Copy className="h-4 w-4" />Copy all
-          </button>
-          <button onClick={clearSelection} aria-label="Clear selection" className="p-1.5 rounded-full liquid-glass-button"><X className="h-4 w-4" /></button>
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => setChainPrompts([...selectedPrompts])}><Link />Prompt Chains</Button>
+          <Button size="icon" variant="ghost" onClick={clearSelection} aria-label="Clear selection"><X className="h-4 w-4" /></Button>
         </div>
       )}
 
-      <AIFinderDialog open={finderOpen} onClose={() => setFinderOpen(false)} onResults={setAiMatches} />
-      <AdaptPromptDialog prompt={adaptPrompt} onClose={() => setAdaptPrompt(null)} />
+      <AIFinderDialog open={finderOpen} initialTask={filters.search} onClose={() => setFinderOpen(false)} onResults={setAiMatches} />
+      <AdaptPromptDialog key={adaptPrompt?.id ?? "closed"} prompt={adaptPrompt} onClose={() => setAdaptPrompt(null)} />
+      {chainPrompts && <PromptChainDialog prompts={chainPrompts} onClose={() => setChainPrompts(null)} />}
     </div>
   );
 };

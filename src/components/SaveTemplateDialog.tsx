@@ -111,8 +111,9 @@ export function SaveTemplateDialog({ isOpen, onClose, promptIds }: SaveTemplateD
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm text-white/70 mb-2">Template Name</label>
+              <label htmlFor="template-name" className="block text-sm text-white/70 mb-2">Template Name</label>
               <input
+                id="template-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -123,8 +124,9 @@ export function SaveTemplateDialog({ isOpen, onClose, promptIds }: SaveTemplateD
             </div>
 
             <div>
-              <label className="block text-sm text-white/70 mb-2">Description (optional)</label>
+              <label htmlFor="template-description" className="block text-sm text-white/70 mb-2">Description (optional)</label>
               <textarea
+                id="template-description"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="What does this chain help with?"
