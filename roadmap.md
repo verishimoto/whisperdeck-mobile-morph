@@ -19,6 +19,9 @@
 - [ ] Restore Prompt Chains on demand from the multi-select bar
 - [ ] Verify saved-template persistence and repair database access
 - [ ] Verify Adapt end-to-end and publish the completed changes
+- [ ] Resolve actionable security errors and report Git sync visibility
+- [ ] Draft description batches for approval without changing original titles or Why Hack
+- [ ] Deliver Markdown evidence-led archaeology, remaining-work report, and multi-perspective enhancement review
 - [ ] Newly written longer descriptions for 233 short-description cards — waiting on you to approve a first batch (flagged in the CSV)
 - [ ] Leaked-password protection — waiting on your OK
 - [ ] Later: profile onboarding, shareable links, Markdown copy, similar prompts, prompts in database
