@@ -15,6 +15,8 @@
 - [x] Favorites bookmarking + filter (already existed)
 
 ## Open
+- [ ] Fix AI Finder viewport placement and redundant search entry step
+- [ ] Restore Prompt Chains on demand from the multi-select bar
 - [ ] Newly written longer descriptions for 233 short-description cards — waiting on you to approve a first batch (flagged in the CSV)
 - [ ] Templates database access fix — waiting on your OK
 - [ ] Leaked-password protection — waiting on your OK
